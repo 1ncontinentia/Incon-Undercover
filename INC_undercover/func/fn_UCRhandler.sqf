@@ -215,7 +215,7 @@ if (isPlayer _unit) then {
 
 	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius"];
 
-	private _responseTime = 0.4;
+	private _responseTime = 0.3;
 
 	if !(isPlayer _unit) then {_responseTime = (_responseTime * 3)}; //Repsonsiveness of script reduced for performance on AI
 
@@ -229,7 +229,7 @@ if (isPlayer _unit) then {
 
 			if !(isNull objectParent _unit) exitWith {true};
 
-			private ["_suspiciousValue","_weirdoLevel"];
+			private ["_suspiciousValue","_weirdoLevel","_nearShotAt"];
 
 			_suspiciousValue = 1; //Suspicious behaviour value: higher = more suspicious
 
@@ -273,27 +273,30 @@ if (isPlayer _unit) then {
 			//Penalise people for being oddballs
 			if (isPlayer _unit) then {
 
-		        switch !(stance _unit == "STAND") do {
+				if !(_unit getVariable ["INC_shotAt",false]) then {
 
-					case true: {
-						_weirdoLevel = _weirdoLevel + 2;
+			        switch !(stance _unit == "STAND") do {
 
-				        if (speed _unit > 2) then {
-							_weirdoLevel = _weirdoLevel + 0.5;
+						case true: {
+							_weirdoLevel = _weirdoLevel + 2;
 
-					        if (speed _unit > 5) then {
+					        if (speed _unit > 2) then {
 								_weirdoLevel = _weirdoLevel + 0.5;
+
+						        if (speed _unit > 5) then {
+									_weirdoLevel = _weirdoLevel + 0.5;
+								};
 							};
 						};
-					};
 
-					case false: {
+						case false: {
 
-					    if (speed _unit > 8) then {
-							_weirdoLevel = _weirdoLevel + 0.5;
+						    if (speed _unit > 8) then {
+								_weirdoLevel = _weirdoLevel + 0.5;
 
-						    if (speed _unit > 17) then {
-								_weirdoLevel = _weirdoLevel + 1.5;
+							    if (speed _unit > 17) then {
+									_weirdoLevel = _weirdoLevel + 1.5;
+								};
 							};
 						};
 					};
@@ -312,6 +315,22 @@ if (isPlayer _unit) then {
 
 				if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
 					_weirdoLevel = _weirdoLevel + 3;
+				};
+
+				_nearShotAt = ((count (
+					(_unit nearEntities 50) select {
+						((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
+						{_x getVariable ["INC_shotAtEny",false]}
+					}
+				)) != 0);
+
+				if (_nearShotAt) then {
+
+					_weirdoLevel = _weirdoLevel + 1;
+
+					if (_unit getVariable ["INC_firedRecent",false]) then {
+						_weirdoLevel = _weirdoLevel + 3;
+					};
 				};
 
 				_unit setVariable ["INC_weirdoLevel",_weirdoLevel];  //This variable acts as a detection radius multiplier
@@ -446,7 +465,7 @@ if (isPlayer _unit) then {
 
 				if !(_unit getVariable ["INC_goneIncognito",false]) then {
 
-					sleep 0.25;
+					sleep _responseTime;
 
 					//Headlights check for moving vehicle at night
 					if (
@@ -458,7 +477,7 @@ if (isPlayer _unit) then {
 						_suspiciousValue = _suspiciousValue + 1;
 					};
 
-					sleep 0.25;
+					sleep _responseTime;
 
 					_weirdoLevel = _weirdoLevel + ((speed _unit)/ 10);
 
@@ -589,23 +608,63 @@ if (isPlayer _unit) then {
 };
 
 //Fired EventHandler
-_unit addEventHandler["Fired", {
+_unit addEventHandler["FiredMan", {
 	params["_unit"];
 
 	//If he's compromised, do nothing
 	if !(_unit getVariable ["INC_undercoverCompromised",false]) then {
 
+		if (!(_unit getVariable ["INC_goneIncognito",false]) || {!(_unit getVariable ["INC_shotAt",false])}) then {
+
+			//If anybody is aware of the unit and the unit isn't incognito, then compromise him
+			if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
+
+				//Do nothing unless they know where the dude is
+				_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
+				_asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
+
+				//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
+				if ((_regAlerted != 0) || {_asymAlerted != 0}) exitWith {
+
+					[_unit] call INCON_fnc_undercoverCompromised;
+				};
+			};
+		};
+
+		//Smell of cordite on clothes...
+		if !(_unit getVariable ["INC_firedRecent",false]) then {
+
+			_unit setVariable ["INC_firedRecent",true];
+
+			[_unit] spawn {
+				params ["_unit"];
+				sleep (60 + (random 520));
+				_unit setVariable ["INC_firedRecent",false];
+			};
+		};
+	};
+}];
+
+//Shot at nearby EventHandler
+_unit addEventHandler["FiredNear", {
+	params["_unit"];
+
+	_shooter = _this select 7;
+
+	if (_unit == _shooter) exitWith {};
+
+	//If he's doing crazy shit, do nothing
+	if (captive _unit) then {
+
 		//If anybody is aware of the unit, then...
-		if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
+		if !(_unit getVariable ["INC_shotAt",false]) then {
 
-			//Do nothing unless they know where the dude is
-			_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
-			_asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
+			_unit setVariable ["INC_shotAt",true];
 
-			//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
-			if ((_regAlerted != 0) || {_asymAlerted != 0}) exitWith {
-
-				[_unit] call INCON_fnc_undercoverCompromised;
+			[_unit] spawn {
+				params ["_unit"];
+				sleep (300 + (random 120));
+				_unit setVariable ["INC_shotAt",false];
 			};
 		};
 	};
