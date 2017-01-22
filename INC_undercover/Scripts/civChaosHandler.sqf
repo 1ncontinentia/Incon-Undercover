@@ -14,7 +14,7 @@ if (missionNamespace getVariable ["civiliansTargeted",false]) exitWith {};
 		missionNameSpace setVariable ["civiliansTargeted", true, true];
 		//Enemies target civs
 		{
-			if (((side _x) == Civilian) && {!(_x getVariable ["isUndercover", false])}) then {
+			if !(_x getVariable ["isUndercover", false]) then {
 				if (_percentageTarget > (random 100)) then {
 					private _prevGroup = group _x;
 
@@ -26,7 +26,7 @@ if (missionNamespace getVariable ["civiliansTargeted",false]) exitWith {};
 					};
 				};
 			};
-		} foreach allunits;
+		} foreach (allunits select {(side _x) == CIVILIAN});
 	};
 
 	sleep _timeToRebel;
@@ -36,8 +36,7 @@ if (missionNamespace getVariable ["civiliansTargeted",false]) exitWith {};
 	if (_rebelChance > (random 100)) then {
 		{
 			if (
-				((side _x) == Civilian) &&
-				{_percentageRebel > (random 100)} &&
+				(_percentageRebel > (random 100)) &&
 				{!(_x getVariable ["isUndercover", false])} &&
 				{!((count weapons _x) == 0)}
 			) then {
@@ -46,9 +45,7 @@ if (missionNamespace getVariable ["civiliansTargeted",false]) exitWith {};
 				[_x] joinSilent grpNull;
 				[_x] joinSilent (group INC_rebelCommander);
 
-				if ((count units _prevGroup) == 0) then {
-					deleteGroup _prevGroup;
-				};
+				deleteGroup _prevGroup;
 
 				private _wpn = selectRandom (weapons _x);
 				_x removeWeapon _wpn;
@@ -58,7 +55,7 @@ if (missionNamespace getVariable ["civiliansTargeted",false]) exitWith {};
 
 				_x setUnitAbility (0.7 + (random 0.25));
 			};
-		} foreach allunits;
+		} foreach (allunits select {(side _x) == CIVILIAN});
 	};
 
 	sleep _cooldownTimer;
