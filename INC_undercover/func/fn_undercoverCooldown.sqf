@@ -11,7 +11,7 @@ _unit
 
 */
 
-params ["_unit",["_regEnySide",sideEmpty],["_asymEnySide",sideEmpty]];
+params ["_unit"];
 
 //Run the script locally on unit's machine
 //if (!local _unit) exitWith {};
@@ -21,9 +21,9 @@ if ((_unit getVariable ["INC_cooldown",false]) || {!local _unit}) exitWith {};
 
 _unit setVariable ["INC_cooldown", true];
 
-[_unit,_regEnySide,_asymEnySide,_debug] spawn {
+[_unit,_debug] spawn {
 
-	params ["_unit",["_regEnySide",sideEmpty],["_asymEnySide",sideEmpty],["_debug",false]];
+	params ["_unit",["_debug",false]];
 
 	private ["_asymKnowsAboutUnit","_regKnowsAboutUnit","_regAlerted","_asymAlerted"];
 
@@ -39,8 +39,8 @@ _unit setVariable ["INC_cooldown", true];
 		!(_unit getVariable ["INC_undercoverCompromised",false]);
 	};
 
-	//Checks if _regEnySide has seen him recently and sets variables accordingly
-	_regAlerted = [_regEnySide,_unit,50] call INCON_fnc_countAlerted;
+	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
+	_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
 	if (_regAlerted != 0) then {
 		_regKnowsAboutUnit = true;
 	} else {
@@ -48,8 +48,8 @@ _unit setVariable ["INC_cooldown", true];
 	};
 
 
-	//Checks if _asymEnySide has seen him recently
-	_asymAlerted = [_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
+	//Checks if INC_asymEnySide has seen him recently
+	_asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
 	if (_asymAlerted != 0) then {
 		_asymKnowsAboutUnit = true;
 	} else {
@@ -70,7 +70,7 @@ _unit setVariable ["INC_cooldown", true];
 		_unit setVariable ["INC_cooldown", false, true];
 	};
 
-	//If both _regEnySide and _asymEnySide know about the unit, wait until neither does.
+	//If both INC_regEnySide and INC_asymEnySide know about the unit, wait until neither does.
 	if ((_asymKnowsAboutUnit) && {_regKnowsAboutUnit}) exitWith {
 
 		waitUntil {
@@ -86,7 +86,7 @@ _unit setVariable ["INC_cooldown", true];
 
 	};
 
-	//If only _asymEnySide knows about the unit, wait until they no longer do.
+	//If only INC_asymEnySide knows about the unit, wait until they no longer do.
 	if (_asymKnowsAboutUnit) then {
 
 		waitUntil {
@@ -94,7 +94,7 @@ _unit setVariable ["INC_cooldown", true];
 			(!(_unit getVariable ["INC_AsymKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
 		};
 
-	//Otherwise, only _regEnySide knows about the unit so wait until they no longer do.
+	//Otherwise, only INC_regEnySide knows about the unit so wait until they no longer do.
 	} else {
 
 		waitUntil {
@@ -103,9 +103,9 @@ _unit setVariable ["INC_cooldown", true];
 		};
 
 		//Percentage chance that unit will become compromised anyway
-		if ((45 > (random 100)) && {((_regEnySide knowsAbout _unit) > 3)}) then {
+		if ((45 > (random 100)) && {((INC_regEnySide knowsAbout _unit) > 3)}) then {
 
-			[_unit,_regEnySide,_asymEnySide] remoteExecCall ["INCON_fnc_undercoverCompromised",_unit];
+			[_unit] remoteExecCall ["INCON_fnc_undercoverCompromised",_unit];
 		};
 	};
 

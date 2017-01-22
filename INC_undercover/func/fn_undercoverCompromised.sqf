@@ -4,8 +4,8 @@ Changes the _percentage number of units of a given side to side enemy. Useful fo
 Arguments
 
 _unit: The compromised unit
-_regEnySide: Regular / conventional enemy side
-_asymEnySide: Asymmetric enemy side (doesn't remember as long due to lack of information sharing between cells)
+INC_regEnySide: Regular / conventional enemy side
+INC_asymEnySide: Asymmetric enemy side (doesn't remember as long due to lack of information sharing between cells)
 
 
 Conditions to be met first:
@@ -31,7 +31,7 @@ Wanted level will only descrease when nobody knows about the unit anymore (alert
 */
 
 
-params ["_unit",["_regEnySide",sideEmpty],["_asymEnySide",sideEmpty]];
+params ["_unit"];
 
 #include "..\UCR_setup.sqf"
 
@@ -40,9 +40,9 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
 
 //Compromised loop
-[_unit,_regEnySide,_asymEnySide,_debug] spawn {
+[_unit,_debug] spawn {
 
-	params ["_unit",["_regEnySide",sideEmpty],["_asymEnySide",sideEmpty],["_debug",false]];
+	params ["_unit",["_debug",false]];
 
 	private ["_activeVeh"];
 
@@ -102,8 +102,8 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 				_activeVeh = (vehicle _unit);
 				if !(
 
-					(([_regEnySide,_unit,10] call INCON_fnc_countAlerted) == 0) &&
-					{(([_asymEnySide,_unit,10] call INCON_fnc_countAlerted) == 0)}
+					(([INC_regEnySide,_unit,10] call INCON_fnc_countAlerted) == 0) &&
+					{(([INC_asymEnySide,_unit,10] call INCON_fnc_countAlerted) == 0)}
 
 				) then {
 					_activeVeh setVariable ["INC_naughtyVehicle",true];
@@ -121,8 +121,8 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 
 				if (
 
-					(([_regEnySide,_unit,30] call INCON_fnc_countAlerted) == 0) &&
-					{(([_asymEnySide,_unit,30] call INCON_fnc_countAlerted) == 0)}
+					(([INC_regEnySide,_unit,30] call INCON_fnc_countAlerted) == 0) &&
+					{(([INC_asymEnySide,_unit,30] call INCON_fnc_countAlerted) == 0)}
 
 				) then {
 
@@ -165,7 +165,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 			sleep 1;
 
 			(
-				(!(_unit getVariable ["INC_AnyKnowsSO",false]) && {(1.8 > (_regEnySide knowsAbout _unit))}) ||
+				(!(_unit getVariable ["INC_AnyKnowsSO",false]) && {(1.8 > (INC_regEnySide knowsAbout _unit))}) ||
 				{!alive _unit}
 			);
 		};
@@ -176,7 +176,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 		if (_debug) then {hint "Disguise intact."};
 
 		// Cooldown
-		[_unit,_regEnySide,_asymEnySide] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];
+		[_unit] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];
 
 		private ["_disguiseValue","_newDisguiseValue"];
 
@@ -199,7 +199,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 		if (_debug) then {hint "Disguise intact."};
 
 		// Cooldown
-		[_unit,_regEnySide,_asymEnySide] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];
+		[_unit] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];
 
 	};
 
