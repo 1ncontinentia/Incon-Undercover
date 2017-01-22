@@ -1,6 +1,6 @@
 class Extended_InitPost_EventHandlers {
      class CAManBase {
-		init = "_this call (compile preprocessFileLineNumbers 'initUnits.sqf')";
+		init = "_this call (compile preprocessFileLineNumbers 'postInitXEH.sqf')";
 	};
 };
 

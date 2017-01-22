@@ -1,8 +1,8 @@
 
 class INC_undercover
 {
-	tag = "Incon Undercover Operations";
-	class UCR
+	tag = "INCON";
+	class undercoverRecruit
 	{
 		file = "INC_undercover\func";
 		class ucrMain {description = "Contains functions for arming recruitable civilians."};

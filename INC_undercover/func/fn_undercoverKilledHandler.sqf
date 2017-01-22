@@ -30,14 +30,14 @@ if !(_barbaric) then {
 
 		params["_unit","_killer"];
 
-		if (_killer getVariable ["isSneaky",true]) then {
-
-			[_killer, 1000] remoteExec ["addRating", _killer];
-		};
-
 		[_unit,_killer] spawn {
 
 			params["_unit","_killer"];
+
+			if (_killer getVariable ["isSneaky",true]) then {
+
+				[_killer, 1000] remoteExec ["addRating", _killer];
+			};
 
 			private _side = (_unit getVariable ["INC_unitSide",west]);
 
