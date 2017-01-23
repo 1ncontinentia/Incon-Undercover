@@ -581,7 +581,7 @@ switch (_operation) do {
 				sleep 1;
 
 				[[_recruitedCiv,_groupLead],"addConcealActions"] call INCON_fnc_ucrMain;
-				[[_recruitedCiv],"INC_undercover\initUCR.sqf"] remoteExec ["execVM",_groupLead];
+				[[_recruitedCiv],"INC_undercover\Scripts\initUCR.sqf"] remoteExec ["execVM",_groupLead];
 				//[_recruitedCiv] remoteExecCall ["INCON_fnc_undercoverInit",_undercoverUnit];
 
 				_recruitedCiv setCombatMode "GREEN";
@@ -662,11 +662,10 @@ switch (_operation) do {
 		if ((count _containerArray == 0) && {_attempt <= 4}) then {
 			_attempt = 4;
 			_isMan = true;
-			_containerArray =  (
-				(nearestObjects [_unit, ["Man"],5]) select {
-					!alive _x;
-				};
-			)
+			_containerArray = (nearestObjects [_unit, ["Man"],5]) select {
+				(!alive _x)
+			};
+
 		};
 
 		if (count _containerArray == 0) exitWith {_return = false};
@@ -746,7 +745,11 @@ switch (_operation) do {
 					[_unit,_activeContainer,_origUnifItems,_origUnif,_newUnif] spawn {
 						params ["_unit","_activeContainer","_origUnifItems","_origUnif","_newUnif"];
 
-						if (_activeContainer isKindOf "GroundWeaponHolder") then {_oldGwh = _activeContainer; _activeContainer = createVehicle ["GroundWeaponHolder", getPosATL _unit, [], 0, "CAN_COLLIDE"]};
+						private ["_newCrateCargo","_oldGwh"];
+
+						_oldGwh = false;
+
+						if (_activeContainer isKindOf "GroundWeaponHolder") then {_oldGwh = true};
 
 						_activeContainer addItemCargoGlobal [(_origUnif), 1];
 
@@ -768,15 +771,47 @@ switch (_operation) do {
 
 						sleep 0.1;
 
-						_crateCargo = itemCargo _activeContainer;
 						_newCrateCargo = (itemCargo _activeContainer);
 						_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
 						_newCrateCargo = _newCrateCargo - [-1];
 
-						sleep 0.2;
-						clearItemCargoGlobal _activeContainer;
-						{_activeContainer addItemCargoGlobal [_x,1]} forEach (_newCrateCargo);
+						/*switch (_activeContainer isKindOf "GroundWeaponHolder") do {
+							case true: {
 
+								_newCrateCargo = (itemCargo _oldGwh) + (itemCargo _activeContainer);
+								_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
+								_newCrateCargo = _newCrateCargo - [-1];
+								deleteVehicle _oldGwh;
+
+							};
+
+							case false: {
+
+								_newCrateCargo = (itemCargo _activeContainer);
+								_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
+								_newCrateCargo = _newCrateCargo - [-1];
+
+							};
+						};*/
+
+						sleep 0.2;
+
+						switch (_oldGwh) do {
+							case true: {
+
+								clearItemCargoGlobal _activeContainer;
+								deleteVehicle _activeContainer;
+								 _newActiveContainer = createVehicle ["GroundWeaponHolder", getPosATL _unit, [], 0, "CAN_COLLIDE"];
+ 								{_newActiveContainer addItemCargoGlobal [_x,1]} forEach (_newCrateCargo);
+
+							};
+
+							case false: {
+								clearItemCargoGlobal _activeContainer;
+								{_activeContainer addItemCargoGlobal [_x,1]} forEach (_newCrateCargo);
+
+							};
+						};
 					};
 				};
 			};
