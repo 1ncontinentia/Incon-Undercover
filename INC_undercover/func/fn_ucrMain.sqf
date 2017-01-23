@@ -11,6 +11,8 @@ params [["_input",objNull],["_operation","addConcealedRifle"]];
 
 private ["_return"];
 
+_return = false;
+
 #include "..\UCR_setup.sqf"
 
 switch (_operation) do {
@@ -712,6 +714,8 @@ switch (_operation) do {
 			};
 		};
 
+		_return = true;
+
 		if (_switchUniform) then {
 
 			switch (_isMan) do {
@@ -733,7 +737,7 @@ switch (_operation) do {
 						_gwh addItemCargoGlobal [_oldUniform, 1];
 						{_gwh addItemCargoGlobal [_x, 1];} forEach (_deadGuyItems);
 
-						sleep 1;
+						sleep 2;
 
 						removeUniform _deadGuy;
 						_opportunist forceAddUniform _deadUniform;
@@ -748,20 +752,21 @@ switch (_operation) do {
 						private ["_newCrateCargo","_oldGwh"];
 
 						_oldGwh = false;
+						_newCrateCargo = [];
 
 						if (_activeContainer isKindOf "GroundWeaponHolder") then {_oldGwh = true};
 
 						_activeContainer addItemCargoGlobal [(_origUnif), 1];
 
-						_newUnifItems = (itemcargo (_newUnif select 1)) + (magazinecargo (_newUnif select 1)) + (weaponcargo (_newUnif select 1));
+						//_newUnifItems = (itemcargo (_newUnif select 1)) + (magazinecargo (_newUnif select 1)) + (weaponcargo (_newUnif select 1));
 
 						[_unit,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
 
 						sleep 0.2;
 
-						{_activeContainer addItemCargoGlobal [_x, 1];} forEach (_newUnifItems);
+						//{_activeContainer addItemCargoGlobal [_x, 1];} forEach (_newUnifItems);
 
-						sleep 0.1;
+						sleep 1;
 
 						_unit forceAddUniform (_newUnif select 0);
 
@@ -771,28 +776,18 @@ switch (_operation) do {
 
 						sleep 0.1;
 
-						_newCrateCargo = (itemCargo _activeContainer);
+						//_newCrateCargo = (itemcargo _activeContainer) + (magazinecargo _activeContainer) + (weaponcargo _activeContainer);
+
+						for "_i" from 0 to ((count (everyContainer _activeContainer))-1) do {
+						    private ["_container","_contents"];
+							_container = ((everyContainer _activeContainer) select _i);
+							_contents = (itemcargo (_container select 1)) + (magazinecargo (_container select 1)) + (weaponcargo (_container select 1));
+							{_newCrateCargo pushBack _x} forEach _contents;
+							_newCrateCargo pushBack (_container select 0);
+						};
+
 						_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
 						_newCrateCargo = _newCrateCargo - [-1];
-
-						/*switch (_activeContainer isKindOf "GroundWeaponHolder") do {
-							case true: {
-
-								_newCrateCargo = (itemCargo _oldGwh) + (itemCargo _activeContainer);
-								_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
-								_newCrateCargo = _newCrateCargo - [-1];
-								deleteVehicle _oldGwh;
-
-							};
-
-							case false: {
-
-								_newCrateCargo = (itemCargo _activeContainer);
-								_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
-								_newCrateCargo = _newCrateCargo - [-1];
-
-							};
-						};*/
 
 						sleep 0.2;
 
@@ -816,8 +811,6 @@ switch (_operation) do {
 				};
 			};
 		};
-
-		_return = true;
 	};
 };
 
