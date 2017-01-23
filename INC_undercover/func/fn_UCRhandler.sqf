@@ -8,68 +8,6 @@ Creates:
 Loops for all checks
 Environmental loop
 Eventhandlers that auto compromise the unit if seen shooting
-
-Any suspicious behvaviour will make enemies that see the unit instantly hostile.
-Weird behaviours will increase the radius and likelihood of nearby enemies who could blow the units cover.
-Weird behaviour in proximity to enemies may cause some to take interest. If they are not dealt with quickly, they will compromise the unit.
-Unit will remain suspicious as long as there are enemies who have target knowledge of the unit, even if not doing anything suspicious anymore.
-Two or more suspicious behaviours witnessed at the same time by an enemy will compromise the unit (being both armed and trespassing).
-If the unit is compromised, the unit has a chance to kill all enemies who know about them before they spread the units identity across the AO.
-After that, the unit becomes fully compromised and must change his disguise (clothes and either goggles / headgear) to go undercover again.
-Each time unit gets fully compromised, the effects of any weird behaviour will be amplified.
-
-Suspicious / weird behaviours will vary according to:
-Whether the unit is disguised as the enemy
-Whether the unit is in a vehicle or on foot
-What time of day and weather it is (dark / moonlit / overcast / fog at night, fog during the day)
-Whether the unit has been compromised before
-
-IN DISGUISE AS ENEMY:
-
-ON FOOT:
-Weird behaviour:
-Wearing a backpack that doesn't fit the disguise
-Moving fast
-Not standing
-Wearing a uniform that the unit was recently compromised in
-
-IN VEHICLE:
-Weird behaviour:
-Driving with headlights off at night
-Wearing a non-disguise vest (if not in a tank)
-
-
-NOT IN DISGUISE AS ENEMY:
-
-ON FOOT:
-Suspicious behaviour:
-Wearing a suspicious uniform, vest or HMD
-Wearing a compromised uniform
-Holding a weapon or holding binoculars / laser designators / rangefinders
-Trespassing onto a restricted area
-
-Weird behaviour:
-Moving fast
-Not standing
-Wearing a uniform that the unit was recently compromised in
-
-IN VEHICLE:
-Suspicious behaviour:
-Driving an enemy vehicle
-Trespassing onto a restricted area
-Driving more than 30m offroad (optional)
-Driving with headlights off at night
-
-Weird behaviour:
-Wearing a suspicious uniform or vest
-Wearing a HMD (optional)
-Wearing a compromised uniform
-Driving fast (the faster, the more attention you attract)
-
-
-*
-
-
 */
 
 
@@ -224,7 +162,7 @@ if (isPlayer _unit) then {
 	//Main loop
 	waitUntil {
 
-		//While not in a vehicle
+		//While on foot
 		waitUntil {
 
 			if !(isNull objectParent _unit) exitWith {true};
@@ -237,29 +175,6 @@ if (isPlayer _unit) then {
 
 			//Incognito check
 			if (uniform _unit in INC_incognitoUniforms) then {
-
-				_weirdoLevel = 0.5; //Multiplier of radius for units near the player
-
-				if !(backpack _unit in INC_incognitoBackpacks) then {
-					_weirdoLevel = _weirdoLevel + 0.5;
-				};
-
-				if !(vest _unit in INC_incognitoVests) then {
-					_weirdoLevel = _weirdoLevel + 2;
-				};
-
-				if !(headgear _unit in INC_incognitoHeadgear) then {
-					_weirdoLevel = _weirdoLevel + 0.8;
-
-					if (((headgear _unit) find "elmet") >= 0) then {
-						_weirdoLevel = _weirdoLevel + 2;
-					};
-				};
-
-				if !(currentWeapon _unit in INC_incognitoWpns) then {
-					_weirdoLevel = _weirdoLevel + 0.8;
-				};
-
 				_unit setVariable ["INC_goneIncognito",true];
 			} else {
 				_unit setVariable ["INC_goneIncognito",false];
@@ -273,7 +188,44 @@ if (isPlayer _unit) then {
 			//Penalise people for being oddballs
 			if (isPlayer _unit) then {
 
-				if !(_unit getVariable ["INC_shotAt",false]) then {
+				switch (_unit getVariable ["INC_goneIncognito",false]) do {
+
+					case true: {
+
+						_weirdoLevel = 0.8; //Multiplier of radius for units near the player
+
+						if !(backpack _unit in INC_incognitoBackpacks) then {
+							_weirdoLevel = _weirdoLevel + 0.5;
+						};
+
+						if !(vest _unit in INC_incognitoVests) then {
+							_weirdoLevel = _weirdoLevel + 2;
+						};
+
+						if !(headgear _unit in INC_incognitoHeadgear) then {
+							_weirdoLevel = _weirdoLevel + 0.5;
+
+							if (((headgear _unit) find "elmet") >= 0) then {
+								_weirdoLevel = _weirdoLevel + 1;
+							};
+						};
+
+						if !(currentWeapon _unit in INC_incognitoWpns) then {
+							_weirdoLevel = _weirdoLevel + 0.8;
+						};
+					};
+
+					case false: {
+
+						//Check if unit is wearing anything suspicious
+						if ((((headgear _unit) find "elmet") >= 0) || {((goggles _unit) find "alaclava") >= 0}) then {
+
+							_weirdoLevel = _weirdoLevel + 2;
+						};
+					};
+				};
+
+				if !(_unit getVariable ["INC_shotNear",false]) then {
 
 			        switch !(stance _unit == "STAND") do {
 
@@ -302,35 +254,17 @@ if (isPlayer _unit) then {
 					};
 				};
 
-
-				sleep _responseTime;
-
-				//Check if unit is wearing anything suspicious
-				if (!(_unit getVariable ["INC_goneIncognito",false]) && {(((headgear _unit) find "elmet") >= 0) || {((goggles _unit) find "alaclava") >= 0}}) then {
-
+				if (_unit getVariable ["INC_firedRecent",false]) then {
 					_weirdoLevel = _weirdoLevel + 2;
 				};
+
+
+				sleep _responseTime;
 
 				sleep _responseTime;
 
 				if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
 					_weirdoLevel = _weirdoLevel + 3;
-				};
-
-				_nearShotAt = ((count (
-					(_unit nearEntities 50) select {
-						((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
-						{_x getVariable ["INC_shotAtEny",false]}
-					}
-				)) != 0);
-
-				if (_nearShotAt) then {
-
-					_weirdoLevel = _weirdoLevel + 1;
-
-					if (_unit getVariable ["INC_firedRecent",false]) then {
-						_weirdoLevel = _weirdoLevel + 3;
-					};
 				};
 
 				_unit setVariable ["INC_weirdoLevel",_weirdoLevel];  //This variable acts as a detection radius multiplier
@@ -364,6 +298,10 @@ if (isPlayer _unit) then {
 				};
 			};
 
+			if (_unit getVariable ["INC_firedRecent",false]) then {
+				_suspiciousValue = _suspiciousValue + 2;
+			};
+
 			//Proximity alert scenario
 			if (_unit getVariable ["INC_proxAlert",false]) then {
 
@@ -386,6 +324,12 @@ if (isPlayer _unit) then {
 					[_unit,_suspiciousEnemy] spawn {
 						params ["_unit","_suspiciousEnemy"];
 
+						_suspiciousEnemy doWatch _unit;
+
+						sleep (random 15);
+
+						if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {};
+
 						if (45 > (random 100)) then {
 							private ["_comment"];
 							switch (_unit getVariable ["INC_goneIncognito",false]) do {
@@ -401,11 +345,9 @@ if (isPlayer _unit) then {
 
 						_suspiciousEnemy doWatch _unit;
 
-						sleep (random 15);
+						sleep (random 25);
 
-						if !((50 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {};
-
-						(group _unit) setSpeedMode "LIMITED";
+						if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {};
 
 						waitUntil {
 
@@ -614,20 +556,17 @@ _unit addEventHandler["FiredMan", {
 	//If he's compromised, do nothing
 	if !(_unit getVariable ["INC_undercoverCompromised",false]) then {
 
-		if (!(_unit getVariable ["INC_goneIncognito",false]) || {!(_unit getVariable ["INC_shotAt",false])}) then {
+		//If anybody is aware of the unit and the unit isn't incognito, then compromise him
+		if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
 
-			//If anybody is aware of the unit and the unit isn't incognito, then compromise him
-			if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
+			//Do nothing unless they know where the dude is
+			_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
+			_asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
 
-				//Do nothing unless they know where the dude is
-				_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
-				_asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
+			//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
+			if ((_regAlerted != 0) || {_asymAlerted != 0}) exitWith {
 
-				//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
-				if ((_regAlerted != 0) || {_asymAlerted != 0}) exitWith {
-
-					[_unit] call INCON_fnc_undercoverCompromised;
-				};
+				[_unit] call INCON_fnc_undercoverCompromised;
 			};
 		};
 
@@ -638,37 +577,37 @@ _unit addEventHandler["FiredMan", {
 
 			[_unit] spawn {
 				params ["_unit"];
-				sleep (60 + (random 520));
+				sleep (30 + (random 30));
 				_unit setVariable ["INC_firedRecent",false];
 			};
 		};
 	};
 }];
 
-//Shot at nearby EventHandler
-_unit addEventHandler["FiredNear", {
-	params["_unit"];
+if (isPlayer _unit) then {
+	//Shot at nearby EventHandler
+	_unit addEventHandler["FiredNear", {
+		params["_unit"];
 
-	_shooter = _this select 7;
+		if (_unit == (_this select 7)) exitWith {};
 
-	if (_unit == _shooter) exitWith {};
+		//If he's doing crazy shit, do nothing
+		if (captive _unit) then {
 
-	//If he's doing crazy shit, do nothing
-	if (captive _unit) then {
+			//If unit hasn't been fired near before
+			if !(_unit getVariable ["INC_shotNear",false]) then {
 
-		//If anybody is aware of the unit, then...
-		if !(_unit getVariable ["INC_shotAt",false]) then {
+				_unit setVariable ["INC_shotNear",true];
 
-			_unit setVariable ["INC_shotAt",true];
-
-			[_unit] spawn {
-				params ["_unit"];
-				sleep (300 + (random 120));
-				_unit setVariable ["INC_shotAt",false];
+				[_unit] spawn {
+					params ["_unit"];
+					sleep (200 + (random 120));
+					_unit setVariable ["INC_shotNear",false];
+				};
 			};
 		};
-	};
-}];
+	}];
+};
 
 if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_environmentMultiLoopActive",false])}) then {
 	[_unit] spawn {

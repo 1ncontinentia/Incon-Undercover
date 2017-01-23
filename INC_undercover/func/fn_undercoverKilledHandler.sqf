@@ -131,26 +131,3 @@ if (_barbaric) then {
 		};
 	}];
 };
-
-//Fired EventHandler
-_unit addEventHandler["FiredNear", {
-	params["_unit"];
-
-	_shooter = _this select 7;
-
-	if (_unit == _shooter) exitWith {};
-
-	private _leader = leader _unit;
-
-	//If anybody is aware of the unit, then...
-	if !(_leader getVariable ["INC_shotAtEny",false]) then {
-
-		_leader setVariable ["INC_shotAtEny",true];
-
-		[_leader] spawn {
-			params ["_leader"];
-			sleep (300 + (random 120));
-			_leader setVariable ["INC_shotAtEny",false];
-		};
-	};
-}];
