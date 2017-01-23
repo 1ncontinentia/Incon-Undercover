@@ -647,7 +647,9 @@ switch (_operation) do {
 
 		_input params ["_unit",["_switchUniform",true],["_attempt",1],["_autoReAttempt",true]];
 
-		private ["_activeContainer","_newUnif","_origUnif","_newUnifItems","_droppedUniform","_containerArray"];
+		private ["_activeContainer","_newUnif","_origUnif","_newUnifItems","_droppedUniform","_containerArray","_isMan"];
+
+		_isMan = false;
 
 		_containerArray = [];
 
@@ -657,6 +659,16 @@ switch (_operation) do {
 
 		if ((count _containerArray == 0) && {_attempt <= 3}) then {_attempt = 3; _containerArray =  (nearestObjects [_unit, ["ReammoBox_F"],5])};
 
+		if ((count _containerArray == 0) && {_attempt <= 4}) then {
+			_attempt = 4;
+			_isMan = true;
+			_containerArray =  (
+				(nearestObjects [_unit, ["Man"],5]) select {
+					!alive _x;
+				};
+			)
+		};
+
 		if (count _containerArray == 0) exitWith {_return = false};
 
 		_activeContainer = (_containerArray select 0);
@@ -664,63 +676,109 @@ switch (_operation) do {
 		_origUnif = uniform _unit;
 		_origUnifItems = uniformItems _unit;
 
-		_newUnif = (((everyContainer _activeContainer) select {
-		    (
-				(
-					(((_x select 0) find "U_") >= 0) ||
-					{(((_x select 0) find "uniform") >= 0)} ||
-					{(((_x select 0) find "Uniform") >= 0)}
-				) &&
-				{
-					!(((_x select 0) find _origUnif) == 0) ||
-					{_origUnif == ""}
-				} &&
-				{(_x select 0) in (INC_civilianUniforms + INC_incognitoUniforms)}
-			)
-		}) select 0);
+		switch (_isMan) do {
+			case true: {
+
+				if (
+					(uniform _activeContainer in (INC_civilianUniforms + INC_incognitoUniforms)) &&
+					{(uniform _activeContainer) != _origUnif}
+				) then {
+					_newUnif = uniform _activeContainer;
+				};
+
+			};
+
+			case false: {
+				_newUnif = (((everyContainer _activeContainer) select {
+				    (
+						(
+							(((_x select 0) find "U_") >= 0) ||
+							{(((_x select 0) find "uniform") >= 0)} ||
+							{(((_x select 0) find "Uniform") >= 0)}
+						) &&
+						{
+							!(((_x select 0) find _origUnif) == 0) ||
+							{_origUnif == ""}
+						} &&
+						{(_x select 0) in (INC_civilianUniforms + INC_incognitoUniforms)}
+					)
+				}) select 0);
+			};
+		};
 
 		if (isNil "_newUnif") exitWith {
 			_return = false;
-			if (_autoReAttempt && {_attempt <= 2}) then {
+			if (_autoReAttempt && {_attempt <= 3}) then {
 				_return = [[_unit,_switchUniform,(_attempt + 1)],"switchUniforms"] call INCON_fnc_ucrMain;
 			};
 		};
 
 		if (_switchUniform) then {
-			[_unit,_activeContainer,_origUnifItems,_origUnif,_newUnif] spawn {
-				params ["_unit","_activeContainer","_origUnifItems","_origUnif","_newUnif"];
 
-				if (_activeContainer isKindOf "GroundWeaponHolder") then {_oldGwh = _activeContainer; _activeContainer = createVehicle ["GroundWeaponHolder", getPosATL _unit, [], 0, "CAN_COLLIDE"]};
+			switch (_isMan) do {
+				case true: {
+					[_activeContainer,_unit] spawn {
+						params ["_deadGuy","_opportunist"];
+						private ["_gwh","_oldUniform","_deadUniform","_oldItems"];
 
-				_activeContainer addItemCargoGlobal [(_origUnif), 1];
+						[_opportunist,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
 
-				_newUnifItems = (itemcargo (_newUnif select 1)) + (magazinecargo (_newUnif select 1)) + (weaponcargo (_newUnif select 1));
+						_oldUniform = uniform _opportunist;
+						_deadUniform = uniform _deadGuy;
+						_oldItems = uniformItems _opportunist;
+						_deadGuyItems = uniformItems _deadGuy;
 
-				[_unit,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
+						sleep 0.2;
 
-				sleep 0.2;
+						_gwh = createVehicle ["GroundWeaponHolder", getPosATL _opportunist, [], 0, "CAN_COLLIDE"];
+						_gwh addItemCargoGlobal [_oldUniform, 1];
+						{_gwh addItemCargoGlobal [_x, 1];} forEach (_deadGuyItems);
 
-				{_activeContainer addItemCargoGlobal [_x, 1];} forEach (_newUnifItems);
+						sleep 1;
 
-				sleep 0.1;
+						removeUniform _deadGuy;
+						_opportunist forceAddUniform _deadUniform;
+						{(uniformContainer _opportunist) addItemCargoGlobal [_x, 1];} forEach (_oldItems);
+					};
+				};
 
-				_unit forceAddUniform (_newUnif select 0);
+				case false: {
+					[_unit,_activeContainer,_origUnifItems,_origUnif,_newUnif] spawn {
+						params ["_unit","_activeContainer","_origUnifItems","_origUnif","_newUnif"];
 
-				sleep 0.2;
+						if (_activeContainer isKindOf "GroundWeaponHolder") then {_oldGwh = _activeContainer; _activeContainer = createVehicle ["GroundWeaponHolder", getPosATL _unit, [], 0, "CAN_COLLIDE"]};
 
-				{(uniformContainer _unit) addItemCargoGlobal  [_x, 1]} forEach (_origUnifItems);
+						_activeContainer addItemCargoGlobal [(_origUnif), 1];
 
-				sleep 0.1;
+						_newUnifItems = (itemcargo (_newUnif select 1)) + (magazinecargo (_newUnif select 1)) + (weaponcargo (_newUnif select 1));
 
-				_crateCargo = itemCargo _activeContainer;
-				_newCrateCargo = (itemCargo _activeContainer);
-				_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
-				_newCrateCargo = _newCrateCargo - [-1];
+						[_unit,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
 
-				sleep 0.2;
-				clearItemCargoGlobal _activeContainer;
-				{_activeContainer addItemCargoGlobal [_x,1]} forEach (_newCrateCargo);
+						sleep 0.2;
 
+						{_activeContainer addItemCargoGlobal [_x, 1];} forEach (_newUnifItems);
+
+						sleep 0.1;
+
+						_unit forceAddUniform (_newUnif select 0);
+
+						sleep 0.2;
+
+						{(uniformContainer _unit) addItemCargoGlobal  [_x, 1]} forEach (_origUnifItems);
+
+						sleep 0.1;
+
+						_crateCargo = itemCargo _activeContainer;
+						_newCrateCargo = (itemCargo _activeContainer);
+						_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
+						_newCrateCargo = _newCrateCargo - [-1];
+
+						sleep 0.2;
+						clearItemCargoGlobal _activeContainer;
+						{_activeContainer addItemCargoGlobal [_x,1]} forEach (_newCrateCargo);
+
+					};
+				};
 			};
 		};
 

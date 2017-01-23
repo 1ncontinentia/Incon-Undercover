@@ -48,6 +48,6 @@ _unit addEventHandler["Killed", {
 				{(uniformContainer _opportunist) addItemCargoGlobal [_x, 1];} forEach (_oldItems);
 			};
 
-		},[],6,true,true,"","((_this getVariable ['isUndercover',false]) && {uniform _target != ''})",4
+		},[],6,true,true,"","((_this getVariable ['isUndercover',false]) && {uniform _target != ''})",3
 	]] remoteExec ["addAction", 0,true];
 }];
