@@ -25,7 +25,7 @@ _unit setVariable ["INC_firedRecent",false];
 
 _unit setVariable ["INC_undercoverHandlerRunning", true];
 
-{_x setVariable ["INC_notDismissable",true]} forEach (units group _unit);
+if (isPlayer _unit) then {{_x setVariable ["INC_notDismissable",true]} forEach (units group _unit)};
 
 _unit setVariable ["isUndercover", true, true]; //Allow scripts to pick up sneaky units alongside undercover civilians (who do not have the isSneaky variable)
 
@@ -124,11 +124,6 @@ sleep 0.5;
 [_unit, true] remoteExec ["setCaptive", _unit]; //Makes enemies not hostile to the unit
 
 if (isPlayer _unit) then {
-	//Group persistence
-	if ((_persistentGroup) && {!(isNil "INCON_fnc_groupPersist")}) then {
-		["loadGroup",_unit] call INCON_fnc_groupPersist;
-		["saveGroup",_unit] call INCON_fnc_groupPersist;
-	};
 
 	//Add respawn eventhandler so all scripts work properly on respawn
 	_unit addMPEventHandler ["MPRespawn",{
