@@ -61,7 +61,13 @@ if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multipl
 
 	// Cooldown Timer to simulate how long it would take for word to get out
 	_cooldownTimer = (30 + (random 240));
-	sleep _cooldownTimer;
+	sleep 30;
+
+	waitUntil {
+		sleep 1;
+		_cooldownTimer = (_cooldownTimer - 1);
+		(!(_unit getVariable ["INC_AnyKnowsSO",false]) || {_cooldownTimer <= 0})
+	};
 
 
 	//If there are still alerted units alive...
