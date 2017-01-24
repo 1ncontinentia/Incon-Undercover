@@ -112,6 +112,10 @@ if (!local _unit) exitWith {};
 						if !(currentWeapon _unit in INC_incognitoWpns) then {
 							_weirdoLevel = _weirdoLevel + 0.8;
 						};
+
+						if ((currentWeapon _unit == primaryWeapon _unit) && {!(weaponLowered _unit)}) then {
+							_weirdoLevel = _weirdoLevel + 0.5;
+						};
 					};
 
 					case false: {
