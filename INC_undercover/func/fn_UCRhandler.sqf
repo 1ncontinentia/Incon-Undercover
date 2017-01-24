@@ -197,14 +197,14 @@ _unit addEventHandler["FiredMan", {
 		};
 
 		//Smell of cordite on clothes...
-		if !(_unit getVariable ["INC_firedRecent",false]) then {
+		if !(_unit getVariable ["INC_justFired",false]) then {
 
-			_unit setVariable ["INC_firedRecent",true];
+			_unit setVariable ["INC_justFired",true];
 
 			[_unit] spawn {
 				params ["_unit"];
 				sleep (15 + (random 5));
-				_unit setVariable ["INC_firedRecent",false];
+				_unit setVariable ["INC_justFired",false];
 			};
 		};
 	};

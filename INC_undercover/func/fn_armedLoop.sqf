@@ -199,8 +199,17 @@ if (!local _unit) exitWith {};
 				};
 			};
 
-			if (_unit getVariable ["INC_firedRecent",false]) then {
+			if (_unit getVariable ["INC_justFired",false]) then {
 				_suspiciousValue = _suspiciousValue + 2;
+
+
+				_unit setVariable ["INC_firedRecent",true];
+
+				[_unit] spawn {
+					params ["_unit"];
+					sleep (60 + (random 300));
+					_unit setVariable ["INC_firedRecent",false];
+				};
 			};
 
 			//Proximity alert scenario
