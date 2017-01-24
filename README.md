@@ -11,10 +11,11 @@ SP / Coop and Dedi compatible.
 
 #### General
 
-* Optimised detection system: enemies respond in a realistic and credible way to undercover units without destroying performance
+* Optimised detection system: enemies respond in a realistic and credible way to undercover units without destroying performance (tested on 20+ undercover units simultaneously with +/- 4 fps difference)
+* Operates primarily on each client, very little information is passed to the server - server performance impact is therefore kept to a minimum even when multiple players are undercover at the same time
 * Works on players and their AI subordinates
 * Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover
-* Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, whether it is day or night, with each situation requiring players to behave appropriately
+* Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, or whether it is day or night, with each situation requiring players to behave appropriately
 * Suspicious enemies may challenge units or watch and follow them if they act strange; the more weird stuff you do, the more likely they are to see through your disguise
 * Once undercover units become compromised, enemies will remember the vehicles they are spotted in and clothes they are wearing
 * Change your clothing (both uniform and either headgear or goggles) and if no enemies sees you doing it, your new disguise may stick
@@ -78,7 +79,7 @@ Non-playable AI subordinates in the undercover unit's group do not need anything
 For the sake of this explanation, we'll separate behaviours into two categories: suspicious and weird.
 
 * Any suspicious behvaviour will make enemies see the unit as hostile automatically. Two minor suspicious behaviours seen at once (being both armed and trespassing) or one major one (shooting / killing an enemy) will compromise the unit.
-* Weird behaviour will not make enemies see the unit as hostile instantly, but each additional weird behaviour will increase the radius and likelihood of nearby enemies who could blow the units cover. Weird behaviour in proximity to enemies may cause some to take interest. If they are not dealt with quickly, they will compromise the unit. Units will remain suspicious as long as there are enemies who have reasonably fresh target knowledge of the unit, even if not doing anything suspicious anymore. The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the unit's speed, behaviour, vehicle, as well as environmental factors like moon intensity, overcast and fog.
+* Weird behaviour will not make enemies see the unit as hostile instantly, but each additional weird behaviour will increase the radius and likelihood of nearby enemies who could blow the units cover. Weird behaviour in proximity to enemies may cause some to take interest. If they are not dealt with quickly, they may compromise the unit. Units will remain suspicious as long as there are enemies who have reasonably fresh target knowledge of the unit, even if not doing anything suspicious anymore. The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the unit's speed, behaviour, vehicle, as well as environmental factors like moon intensity, overcast and fog.
 
 If the unit is compromised, the unit must kill all enemies who know about them before they spread the units identity across the AO.
 After that, the unit becomes fully compromised and must change his disguise (clothes and either goggles / headgear) to go undercover again.
