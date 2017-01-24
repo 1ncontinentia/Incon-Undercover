@@ -30,7 +30,7 @@ if (_percentage > 30) then {
 
 } else {
 
-    if ((_percentage > (random 100)) && {_undercoverUnit getVariable ["isUndercover", false]} && {!(_undercoverUnit getVariable ["INC_undercoverCompromised", false])}) then {
+    if ((_percentage > (random 100)) && {_undercoverUnit getVariable ["isUndercover", false]} && {!(_undercoverUnit getVariable ["INC_isCompromised", false])}) then {
 
         if (_undercoverGroup < (2 + (random 5))) then {
 

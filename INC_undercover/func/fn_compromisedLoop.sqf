@@ -48,8 +48,8 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 
 	_unit setVariable ["INC_compromisedLoopRunning", true];
 
-	// Publicize undercoverCompromised variable to true. This prevents other scripts from setting captive while unit is still compromised.
-	_unit setVariable ["INC_undercoverCompromised", true];
+	// Publicize isCompromised variable to true. This prevents other scripts from setting captive while unit is still compromised.
+	_unit setVariable ["INC_isCompromised", true];
 
 	// SetCaptive after suspicious act has been committed
 	[_unit, false] remoteExec ["setCaptive", _unit];
@@ -170,8 +170,8 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 			);
 		};
 
-		// Publicize undercoverCompromised to false.
-		_unit setVariable ["INC_undercoverCompromised", false];
+		// Publicize isCompromised to false.
+		_unit setVariable ["INC_isCompromised", false];
 
 		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 
@@ -193,8 +193,8 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 
 		if !(isNil "_activeVeh") then {_activeVeh setVariable ["INC_naughtyVehicle",false]};
 
-		// Publicize undercoverCompromised to false.
-		_unit setVariable ["INC_undercoverCompromised", false];
+		// Publicize isCompromised to false.
+		_unit setVariable ["INC_isCompromised", false];
 
 		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 

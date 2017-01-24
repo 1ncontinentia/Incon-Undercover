@@ -36,7 +36,7 @@ _unit setVariable ["INC_cooldown", true];
 	//Stop the script running while the unit is compromised
 	waitUntil {
 		sleep 2;
-		!(_unit getVariable ["INC_undercoverCompromised",false]);
+		!(_unit getVariable ["INC_isCompromised",false]);
 	};
 
 	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
@@ -61,7 +61,7 @@ _unit setVariable ["INC_cooldown", true];
 	//SetsCaptive back to true if nobody has seen him, unless he is already compromised
 	if !((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) exitWith {
 
-		if !(_unit getVariable ["INC_undercoverCompromised",false]) then {
+		if !(_unit getVariable ["INC_isCompromised",false]) then {
 			[_unit, true] remoteExec ["setCaptive", _unit];
 		};
 
@@ -78,7 +78,7 @@ _unit setVariable ["INC_cooldown", true];
 			(!(_unit getVariable ["INC_AnyKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
 		};
 
-		if !(_unit getVariable ["INC_undercoverCompromised",false]) then {
+		if !(_unit getVariable ["INC_isCompromised",false]) then {
 			[_unit, true] remoteExec ["setCaptive", _unit];
 		};
 
@@ -105,12 +105,12 @@ _unit setVariable ["INC_cooldown", true];
 		//Percentage chance that unit will become compromised anyway
 		if ((45 > (random 100)) && {((INC_regEnySide knowsAbout _unit) > 3)}) then {
 
-			[_unit] remoteExecCall ["INCON_fnc_undercoverCompromised",_unit];
+			[_unit] call INCON_fnc_compromisedLoop;
 		};
 	};
 
-	//Then set captive back to true as long as the undercoverCompromised loop isn't running
-	if !(_unit getVariable ["INC_undercoverCompromised",false]) then {
+	//Then set captive back to true as long as the isCompromised loop isn't running
+	if !(_unit getVariable ["INC_isCompromised",false]) then {
 		[_unit, true] remoteExec ["setCaptive", _unit];
 	};
 

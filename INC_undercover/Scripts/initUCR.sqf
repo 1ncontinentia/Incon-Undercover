@@ -17,7 +17,7 @@ waitUntil {!(isNull player)};
 if ((_unit getVariable ["INC_undercoverHandlerRunning",false]) || {(!local _unit)}) exitWith {};
 
 _unit setVariable ["INC_compromisedLoopRunning", false];
-_unit setVariable ["INC_undercoverCompromised", false];
+_unit setVariable ["INC_isCompromised", false];
 _unit setVariable ["INC_suspicious", false];
 _unit setVariable ["INC_cooldown", false];
 _unit setVariable ["INC_shotAt",false];
@@ -132,7 +132,7 @@ if (isPlayer _unit) then {
 			_unit setVariable ["INC_undercoverHandlerRunning", false];
 			_unit setVariable ["INC_undercoverLoopsActive", false];
 			_unit setVariable ["INC_compromisedLoopRunning", false];
-			_unit setVariable ["INC_undercoverCompromised", false];
+			_unit setVariable ["INC_isCompromised", false];
 			_unit setVariable ["INC_suspicious", false];
 			_unit setVariable ["INC_cooldown", false];
 			sleep 1;
@@ -151,7 +151,7 @@ if (isPlayer _unit) then {
 			waitUntil {
 				sleep 1;
 				_unit globalChat (format ["%1 cover intact: %2",_unit,(captive _unit)]);
-				_unit globalChat (format ["%1 compromised: %2",_unit,(_unit getVariable ["INC_undercoverCompromised",false])]);
+				_unit globalChat (format ["%1 compromised: %2",_unit,(_unit getVariable ["INC_isCompromised",false])]);
 				_unit globalChat (format ["%1 trespassing: %2",_unit,((_unit getVariable ["INC_proxAlert",false]) || {(_unit getVariable ["INC_trespassAlert",false])})]);
 				_unit globalChat (format ["%1 suspicious level: %2",_unit,(_unit getVariable ["INC_suspiciousValue",false])]);
 				_unit globalChat (format ["%1 weirdo level: %2",_unit,(_unit getVariable ["INC_disguiseValue",1])]);
@@ -199,7 +199,7 @@ waitUntil {
 	//Pause while the unit is compromised
 	waitUntil {
 		sleep 1;
-		!(_unit getVariable ["INC_undercoverCompromised",false]);
+		!(_unit getVariable ["INC_isCompromised",false]);
 	};
 
 	//wait until the unit is acting all suspicious
@@ -230,7 +230,7 @@ waitUntil {
 	//While he's acting suspiciously
 	while {
 		sleep 1;
-		(((_unit getVariable ["INC_suspiciousValue",1]) >= 2) && {!(_unit getVariable ["INC_undercoverCompromised",false])}) //While not compromised and either armed or trespassing
+		(((_unit getVariable ["INC_suspiciousValue",1]) >= 2) && {!(_unit getVariable ["INC_isCompromised",false])}) //While not compromised and either armed or trespassing
 	} do {
 		if (
 			((_unit getVariable ["INC_suspiciousValue",1]) >= 3) &&
@@ -242,7 +242,7 @@ waitUntil {
 			//Once people know exactly where he is, who he is, and that he is both armed and trespassing, make him compromised
 			if ((_regAlerted != 0) || {(_asymAlerted != 0)}) exitWith {
 
-				[_unit] remoteExecCall ["INCON_fnc_undercoverCompromised",_unit];
+				[_unit] call INCON_fnc_compromisedLoop;
 			};
 		};
 	};

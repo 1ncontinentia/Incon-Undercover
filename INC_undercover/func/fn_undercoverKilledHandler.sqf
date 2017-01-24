@@ -62,7 +62,7 @@ if !(_barbaric) then {
 
 					_suspect = selectRandom _nearbyUndercoverUnits;
 
-					[_suspect] remoteExecCall ["INCON_fnc_undercoverCompromised",_suspect];
+					[_suspect] remoteExecCall ["INCON_fnc_compromisedLoop",_suspect];
 
 					[_suspect, 2000] remoteExec ["addRating", _suspect];
 				};
@@ -110,7 +110,7 @@ if (_barbaric) then {
 					_suspect = selectRandom _nearbyUndercoverUnits;
 
 					//makes enemies consider undercover units as a threat if they start to die and know about the underCoverUnit
-					[_suspect] remoteExecCall ["INCON_fnc_undercoverCompromised",_suspect];
+					[_suspect] remoteExecCall ["INCON_fnc_compromisedLoop",_suspect];
 
 				};
 
