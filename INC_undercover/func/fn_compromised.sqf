@@ -37,7 +37,7 @@ params ["_unit"];
 
 if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
-if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
+if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
 
 //Compromised loop
 [_unit,_debug] spawn {
@@ -46,7 +46,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 
 	private ["_activeVeh"];
 
-	_unit setVariable ["INC_compromisedLoopRunning", true];
+	_unit setVariable ["INC_compLoopActive", true];
 
 	// Publicize isCompromised variable to true. This prevents other scripts from setting captive while unit is still compromised.
 	_unit setVariable ["INC_isCompromised", true];
@@ -176,7 +176,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 
 		// Cooldown
-		[_unit] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];
+		[_unit] call INCON_fnc_cooldown;
 
 		private ["_disguiseValue","_newDisguiseValue"];
 
@@ -199,11 +199,11 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 
 		// Cooldown
-		[_unit] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];
+		[_unit] call INCON_fnc_cooldown;
 
 	};
 
 	//Allow the loop to run again
-	_unit setVariable ["INC_compromisedLoopRunning", false];
+	_unit setVariable ["INC_compLoopActive", false];
 
 };

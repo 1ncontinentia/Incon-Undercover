@@ -1,5 +1,5 @@
 /*
-undercoverCooldown
+cooldown
 
 Author: Incontinentia
 
@@ -75,7 +75,7 @@ _unit setVariable ["INC_cooldown", true];
 
 		waitUntil {
 			sleep 2;
-			(!(_unit getVariable ["INC_AnyKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
+			(!(_unit getVariable ["INC_anyKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
 		};
 
 		if !(_unit getVariable ["INC_isCompromised",false]) then {
@@ -91,7 +91,7 @@ _unit setVariable ["INC_cooldown", true];
 
 		waitUntil {
 			sleep 10;
-			(!(_unit getVariable ["INC_AsymKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
+			(!(_unit getVariable ["INC_asymKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
 		};
 
 	//Otherwise, only INC_regEnySide knows about the unit so wait until they no longer do.
@@ -99,13 +99,13 @@ _unit setVariable ["INC_cooldown", true];
 
 		waitUntil {
 			sleep 10;
-			(!(_unit getVariable ["INC_RegKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
+			(!(_unit getVariable ["INC_regKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
 		};
 
 		//Percentage chance that unit will become compromised anyway
 		if ((45 > (random 100)) && {((INC_regEnySide knowsAbout _unit) > 3)}) then {
 
-			[_unit] call INCON_fnc_compromisedLoop;
+			[_unit] call INCON_fnc_compromised;
 		};
 	};
 

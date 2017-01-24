@@ -16,7 +16,7 @@ waitUntil {!(isNull player)};
 //Can only be run once per unit.
 if ((_unit getVariable ["INC_undercoverHandlerRunning",false]) || {(!local _unit)}) exitWith {};
 
-_unit setVariable ["INC_compromisedLoopRunning", false];
+_unit setVariable ["INC_compLoopActive", false];
 _unit setVariable ["INC_isCompromised", false];
 _unit setVariable ["INC_suspicious", false];
 _unit setVariable ["INC_cooldown", false];
@@ -131,7 +131,7 @@ if (isPlayer _unit) then {
 	        params ["_unit"];
 			_unit setVariable ["INC_undercoverHandlerRunning", false];
 			_unit setVariable ["INC_undercoverLoopsActive", false];
-			_unit setVariable ["INC_compromisedLoopRunning", false];
+			_unit setVariable ["INC_compLoopActive", false];
 			_unit setVariable ["INC_isCompromised", false];
 			_unit setVariable ["INC_suspicious", false];
 			_unit setVariable ["INC_cooldown", false];
@@ -225,7 +225,7 @@ waitUntil {
 	_unit setVariable ["INC_suspicious", true]; //Hold the cooldown script until the unit is no longer doing suspicious things
 	[_unit, false] remoteExec ["setCaptive", _unit]; //Makes enemies hostile to the unit
 
-	[_unit] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit]; //Gets the cooldown script going
+	[_unit] call INCON_fnc_cooldown; //Gets the cooldown script going
 
 	//While he's acting suspiciously
 	while {
@@ -242,7 +242,7 @@ waitUntil {
 			//Once people know exactly where he is, who he is, and that he is both armed and trespassing, make him compromised
 			if ((_regAlerted != 0) || {(_asymAlerted != 0)}) exitWith {
 
-				[_unit] call INCON_fnc_compromisedLoop;
+				[_unit] call INCON_fnc_compromised;
 			};
 		};
 	};

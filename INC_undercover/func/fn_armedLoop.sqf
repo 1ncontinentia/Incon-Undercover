@@ -72,7 +72,7 @@ if (!local _unit) exitWith {};
 
 							//If either side has seen the unit, make him compromised
 							if ((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) then {
-								[_unit] call INCON_fnc_compromisedLoop;
+								[_unit] call INCON_fnc_compromised;
 							};
 						};
 
@@ -274,7 +274,7 @@ if (!local _unit) exitWith {};
 
 								if (((((speed _unit) + 4) / 1.6) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 									_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-									[_unit] call INCON_fnc_compromisedLoop;
+									[_unit] call INCON_fnc_compromised;
 									true
 								};
 

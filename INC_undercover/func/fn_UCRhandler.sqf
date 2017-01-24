@@ -146,9 +146,7 @@ if (isPlayer _unit) then {
 	};
 };
 
-
-[_unit] call INCON_fnc_armedLoop; 
-
+[_unit] call INCON_fnc_armedLoop;
 
 //Detection Stuff
 //=======================================================================//
@@ -169,9 +167,9 @@ if (isPlayer _unit) then {
 		if (_alertedRegKnows || {_alertedAsymKnows}) then {_anyAlerted = true};
 
 		//Publicise variables on undercover unit for undercover handler, killed handler & cooldown.
-		_unit setVariable ["INC_RegKnowsSO", _alertedRegKnows, true];
-		_unit setVariable ["INC_AsymKnowsSO", _alertedAsymKnows, true];
-		_unit setVariable ["INC_AnyKnowsSO", _anyAlerted, true];
+		_unit setVariable ["INC_regKnowsSO", _alertedRegKnows, true];
+		_unit setVariable ["INC_asymKnowsSO", _alertedAsymKnows, true];
+		_unit setVariable ["INC_anyKnowsSO", _anyAlerted, true];
 
 		(!(_unit getVariable ["isUndercover",false]) || !(alive _unit))
 	};
@@ -185,7 +183,7 @@ _unit addEventHandler["FiredMan", {
 	if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 		//If anybody is aware of the unit and the unit isn't incognito, then compromise him
-		if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
+		if (_unit getVariable ["INC_anyKnowsSO",false]) then {
 
 			//Do nothing unless they know where the dude is
 			_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
@@ -194,7 +192,7 @@ _unit addEventHandler["FiredMan", {
 			//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
 			if ((_regAlerted != 0) || {_asymAlerted != 0}) exitWith {
 
-				[_unit] call INCON_fnc_compromisedLoop;
+				[_unit] call INCON_fnc_compromised;
 			};
 		};
 
@@ -212,8 +210,8 @@ _unit addEventHandler["FiredMan", {
 	};
 }];
 
+//Shot at nearby EventHandler
 if (isPlayer _unit) then {
-	//Shot at nearby EventHandler
 	_unit addEventHandler["FiredNear", {
 		params["_unit"];
 
@@ -237,12 +235,12 @@ if (isPlayer _unit) then {
 	}];
 };
 
-if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_environmentMultiLoopActive",false])}) then {
+if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_envLoopActive",false])}) then {
 	[_unit] spawn {
 		params ["_unit"];
 		private ["_daylightMulti","_jumpinessMulti"];
 
-		missionNamespace setVariable ["INC_environmentMultiLoopActive",true,true];
+		missionNamespace setVariable ["INC_envLoopActive",true,true];
 
 		waitUntil {
 
@@ -264,7 +262,7 @@ if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_environmentMultiLo
 
 			(!local _unit)
 		};
-		missionNamespace setVariable ["INC_environmentMultiLoopActive",false,true];
+		missionNamespace setVariable ["INC_envLoopActive",false,true];
 	};
 };
 
