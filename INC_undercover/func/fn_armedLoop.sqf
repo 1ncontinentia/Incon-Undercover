@@ -2,12 +2,8 @@
 Checks for:
 Suspicious behaviour
 Weird behaviour
-Nearby enemies who could blow the unit's cover
 
-Creates:
-Loops for all checks
-Environmental loop
-Eventhandlers that auto compromise the unit if seen shooting
+Sets variables accordingly
 */
 
 
@@ -85,8 +81,8 @@ if (!local _unit) exitWith {};
 
 			sleep _responseTime;
 
-			_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_ucrMain)];
-			_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_ucrMain)];
+			_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_gearHandler)];
+			_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_gearHandler)];
 
 			sleep _responseTime;
 
@@ -316,8 +312,8 @@ if (!local _unit) exitWith {};
 				_unit setVariable ["INC_canGoLoud",false];
 			} else {
 				_unit setVariable ["INC_goneIncognito",false];
-				_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_ucrMain)];
-				_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_ucrMain)];
+				_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_gearHandler)];
+				_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_gearHandler)];
 			};
 
 			//Penalise people for being oddballs by increasing the spotting radius - wearing wrong uniform / hmd

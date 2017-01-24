@@ -63,17 +63,17 @@ switch (_operation) do {
         ]] remoteExec ["addAction", 0,true];
 
         if (30 > (random 100)) then {
-        	[_unit,"addBackpack"] call INCON_fnc_ucrMain;
+        	[_unit,"addBackpack"] call INCON_fnc_gearHandler;
         };
 
         if (_armedCivPercentage > (random 100)) then {
 
-        	[_unit,"addWeapon"] call INCON_fnc_ucrMain;
+        	[_unit,"addWeapon"] call INCON_fnc_gearHandler;
         };
 
         if (50 > (random 100)) then {
-        	[_unit,"addItems"] call INCON_fnc_ucrMain;
-        };    
+        	[_unit,"addItems"] call INCON_fnc_gearHandler;
+        };
     };
 
     case "recruitAttempt": {

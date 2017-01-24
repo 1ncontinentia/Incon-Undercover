@@ -10,10 +10,11 @@ class INC_undercover
 		class compromised {description = "Sets the unit as compromised while it is know to enemy units and is doing something naughty.";};
 		class cooldown {description = "Initiates a cooldown after the unit has done something naughty";};
 		class countAlerted {description = "Counts units of the defined side who have been alerted to a unit.";};
+		class gearHandler {description = "Contains functions for gear checks and actions."};
 		class getAlerted {description = "Returns the number of given side who know about the unit";};
-		class getConfigInfo {description = "Gets a faction's gear.";};
-		class recruitHandler {description = "Handles all civilian recruitment";};
-		class ucrMain {description = "Contains functions for arming recruitable civilians."};
+		class getConfigInfo {description = "Gets config information on a given faction / unit.";};
+		class recruitHandler {description = "Handles all civilian recruitment.";};
+		class ucrMain {description = "Contains primary UCR functions."};
 		class UCRhandler {description = "Gets detection scripts running on unit.";};
 	};
 };
