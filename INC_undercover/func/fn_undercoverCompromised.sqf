@@ -69,7 +69,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 
 		private ["_unitUniform","_unitGoggles","_unitHeadgear","_compUniform","_compHeadGear","_compVeh"];
 
-		if (_debug) then {hint "Your description has been shared."};
+		if ((_debug) && {isPlayer _unit}) then {hint "Your description has been shared."};
 
 		if (!isNull objectParent _unit) then {
 			_activeVeh = (vehicle _unit);
@@ -149,7 +149,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 
 				private ["_disguiseValue","_newDisguiseValue"];
 
-				if (_debug) then {hint "Disguise changed."};
+				if ((_debug) && {isPlayer _unit}) then {hint "Disguise changed."};
 
 				_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
 
@@ -173,7 +173,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 		// Publicize undercoverCompromised to false.
 		_unit setVariable ["INC_undercoverCompromised", false];
 
-		if (_debug) then {hint "Disguise intact."};
+		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 
 		// Cooldown
 		[_unit] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];
@@ -196,7 +196,7 @@ if (_unit getVariable ["INC_compromisedLoopRunning",false]) exitWith {}; //Stops
 		// Publicize undercoverCompromised to false.
 		_unit setVariable ["INC_undercoverCompromised", false];
 
-		if (_debug) then {hint "Disguise intact."};
+		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 
 		// Cooldown
 		[_unit] remoteExecCall ["INCON_fnc_undercoverCooldown",_unit];

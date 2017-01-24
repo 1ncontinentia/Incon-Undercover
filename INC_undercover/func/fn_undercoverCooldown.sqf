@@ -56,7 +56,7 @@ _unit setVariable ["INC_cooldown", true];
 		_asymKnowsAboutUnit = false;
 	};
 
-	if (_debug) then {hint "Cooldown active."};
+	if ((isPlayer _unit) && (_debug)) then {hint "Cooldown active."};
 
 	//SetsCaptive back to true if nobody has seen him, unless he is already compromised
 	if !((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) exitWith {

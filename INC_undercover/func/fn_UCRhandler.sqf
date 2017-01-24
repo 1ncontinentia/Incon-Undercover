@@ -374,7 +374,7 @@ if (isPlayer _unit) then {
 
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
 
-			!(isNull objectParent _unit)
+			(!(isNull objectParent _unit) || {!alive _unit})
 		};
 
 		sleep _responseTime;
@@ -512,7 +512,7 @@ if (isPlayer _unit) then {
 
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
 
-			(isNull objectParent _unit)
+			((isNull objectParent _unit) || {!alive _unit})
 		};
 
 		(!(_unit getVariable ["isUndercover",false]) || {!(alive _unit)} || {!local _unit})
