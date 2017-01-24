@@ -12,8 +12,7 @@ class INC_undercover
 		class countAlerted {description = "Counts units of the defined side who have been alerted to a unit.";};
 		class getAlerted {description = "Returns the number of given side who know about the unit";};
 		class getConfigInfo {description = "Gets a faction's gear.";};
-		class recruitAttempt {description = "Attempt to recruit - requires ALiVE.";};
-		class recruitCiv {description = "Allows civilians to be recruited. Also gives them either a rifle or pistol.";};
+		class recruitHandler {description = "Handles all civilian recruitment";};
 		class ucrMain {description = "Contains functions for arming recruitable civilians."};
 		class UCRhandler {description = "Gets detection scripts running on unit.";};
 	};
