@@ -303,7 +303,7 @@ if (isPlayer _unit) then {
 			};
 
 			//Proximity alert scenario
-			if (_unit getVariable ["INC_proxAlert",false]) then {
+			if ((_unit getVariable ["INC_proxAlert",false]) && {!(_unit getVariable ["INC_undercoverCompromised",false])}) then {
 
 				private ["_nearMines","_suspiciousEnemy"];
 
