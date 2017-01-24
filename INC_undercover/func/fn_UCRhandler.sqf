@@ -173,12 +173,46 @@ if (isPlayer _unit) then {
 
 			_weirdoLevel = 1; //Multiplier of radius for units near the player
 
-			//Incognito check
+			//Incognito check - change to incognito if unit is wearing enemy uniform, but also compromise him if enemy sees him doing so
 			if (uniform _unit in INC_incognitoUniforms) then {
-				_unit setVariable ["INC_goneIncognito",true];
+				switch (_unit getVariable ["INC_goneIncognito",false]) do {
+					case false: {
+						private ["_regAlerted","_regKnowsAboutUnit","_asymAlerted","_asymKnowsAboutUnit"];
+
+						if !(_unit getVariable ["INC_isCompromised",false]) then
+
+
+							//Checks if INC_regEnySide has seen him recently and sets variables accordingly
+							_regAlerted = [INC_regEnySide,_unit,20] call INCON_fnc_countAlerted;
+							if (_regAlerted != 0) then {
+								_regKnowsAboutUnit = true;
+							} else {
+								_regKnowsAboutUnit = false;
+							};
+
+
+							//Checks if INC_asymEnySide has seen him recently
+							_asymAlerted = [INC_asymEnySide,_unit,20] call INCON_fnc_countAlerted;
+							if (_asymAlerted != 0) then {
+								_asymKnowsAboutUnit = true;
+							} else {
+								_asymKnowsAboutUnit = false;
+							};
+
+							//If either side has seen the unit, make him compromised
+							if ((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) then {
+								[_unit] call INCON_fnc_compromisedLoop;
+							};
+						};
+
+						_unit setVariable ["INC_goneIncognito",true];
+					};
+				};
 			} else {
 				_unit setVariable ["INC_goneIncognito",false];
 			};
+
+			sleep _responseTime;
 
 			_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_ucrMain)];
 			_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_ucrMain)];
@@ -191,8 +225,6 @@ if (isPlayer _unit) then {
 				switch (_unit getVariable ["INC_goneIncognito",false]) do {
 
 					case true: {
-
-						_weirdoLevel = 0.8; //Multiplier of radius for units near the player
 
 						if !(backpack _unit in INC_incognitoBackpacks) then {
 							_weirdoLevel = _weirdoLevel + 0.5;
@@ -225,6 +257,7 @@ if (isPlayer _unit) then {
 					};
 				};
 
+				//Running and jumping are seen as weird unless there has been shooting near the unit
 				if !(_unit getVariable ["INC_shotNear",false]) then {
 
 			        switch !(stance _unit == "STAND") do {
@@ -254,6 +287,7 @@ if (isPlayer _unit) then {
 					};
 				};
 
+				//If the unit has shot his weapon recently...
 				if (_unit getVariable ["INC_firedRecent",false]) then {
 					_weirdoLevel = _weirdoLevel + 2;
 				};
@@ -303,7 +337,7 @@ if (isPlayer _unit) then {
 			};
 
 			//Proximity alert scenario
-			if ((_unit getVariable ["INC_proxAlert",false]) && {!(_unit getVariable ["INC_undercoverCompromised",false])}) then {
+			if ((_unit getVariable ["INC_proxAlert",false]) && {!(_unit getVariable ["INC_isCompromised",false])}) then {
 
 				private ["_nearMines","_suspiciousEnemy"];
 
@@ -316,57 +350,70 @@ if (isPlayer _unit) then {
 					{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
 					{(_x knowsAbout _unit) > 3.5} &&
 					{alive _x} &&
-					{(6 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
+					{((6 * missionNamespace getVariable ["INC_envJumpygMulti",1]) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
 				});
 
 				if (!isNil "_suspiciousEnemy") then {
 
-					[_unit,_suspiciousEnemy] spawn {
-						params ["_unit","_suspiciousEnemy"];
+					if !(_suspiciousEnemy getVariable ["INC_isSuspicious",false]) then {
 
-						_suspiciousEnemy doWatch _unit;
+						[_unit,_suspiciousEnemy] spawn {
+							params ["_unit","_suspiciousEnemy"];
 
-						sleep (random 15);
-
-						if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {};
-
-						if (45 > (random 100)) then {
-							private ["_comment"];
-							switch (_unit getVariable ["INC_goneIncognito",false]) do {
-								case true: {
-									_comment = selectRandom ["Who the fuck are you?","I don't recognise you.","I don't like the look of you.","You look strange.","What are you doing?","I'd like to know which unit you're from.","Who are you with?","You're not supposed to be here.","You're not with us are you?"];
-								};
-								case false: {
-									_comment = selectRandom ["I recognise you from somewhere.","You hiding something?","Stop right there, let me get a good look at you.","Stop. Don't move.","Stay right there."];
-								};
-							};
-							[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
-						};
-
-						_suspiciousEnemy doWatch _unit;
-
-						sleep (random 25);
-
-						if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {};
-
-						waitUntil {
-
-							_suspiciousEnemy doMove ([(getPosWorld _unit),10] call CBA_fnc_Randpos);
-
-							sleep (random 15);
+							_suspiciousEnemy setVariable ["INC_isSuspicious",true];
 
 							_suspiciousEnemy doWatch _unit;
 
-							_suspiciousEnemy doTarget _unit;
+							sleep (random 15);
 
-							if (((((speed _unit) + 4) / 1.6) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
-								[_unit,INC_regEnySide,INC_asymEnySide] remoteExecCall ["INCON_fnc_undercoverCompromised",_unit];
-								true
+							if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+								_suspiciousEnemy setVariable ["INC_isSuspicious",false];
 							};
 
-							if !((70 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {true};
+							if (45 > (random 100)) then {
+								private ["_comment"];
+								switch (_unit getVariable ["INC_goneIncognito",false]) do {
+									case true: {
+										_comment = selectRandom ["Who the fuck are you?","I don't recognise you.","I don't like the look of you.","You look strange.","What are you doing?","I'd like to know which unit you're from.","Who are you with?","You're not supposed to be here.","You're not with us are you?"];
+									};
+									case false: {
+										_comment = selectRandom ["I recognise you from somewhere.","You hiding something?","Stop right there, let me get a good look at you.","Stop. Don't move.","Stay right there."];
+									};
+								};
+								[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
+							};
 
-							(!((_suspiciousEnemy getHideFrom _unit) distanceSqr _unit < 30) || {!alive _suspiciousEnemy} || {!captive _unit})
+							_suspiciousEnemy doWatch _unit;
+
+							sleep (random 25);
+
+							if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+								_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+							};
+
+							waitUntil {
+
+								_suspiciousEnemy doMove ([(getPosWorld _unit),10] call CBA_fnc_Randpos);
+
+								sleep (random 15);
+
+								_suspiciousEnemy doWatch _unit;
+
+								_suspiciousEnemy doTarget _unit;
+
+								if (((((speed _unit) + 4) / 1.6) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+									_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+									[_unit] call INCON_fnc_compromisedLoop;
+									true
+								};
+
+								if !((70 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+									_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+									true
+								};
+
+								(!((_suspiciousEnemy getHideFrom _unit) distanceSqr _unit < 30) || {!alive _suspiciousEnemy} || {!captive _unit})
+							};
 						};
 					};
 				};
@@ -554,7 +601,7 @@ _unit addEventHandler["FiredMan", {
 	params["_unit"];
 
 	//If he's compromised, do nothing
-	if !(_unit getVariable ["INC_undercoverCompromised",false]) then {
+	if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 		//If anybody is aware of the unit and the unit isn't incognito, then compromise him
 		if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
@@ -566,7 +613,7 @@ _unit addEventHandler["FiredMan", {
 			//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
 			if ((_regAlerted != 0) || {_asymAlerted != 0}) exitWith {
 
-				[_unit] call INCON_fnc_undercoverCompromised;
+				[_unit] call INCON_fnc_compromisedLoop;
 			};
 		};
 
@@ -577,7 +624,7 @@ _unit addEventHandler["FiredMan", {
 
 			[_unit] spawn {
 				params ["_unit"];
-				sleep (30 + (random 30));
+				sleep (15 + (random 5));
 				_unit setVariable ["INC_firedRecent",false];
 			};
 		};
@@ -612,7 +659,7 @@ if (isPlayer _unit) then {
 if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_environmentMultiLoopActive",false])}) then {
 	[_unit] spawn {
 		params ["_unit"];
-		private ["_daylightMulti"];
+		private ["_daylightMulti","_jumpinessMulti"];
 
 		missionNamespace setVariable ["INC_environmentMultiLoopActive",true,true];
 
@@ -620,13 +667,17 @@ if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_environmentMultiLo
 
 			if ((daytime > INC_firstLight) && {daytime < INC_lastLight}) then {
 				_daylightMulti = 1;
+				_jumpinessMulti = 1;
 				missionNamespace setVariable ["INC_isDaytime",true,true];
 			} else {
 				_daylightMulti = (0.5 + (((moonIntensity - (overcast))/4)));
+				_jumpinessMulti = 2;
 				missionNamespace setVariable ["INC_isDaytime",false,true];
 			};
 
 			missionNamespace setVariable ["INC_envDisgMulti",(_daylightMulti - (fog/5))];
+
+			missionNamespace setVariable ["INC_envJumpygMulti",_jumpinessMulti];
 
 			sleep 15;
 
