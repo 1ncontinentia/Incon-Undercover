@@ -136,7 +136,7 @@ if (isPlayer _unit) then {
 			_unit setVariable ["INC_suspicious", false];
 			_unit setVariable ["INC_cooldown", false];
 			sleep 1;
-			[[_unit], "INC_undercover\initUCR.sqf"] remoteExec ["execVM",_unit];
+			[[_unit], "INC_undercover\Scripts\initUCR.sqf"] remoteExec ["execVM",_unit];
 		};
 	}];
 
@@ -172,7 +172,7 @@ if (isPlayer _unit) then {
 			{
 				if !(_x getVariable ["isSneaky",false]) then {
 					sleep 0.2;
-					[_x] execVM "INC_undercover\initUCR.sqf";
+					[_x] execVM "INC_undercover\Scripts\initUCR.sqf";
 					sleep 0.2;
 					_x setVariable ["noChanges",true,true];
 					_x setVariable ["isUndercover", true, true];
