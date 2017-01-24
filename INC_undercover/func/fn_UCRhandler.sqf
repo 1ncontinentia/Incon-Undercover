@@ -32,15 +32,15 @@ if (isPlayer _unit) then {
 
 //Proximity / Trespass Stuff - sets variables to be picked up by armed/suspicious loop
 //=======================================================================//
-[_unit,_regDetectRadius,_asymDetectRadius] spawn {
-	params [["_unit",player],["_regDetectRadius",15],["_asymDetectRadius",25],["_radius3",60],["_radius4",200]];
+[_unit,_fullAIfunctionality,_regDetectRadius,_asymDetectRadius] spawn {
+	params [["_unit",player],"_fullAIfunctionality",["_regDetectRadius",15],["_asymDetectRadius",25],["_radius3",60],["_radius4",200]];
 
 	private ["_nearReg","_nearAsym","_nearHVT","_nearSuperHVT","_nearMines"];
 
 	waitUntil {
 
 		//Proximity check for players (doesn't run if the unit is compromised)
-		if (isPlayer _unit) then {
+		if((isPlayer _unit) || {_fullAIfunctionality}) then {
 
 			private ["_disguiseValue"];
 
@@ -211,7 +211,7 @@ _unit addEventHandler["FiredMan", {
 }];
 
 //Shot at nearby EventHandler
-if (isPlayer _unit) then {
+if((isPlayer _unit) || {_fullAIfunctionality}) then {
 	_unit addEventHandler["FiredNear", {
 		params["_unit"];
 

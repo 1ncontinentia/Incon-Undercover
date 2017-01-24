@@ -16,9 +16,9 @@ if (!local _unit) exitWith {};
 
 //Armed / Incognito Stuff
 //=======================================================================//
-[_unit,_HMDallowed,_noOffRoad,_debug,_hints,_regDetectRadius,_asymDetectRadius] spawn {
+[_unit,_HMDallowed,_noOffRoad,_debug,_hints,_regDetectRadius,_asymDetectRadius,_fullAIfunctionality] spawn {
 
-	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius"];
+	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius","_fullAIfunctionality"];
 
 	private _responseTime = 0.3;
 
@@ -46,7 +46,7 @@ if (!local _unit) exitWith {};
 					case false: {
 						private ["_regAlerted","_regKnowsAboutUnit","_asymAlerted","_asymKnowsAboutUnit"];
 
-						if !(_unit getVariable ["INC_isCompromised",false]) then
+						if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 
 							//Checks if INC_regEnySide has seen him recently and sets variables accordingly
@@ -87,7 +87,7 @@ if (!local _unit) exitWith {};
 			sleep _responseTime;
 
 			//Penalise people for being oddballs
-			if (isPlayer _unit) then {
+			if ((isPlayer _unit) || {_fullAIfunctionality}) then {
 
 				switch (_unit getVariable ["INC_goneIncognito",false]) do {
 
@@ -217,7 +217,7 @@ if (!local _unit) exitWith {};
 					{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
 					{(_x knowsAbout _unit) > 3.5} &&
 					{alive _x} &&
-					{((6 * missionNamespace getVariable ["INC_envJumpygMulti",1]) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
+					{((6 * (missionNamespace getVariable ["INC_envJumpygMulti",1])) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
 				});
 
 				if (!isNil "_suspiciousEnemy") then {
@@ -317,7 +317,7 @@ if (!local _unit) exitWith {};
 			};
 
 			//Penalise people for being oddballs by increasing the spotting radius - wearing wrong uniform / hmd
-			if (isPlayer _unit) then {
+			if ((isPlayer _unit) || {_fullAIfunctionality}) then {
 
 				if !(_unit getVariable ["INC_goneIncognito",false]) then {
 

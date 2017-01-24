@@ -91,3 +91,4 @@ _persistentGroup = true;        //Persist AI in player group between ALiVE persi
 
 _debug = false; //Set to true for debug hints
 _hints = true;  //Hints show changes of state etc
+_fullAIfunctionality = true; //Enable all checks on AI (may degrade performace slightly for large groups)

@@ -74,13 +74,13 @@ if (isNil "INC_asymEnySide") then {
 	missionNamespace setVariable ["INC_civilianUniforms",_civilianUniforms,true];
 	missionNamespace setVariable ["INC_civilianHeadgear",_civilianHeadgear,true];
 	missionNamespace setVariable ["INC_civilianBackpacks",_civilianBackpacks,true];
+	missionNamespace setVariable ["INC_civilianVehicleArray",_civilianVehicleArray,true];
 	missionNamespace setVariable ["INC_incognitoVests",_incognitoVests,true];
 	missionNamespace setVariable ["INC_incognitoUniforms",(_incognitoUniforms - [""]),true];
-	missionNamespace setVariable ["INC_incognitoWpns",_incognitoWpns,true];
-	missionNamespace setVariable ["INC_incognitoBackpacks",_incognitoBackpacks,true];
 	missionNamespace setVariable ["INC_incognitoHeadgear",_incognitoHeadgear,true];
+	missionNamespace setVariable ["INC_incognitoBackpacks",_incognitoBackpacks,true];
 	missionNamespace setVariable ["INC_incognitoVehArray",_incognitoVehArray,true];
-	missionNamespace setVariable ["INC_civilianVehicleArray",_civilianVehicleArray,true];
+	missionNamespace setVariable ["INC_incognitoWpns",_incognitoWpns,true];
 	missionNamespace setVariable ["INC_regEnySide",_regEnySide,true];
 	missionNamespace setVariable ["INC_asymEnySide",_asymEnySide,true];
 	missionNamespace setVariable ["INC_civilianRecruitEnabled",_civRecruitEnabled,true];
