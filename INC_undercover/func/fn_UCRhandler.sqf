@@ -254,7 +254,7 @@ if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_envLoopActive",fal
 				missionNamespace setVariable ["INC_isDaytime",false,true];
 			};
 
-			missionNamespace setVariable ["INC_envDisgMulti",(_daylightMulti - (fog/5))];
+			missionNamespace setVariable ["INC_envDisgMulti",(_daylightMulti - (fog/5) - (rain/4))];
 
 			missionNamespace setVariable ["INC_envJumpygMulti",_jumpinessMulti];
 
