@@ -85,6 +85,20 @@ switch (_operation) do {
 
 		if (!isPlayer _unit) then {
 			[[_unit,false],"SwitchUniformAction"] call INCON_fnc_ucrMain;
+
+			[_unit, [
+
+				"<t color='#F70707'>GROUP GO LOUD</t>", {
+					params ["_unit"];
+
+					{if ((_x getVariable ['INC_canGoLoud',false]) && {!isPlayer _x}) then {
+						[[_x],"unConcealWeapon"] call INCON_fnc_gearHandler;
+						(_x) setCombatMode "YELLOW";
+					};} forEach (units _unit);
+
+				},[],4,false,true,"","(_this == _target)"
+
+			]] remoteExec ["addAction", _groupLead];
 		} else {
 
 			_unit addEventHandler ["InventoryClosed", {
@@ -92,7 +106,7 @@ switch (_operation) do {
 				if ([[_unit,false],"switchUniforms"] call INCON_fnc_gearHandler) then {
 					[[_unit,true,4],"SwitchUniformAction"] call INCON_fnc_ucrMain;
 				};
-			}]
+			}];
 		};
 
 		if ((_dismiss) || {!(_unit getVariable ["INC_notDismissable",false])}) then {
