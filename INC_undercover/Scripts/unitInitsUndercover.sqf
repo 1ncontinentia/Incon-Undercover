@@ -4,10 +4,10 @@ params ["_unit"];
 
 switch (side _unit) do {
 	case INC_regEnySide: {
-		[_unit,_regBarbaric,_undercoverUnitSide] call INCON_fnc_undercoverKilledHandler;
+		[_unit,_regBarbaric,_undercoverUnitSide] call INCON_fnc_addEH;
 	};
 	case INC_asymEnySide: {
-		[_unit,_asymBarbaric,_undercoverUnitSide] call INCON_fnc_undercoverKilledHandler;
+		[_unit,_asymBarbaric,_undercoverUnitSide] call INCON_fnc_addEH;
 	};
 };
 

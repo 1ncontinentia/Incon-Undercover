@@ -529,7 +529,7 @@ switch (_operation) do {
 
 			sleep 0.1;
 
-			_unitType =  (selectRandom (["units",[(faction _groupLead)]] call INCON_fnc_getFactionGear));
+			_unitType =  (selectRandom (["units",[(faction _groupLead)]] call INCON_fnc_getConfigInfo));
 
 			sleep 0.2;
 

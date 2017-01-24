@@ -158,9 +158,9 @@ if (isPlayer _unit) then {
 
 		sleep 4;
 
-		private _alertedRegKnows = ([_unit, INC_regEnySide] call INCON_fnc_undercoverGetAlerted);
+		private _alertedRegKnows = ([_unit, INC_regEnySide] call INCON_fnc_getAlerted);
 
-		private _alertedAsymKnows = ([_unit, INC_asymEnySide] call INCON_fnc_undercoverGetAlerted);
+		private _alertedAsymKnows = ([_unit, INC_asymEnySide] call INCON_fnc_getAlerted);
 
 		private _anyAlerted = false;
 

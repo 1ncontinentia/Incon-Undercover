@@ -41,13 +41,13 @@ if (isNil "INC_asymEnySide") then {
 	_civilianHeadgear append [""];
 	_civilianBackpacks append [""];
 
-	_civilianVests append (["vests",_civilianFactionVests] call INCON_fnc_getFactionGear);
-	_civilianUniforms append (["uniforms",_civilianFactionUniforms] call INCON_fnc_getFactionGear);
+	_civilianVests append (["vests",_civilianFactionVests] call INCON_fnc_getConfigInfo);
+	_civilianUniforms append (["uniforms",_civilianFactionUniforms] call INCON_fnc_getConfigInfo);
 
 	sleep 0.5;
 
-	_civilianHeadgear append (["headgear",_civilianFactionHeadgear] call INCON_fnc_getFactionGear);
-	_civilianHeadgear append (["possibleHeadgear",_civilianFactionHeadgear] call INCON_fnc_getFactionGear);
+	_civilianHeadgear append (["headgear",_civilianFactionHeadgear] call INCON_fnc_getConfigInfo);
+	_civilianHeadgear append (["possibleHeadgear",_civilianFactionHeadgear] call INCON_fnc_getConfigInfo);
 	_civilianBackpacks append _civPackArray;
 
 	sleep 0.5;
@@ -58,15 +58,15 @@ if (isNil "INC_asymEnySide") then {
 	_incognitoBackpacks = [""];
 	_incognitoWpns = [""];
 
-	_incognitoVests append (["vests",_incognitoFactions] call INCON_fnc_getFactionGear);
-	_incognitoUniforms append (["uniforms",_incognitoFactions] call INCON_fnc_getFactionGear);
-	_incognitoWpns append (["weapons",_incognitoFactions] call INCON_fnc_getFactionGear);
+	_incognitoVests append (["vests",_incognitoFactions] call INCON_fnc_getConfigInfo);
+	_incognitoUniforms append (["uniforms",_incognitoFactions] call INCON_fnc_getConfigInfo);
+	_incognitoWpns append (["weapons",_incognitoFactions] call INCON_fnc_getConfigInfo);
 
 	sleep 0.5;
 
-	_incognitoHeadgear append (["headgear",_incognitoFactions] call INCON_fnc_getFactionGear);
-	_incognitoHeadgear append (["possibleHeadgear",_incognitoFactions] call INCON_fnc_getFactionGear);
-	_incognitoBackpacks append (["backpacks",_incognitoFactions] call INCON_fnc_getFactionGear);
+	_incognitoHeadgear append (["headgear",_incognitoFactions] call INCON_fnc_getConfigInfo);
+	_incognitoHeadgear append (["possibleHeadgear",_incognitoFactions] call INCON_fnc_getConfigInfo);
+	_incognitoBackpacks append (["backpacks",_incognitoFactions] call INCON_fnc_getConfigInfo);
 
 	sleep 0.5;
 
