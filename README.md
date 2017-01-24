@@ -15,7 +15,7 @@ SP / Coop and Dedi compatible.
 * Works on players and their AI subordinates
 * Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover
 * Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, whether it is day or night, with each situation requiring players to behave appropriately
-* Suspicious enemies may challenge units or watch and follow them if they act strange; keep doing weird stuff and they will compromise you
+* Suspicious enemies may challenge units or watch and follow them if they act strange; the more weird stuff you do, the more likely they are to see through your disguise
 * Once undercover units become compromised, enemies will remember the vehicles they are spotted in and clothes they are wearing
 * Change your clothing (both uniform and either headgear or goggles) and if no enemies sees you doing it, your new disguise may stick
 * Easily switch disguises: take enemy uniforms from crates, vehicles, dead bodies and the ground (and order AI subordinates to do the same)
