@@ -375,7 +375,7 @@ switch (_operation) do {
 
 	case "switchUniforms": {
 
-		_input params ["_unit",["_switchUniform",true],["_attempt",1],["_autoReAttempt",true]];
+		_input params ["_unit",["_switchUniform",true],["_attempt",1],["_autoReAttempt",true],["_radius",5]];
 
 		private ["_activeContainer","_newUnif","_origUnif","_newUnifItems","_droppedUniform","_containerArray","_isMan"];
 
@@ -383,16 +383,16 @@ switch (_operation) do {
 
 		_containerArray = [];
 
-		if (_attempt <= 1) then {_containerArray = (nearestObjects [_unit, ["GroundWeaponHolder"],5])};
+		if (_attempt <= 1) then {_containerArray = (nearestObjects [_unit, ["GroundWeaponHolder"],_radius])};
 
-		if ((count _containerArray == 0) && {_attempt <= 2}) then {_attempt = 2; _containerArray = (_unit nearEntities [["LandVehicle","Ship","Air"],5])};
+		if ((count _containerArray == 0) && {_attempt <= 2}) then {_attempt = 2; _containerArray = (_unit nearEntities [["LandVehicle","Ship","Air"],_radius])};
 
-		if ((count _containerArray == 0) && {_attempt <= 3}) then {_attempt = 3; _containerArray =  (nearestObjects [_unit, ["ReammoBox_F"],5])};
+		if ((count _containerArray == 0) && {_attempt <= 3}) then {_attempt = 3; _containerArray =  (nearestObjects [_unit, ["ReammoBox_F"],_radius])};
 
 		if ((count _containerArray == 0) && {_attempt <= 4}) then {
 			_attempt = 4;
 			_isMan = true;
-			_containerArray = (nearestObjects [_unit, ["Man"],5]) select {
+			_containerArray = (nearestObjects [_unit, ["Man"],_radius]) select {
 				(!alive _x)
 			};
 

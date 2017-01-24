@@ -189,11 +189,11 @@ switch (_operation) do {
 
 				private ["_success"];
 
-				_success = [[_unit,true],"switchUniforms"] call INCON_fnc_gearHandler;
+				_success = [[_unit,true,1,true,7],"switchUniforms"] call INCON_fnc_gearHandler;
 
 				if (_success) then {
 					if (!isPlayer _unit) then {
-						private _comment = selectRandom ["Ah, yes.","Got something","This'll do","Found some new clothes.","Does my bum look big in this?","Fits nicely.","It's almost as if we're all the same dimensions.","Fits like a glove.","Beautiful.","I look like an idiot."];
+						private _comment = selectRandom ["Found one.","Got something","This'll do","Found some new clothes.","Does my bum look big in this?","Fits nicely.","It's almost as if we're all the same dimensions.","Fits like a glove.","Beautiful.","I look like an idiot."];
 						_unit groupChat _comment;
 					} else {hint "Uniform changed."};
 				} else {
