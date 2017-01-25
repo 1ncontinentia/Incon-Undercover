@@ -281,6 +281,57 @@ switch (_operation) do {
 			};
 		};
 	};
+
+  case "getFacVehs": {
+		_input params [["_factions",["OPF_F"]]];
+
+		private ["_cfgVehicles"];
+
+		_return = [];
+
+		_cfgVehicles = configFile >> "CfgVehicles";
+
+    for "_i" from 0 to (count _cfgVehicles - 1) do {
+      _entry = _cfgVehicles select _i;
+
+      if (isclass _entry) then {
+        if (
+            (getText(_entry >> "faction") in _factions) &&
+            {getNumber(_entry >> "scope") >= 2} &&
+            {
+              (configname _entry isKindOf "Air") ||
+              {configname _entry isKindOf "Boat"} ||
+              {configname _entry isKindOf "LandVehicle"}
+            }
+        ) then {
+            _return pushback (configName _entry);
+        };
+      };
+    };
+  };
+
+  case "getFacUnits": {
+		_input params ["_factions"];
+
+		private ["_cfgVehicles"];
+
+		_return = [];
+		_cfgVehicles = configFile >> "CfgVehicles";
+
+    for "_i" from 0 to (count _cfgVehicles - 1) do {
+      _entry = _cfgVehicles select _i;
+
+      if (isclass _entry) then {
+        if (
+            (getText(_entry >> "faction") in _factions) &&
+            {getNumber(_entry >> "scope") >= 2} &&
+            {configname _entry isKindOf "Man"}
+        ) then {
+            _return pushback (configName _entry);
+        };
+      };
+    };
+  };
 };
 
 _return
