@@ -41,6 +41,8 @@ if (isNil "INC_asymEnySide") then {
 	_civilianHeadgear append [""];
 	_civilianBackpacks append [""];
 
+	sleep 0.5;
+
 	_civilianVests append (["vests",_civilianFactionVests] call INCON_fnc_getConfigInfo);
 	_civilianUniforms append (["uniforms",_civilianFactionUniforms] call INCON_fnc_getConfigInfo);
 
@@ -75,12 +77,18 @@ if (isNil "INC_asymEnySide") then {
 	missionNamespace setVariable ["INC_civilianHeadgear",_civilianHeadgear,true];
 	missionNamespace setVariable ["INC_civilianBackpacks",_civilianBackpacks,true];
 	missionNamespace setVariable ["INC_civilianVehicleArray",_civilianVehicleArray,true];
+
+	sleep 0.5;
+
 	missionNamespace setVariable ["INC_incognitoVests",_incognitoVests,true];
 	missionNamespace setVariable ["INC_incognitoUniforms",(_incognitoUniforms - [""]),true];
 	missionNamespace setVariable ["INC_incognitoHeadgear",_incognitoHeadgear,true];
 	missionNamespace setVariable ["INC_incognitoBackpacks",_incognitoBackpacks,true];
 	missionNamespace setVariable ["INC_incognitoVehArray",_incognitoVehArray,true];
 	missionNamespace setVariable ["INC_incognitoWpns",_incognitoWpns,true];
+
+	sleep 0.5;
+
 	missionNamespace setVariable ["INC_regEnySide",_regEnySide,true];
 	missionNamespace setVariable ["INC_asymEnySide",_asymEnySide,true];
 	missionNamespace setVariable ["INC_civilianRecruitEnabled",_civRecruitEnabled,true];
@@ -150,11 +158,11 @@ if (isPlayer _unit) then {
 
 			waitUntil {
 				sleep 1;
-				_unit globalChat (format ["%1 cover intact: %2",_unit,(captive _unit)]);
-				_unit globalChat (format ["%1 compromised: %2",_unit,(_unit getVariable ["INC_isCompromised",false])]);
+				_unit globalChat (format ["%1 cover intact: %2, compromised: %3",_unit,(captive _unit),(_unit getVariable ["INC_isCompromised",false])]);
 				_unit globalChat (format ["%1 trespassing: %2",_unit,((_unit getVariable ["INC_proxAlert",false]) || {(_unit getVariable ["INC_trespassAlert",false])})]);
-				_unit globalChat (format ["%1 suspicious level: %2",_unit,(_unit getVariable ["INC_suspiciousValue",false])]);
+				_unit globalChat (format ["%1 suspicious level: %2",_unit,(_unit getVariable ["INC_suspiciousValue",1])]);
 				_unit globalChat (format ["%1 weirdo level: %2",_unit,(_unit getVariable ["INC_disguiseValue",1])]);
+				_unit globalChat (format ["%1 spot distance: %2",_unit,(_unit getVariable ["INC_radiusMulti",1])]);
 				_unit globalChat (format ["Enemy know about %1: %2",_unit,(_unit getVariable ["INC_AnyKnowsSO",false])]);
 				!(_unit getVariable ["isUndercover",false])
 			};

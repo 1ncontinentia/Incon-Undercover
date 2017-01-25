@@ -20,7 +20,7 @@ if (!local _unit) exitWith {};
 
 	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius","_fullAIfunctionality"];
 
-	private _responseTime = 0.3;
+	private _responseTime = 0.2;
 
 	if !(isPlayer _unit) then {_responseTime = (_responseTime * 2)}; //Repsonsiveness of script reduced for performance on AI
 
@@ -34,11 +34,13 @@ if (!local _unit) exitWith {};
 
 			if !(isNull objectParent _unit) exitWith {true};
 
-			private ["_suspiciousValue","_weirdoLevel","_nearShotAt"];
+			private ["_suspiciousValue","_weirdoLevel","_spotDistance","_nearShotAt"];
 
 			_suspiciousValue = 1; //Suspicious behaviour value: higher = more suspicious
 
 			_weirdoLevel = 1; //Multiplier of radius for units near the player
+
+			_spotDistance = 1; //Multiplier of radius for units near the player
 
 			//Incognito check - change to incognito if unit is wearing enemy uniform, but also compromise him if enemy sees him doing so
 			if (uniform _unit in INC_incognitoUniforms) then {
@@ -95,22 +97,26 @@ if (!local _unit) exitWith {};
 
 						if !(backpack _unit in INC_incognitoBackpacks) then {
 							_weirdoLevel = _weirdoLevel + 0.5;
+							_spotDistance = _spotDistance + 0.5;
 						};
 
 						if !(vest _unit in INC_incognitoVests) then {
 							_weirdoLevel = _weirdoLevel + 2;
+							_spotDistance = _spotDistance + 1;
 						};
 
 						if !(headgear _unit in INC_incognitoHeadgear) then {
 							_weirdoLevel = _weirdoLevel + 0.5;
 
 							if (((headgear _unit) find "elmet") >= 0) then {
-								_weirdoLevel = _weirdoLevel + 1;
+								_weirdoLevel = _weirdoLevel + 2;
+								_spotDistance = _spotDistance + 0.3;
 							};
 						};
 
 						if !(currentWeapon _unit in INC_incognitoWpns) then {
-							_weirdoLevel = _weirdoLevel + 0.8;
+							_weirdoLevel = _weirdoLevel + 1.5;
+							_spotDistance = _spotDistance + 0.5;
 						};
 
 						if ((currentWeapon _unit == primaryWeapon _unit) && {!(weaponLowered _unit)}) then {
@@ -124,6 +130,7 @@ if (!local _unit) exitWith {};
 						if ((((headgear _unit) find "elmet") >= 0) || {((goggles _unit) find "alaclava") >= 0}) then {
 
 							_weirdoLevel = _weirdoLevel + 2;
+							_spotDistance = _spotDistance + 1;
 						};
 					};
 				};
@@ -135,12 +142,15 @@ if (!local _unit) exitWith {};
 
 						case true: {
 							_weirdoLevel = _weirdoLevel + 2;
+							_spotDistance = _spotDistance + 3;
 
 					        if (speed _unit > 2) then {
-								_weirdoLevel = _weirdoLevel + 0.5;
+								_weirdoLevel = _weirdoLevel + 1;
+								_spotDistance = _spotDistance + 1;
 
 						        if (speed _unit > 5) then {
-									_weirdoLevel = _weirdoLevel + 0.5;
+									_weirdoLevel = _weirdoLevel + 1;
+									_spotDistance = _spotDistance + 0.5;
 								};
 							};
 						};
@@ -148,10 +158,12 @@ if (!local _unit) exitWith {};
 						case false: {
 
 						    if (speed _unit > 8) then {
-								_weirdoLevel = _weirdoLevel + 0.5;
+								_weirdoLevel = _weirdoLevel + 0.3;
+								_spotDistance = _spotDistance + 1.5;
 
 							    if (speed _unit > 17) then {
-									_weirdoLevel = _weirdoLevel + 1.5;
+									_weirdoLevel = _weirdoLevel + 1;
+									_spotDistance = _spotDistance + 3;
 								};
 							};
 						};
@@ -173,6 +185,8 @@ if (!local _unit) exitWith {};
 				};
 
 				_unit setVariable ["INC_weirdoLevel",_weirdoLevel];  //This variable acts as a detection radius multiplier
+
+				_unit setVariable ["INC_radiusMulti",_spotDistance]; //This variable acts as a detection radius multiplier
 			};
 
 			sleep _responseTime;
@@ -255,7 +269,9 @@ if (!local _unit) exitWith {};
 
 			_suspiciousValue = 1; //Suspicious behaviour value: higher = more suspicious
 
-			_weirdoLevel = 0.5; //Multiplier of radius for units near the player
+			_weirdoLevel = 1; //Multiplier of radius for units near the player
+
+			_spotDistance = 0.5;
 
 			//Incognito check to go here
 			if (((typeOf vehicle _unit) in INC_incognitoVehArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])} && {uniform _unit in INC_incognitoUniforms}) then {
@@ -288,7 +304,8 @@ if (!local _unit) exitWith {};
 
 					sleep _responseTime;
 
-					_weirdoLevel = _weirdoLevel + ((speed _unit)/ 10);
+					_weirdoLevel = _weirdoLevel + ((speed _unit)/ 40);
+					_spotDistance = _spotDistance + ((speed _unit)/ 8);
 
 			        switch (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)}) do {
 
@@ -298,7 +315,7 @@ if (!local _unit) exitWith {};
 
 							if ((hmd _unit != "") && {!(_HMDallowed)}) then {
 
-								_weirdoLevel = _weirdoLevel + 1;
+								_weirdoLevel = _weirdoLevel + 2;
 							};
 						};
 
@@ -319,7 +336,8 @@ if (!local _unit) exitWith {};
 						{speed _unit > 5} &&
 						{(vehicle _unit) isKindOf "LandVehicle"}
 					) then {
-						_weirdoLevel = _weirdoLevel + 2;
+						_weirdoLevel = _weirdoLevel + 1;
+						_spotDistance = _spotDistance + 2;
 					};
 
 					//Incognito uniform check for non-tank vehicles
@@ -330,10 +348,12 @@ if (!local _unit) exitWith {};
 				};
 
 				if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
-					_weirdoLevel = _weirdoLevel + 2
+					_weirdoLevel = _weirdoLevel + 2;
 				};
 
 				_unit setVariable ["INC_weirdoLevel",_weirdoLevel]; //This variable acts as a detection radius multiplier
+
+				_unit setVariable ["INC_radiusMulti",_spotDistance]; //This variable acts as a detection radius multiplier
 			};
 
 			sleep _responseTime;

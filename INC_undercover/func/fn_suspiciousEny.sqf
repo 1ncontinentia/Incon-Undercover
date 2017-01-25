@@ -30,7 +30,7 @@ _this spawn {
 
 	_suspiciousEnemy doWatch _unit;
 
-	sleep (random 25);
+	sleep (random 15);
 
 	if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
@@ -52,7 +52,7 @@ _this spawn {
 			true
 		};
 
-		if !((70 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+		if !((30 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 			_suspiciousEnemy setVariable ["INC_isSuspicious",false];
 			true
 		};

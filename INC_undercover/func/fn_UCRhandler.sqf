@@ -42,23 +42,27 @@ if (isPlayer _unit) then {
 		//Proximity check for players (doesn't run if the unit is compromised)
 		if((isPlayer _unit) || {_fullAIfunctionality}) then {
 
-			private ["_disguiseValue"];
+			private ["_disguiseValue","_disguiseRadius"];
 
-			_disguiseValue = ((_unit getVariable ["INC_compromisedValue",1]) * (_unit getVariable ["INC_weirdoLevel",1]) * (missionNamespace getVariable ["INC_envDisgMulti",1]));
+			_disguiseValue = ((_unit getVariable ["INC_compromisedValue",1]) * (_unit getVariable ["INC_weirdoLevel",1]));
+
+			_disguiseRadius = ((_unit getVariable ["INC_compromisedValue",1]) * (_unit getVariable ["INC_radiusMulti",1]) * (missionNamespace getVariable ["INC_envDisgMulti",1]));
 
 			sleep 0.5;
 
 			_unit setVariable ["INC_disguiseValue",_disguiseValue];
+
+			_unit setVariable ["INC_disguiseRad",_disguiseRadius];
 
 			switch (_unit getVariable ["INC_goneIncognito",false]) do {
 
 				case true: {
 
 					_nearReg = count (
-						(_unit nearEntities ((_regDetectRadius * _disguiseValue) * 0.7)) select {
+						(_unit nearEntities ((_regDetectRadius * _disguiseRadius) * 0.7)) select {
 							(side _x == INC_regEnySide) &&
 							{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
-							{(_x knowsAbout _unit) > 3.5} &&
+							{(_x knowsAbout _unit) > 2} &&
 							{alive _x} &&
 							{(5 + (2 * _disguiseValue)) > (random 100)}
 						}
@@ -67,10 +71,10 @@ if (isPlayer _unit) then {
 					sleep 0.5;
 
 					_nearAsym = count (
-						(_unit nearEntities ((_asymDetectRadius * _disguiseValue) * 2)) select {
+						(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 2)) select {
 							(side _x == INC_asymEnySide) &&
 							{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
-							{(_x knowsAbout _unit) > 3.5} &&
+							{(_x knowsAbout _unit) > 2} &&
 							{alive _x} &&
 							{(5 + (3 * _disguiseValue)) > (random 100)}
 						}
@@ -80,7 +84,7 @@ if (isPlayer _unit) then {
 				case false: {
 
 					_nearReg = count (
-						(_unit nearEntities (_regDetectRadius * _disguiseValue)) select {
+						(_unit nearEntities (_regDetectRadius * _disguiseRadius)) select {
 							(side _x == INC_regEnySide) &&
 							{(_x knowsAbout _unit) > 3} &&
 							{alive _x}
@@ -90,7 +94,7 @@ if (isPlayer _unit) then {
 					sleep 0.5;
 
 					_nearAsym = count (
-						(_unit nearEntities (_asymDetectRadius * _disguiseValue)) select {
+						(_unit nearEntities (_asymDetectRadius * _disguiseRadius)) select {
 							(side _x == INC_asymEnySide) &&
 							{(_x knowsAbout _unit) > 3} &&
 							{alive _x}
@@ -106,7 +110,10 @@ if (isPlayer _unit) then {
 			sleep 0.5;
 
 			if ((_nearAsym + _nearReg + _nearMines) != 0) then {
-				_unit setVariable ["INC_proxAlert",true]
+				_unit setVariable ["INC_proxAlert",true];
+				if (_disguiseValue > (4 + random 20)) then {
+					[_unit] call INCON_fnc_compromised;
+				};
 			} else {
 				_unit setVariable ["INC_proxAlert",false]
 			};
