@@ -128,6 +128,16 @@ switch (_gearType) do {
             } forEach _weaponArray;
         } forEach _units;
     };
+
+    case "possibleIdentities": {
+        {
+            _unit = _x;
+            _IDarray = getArray (_unit >> "identityTypes");
+            {
+						  _result pushbackunique _x;
+            } forEach _IDarray;
+        } forEach _units;
+    };
 };
 
 _result

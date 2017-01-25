@@ -227,6 +227,43 @@ switch (_operation) do {
 
 		_return = true;
 	};
+
+	case "getUnitIDs": {
+		_input params ["_unit"];
+
+		private ["_IDarray"];
+
+		_IDarray = getArray (_unit >> "identityTypes");
+		{
+			_result pushbackunique _x;
+		} forEach _IDarray;
+
+		_return = _IDarray;
+	};
+
+	case "factionIDcheck": {
+		_input params ["_unit",["_factions",["OPF_F"]],["_simpleCheck",true]];
+
+		private ["_factionIDs","_unitIDs","_overlappingIDs"];
+
+		_factionIDs = (["possibleIdentities",_factions] call INCON_fnc_getConfigInfo);
+
+		_unitIDs = [[_unit],"getUnitIDs"] call INCON_fnc_ucrMain;
+
+		_overlappingIDs = [];
+
+		switch (_simpleCheck) do {
+			case true: {
+				{if (_x in _factionIDs) exitWith {_return = true}} forEach _unitIDs;
+			};
+			case false: {
+				{if (_x in _factionIDs) then {_overlappingIDs pushbackunique _x}} forEach _unitIDs;
+				_return = _overlappingIDs;
+			};
+		};
+
+		_return = _IDarray;
+	};
 };
 
 _return
