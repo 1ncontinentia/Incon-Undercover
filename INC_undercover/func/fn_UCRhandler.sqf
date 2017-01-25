@@ -227,7 +227,13 @@ if((isPlayer _unit) || {_fullAIfunctionality}) then {
 
 				[_unit] spawn {
 					params ["_unit"];
-					sleep (200 + (random 120));
+					_cooldownTimer = (60 + (random 120));
+
+					waitUntil {
+						sleep 3;
+						_cooldownTimer = (_cooldownTimer - 3);
+						(!(_unit getVariable ["INC_AnyKnowsSO",false]) || {_cooldownTimer <= 0})
+					};
 					_unit setVariable ["INC_shotNear",false];
 				};
 			};
