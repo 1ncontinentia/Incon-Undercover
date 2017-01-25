@@ -5,27 +5,26 @@ Author: Spyderblack723
 Modified by: Incontinentia
 */
 
-private ["_unit","_linkedItems","_pack","_uniform","_headgearList"];
+private ["_units","_cfgVehicles","_result","_unit","_linkedItems","_pack","_uniform","_headgearList"];
 
 params ["_gearType","_factions"];
 
-private _result = [];
-
-private _units = [];
-private _cfgVehicles = configFile >> "CfgVehicles";
+_result = [];
+_units = [];
+_cfgVehicles = configFile >> "CfgVehicles";
 
 for "_i" from 0 to (count _cfgVehicles - 1) do {
-    _entry = _cfgVehicles select _i;
+  _entry = _cfgVehicles select _i;
 
-    if (isclass _entry) then {
-        if (
-            (getText(_entry >> "faction") in _factions) &&
-            {getNumber(_entry >> "scope") >= 2} &&
-            {configname _entry isKindOf "Man"}
-        ) then {
-            _units pushback _entry;
-        };
+  if (isclass _entry) then {
+    if (
+      (getText(_entry >> "faction") in _factions) &&
+      {getNumber(_entry >> "scope") >= 2} &&
+      {configname _entry isKindOf "Man"}
+    ) then {
+      _units pushback _entry;
     };
+  };
 };
 
 switch (_gearType) do {
@@ -130,13 +129,14 @@ switch (_gearType) do {
     };
 
     case "possibleIdentities": {
-        {
-            _unit = _x;
-            _IDarray = getArray (_unit >> "identityTypes");
-            {
-						  _result pushbackunique _x;
-            } forEach _IDarray;
-        } forEach _units;
+      _result = ["Default"];
+      {
+          _unit = _x;
+          _IDarray = getArray (_unit >> "identityTypes");
+          {
+					  _result pushbackunique _x;
+          } forEach _IDarray;
+      } forEach _units;
     };
 };
 
