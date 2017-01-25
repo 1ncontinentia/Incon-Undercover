@@ -42,9 +42,9 @@ if (!local _unit) exitWith {};
 
 			_spotDistance = 1; //Multiplier of radius for units near the player
 
-			//Incognito check - change to incognito if unit is wearing enemy uniform, but also compromise him if enemy sees him doing so
-			if (uniform _unit in INC_incognitoUniforms) then {
-				switch (_unit getVariable ["INC_goneIncognito",false]) do {
+			//Incognito check - change to incog if unit is wearing enemy uniform, but also compromise him if enemy sees him doing so
+			if (uniform _unit in INC_incogUniforms) then {
+				switch (_unit getVariable ["INC_goneIncog",false]) do {
 					case false: {
 						private ["_regAlerted","_regKnowsAboutUnit","_asymAlerted","_asymKnowsAboutUnit"];
 
@@ -74,11 +74,11 @@ if (!local _unit) exitWith {};
 							};
 						};
 
-						_unit setVariable ["INC_goneIncognito",true];
+						_unit setVariable ["INC_goneIncog",true];
 					};
 				};
 			} else {
-				_unit setVariable ["INC_goneIncognito",false];
+				_unit setVariable ["INC_goneIncog",false];
 			};
 
 			sleep _responseTime;
@@ -91,21 +91,21 @@ if (!local _unit) exitWith {};
 			//Penalise people for being oddballs
 			if ((isPlayer _unit) || {_fullAIfunctionality}) then {
 
-				switch (_unit getVariable ["INC_goneIncognito",false]) do {
+				switch (_unit getVariable ["INC_goneIncog",false]) do {
 
 					case true: {
 
-						if !(backpack _unit in INC_incognitoBackpacks) then {
+						if !(backpack _unit in INC_incogBackpacks) then {
 							_weirdoLevel = _weirdoLevel + 0.5;
 							_spotDistance = _spotDistance + 0.5;
 						};
 
-						if !(vest _unit in INC_incognitoVests) then {
+						if !(vest _unit in INC_incogVests) then {
 							_weirdoLevel = _weirdoLevel + 2;
 							_spotDistance = _spotDistance + 1;
 						};
 
-						if !(headgear _unit in INC_incognitoHeadgear) then {
+						if !(headgear _unit in INC_incogHeadgear) then {
 							_weirdoLevel = _weirdoLevel + 0.5;
 
 							if (((headgear _unit) find "elmet") >= 0) then {
@@ -114,7 +114,7 @@ if (!local _unit) exitWith {};
 							};
 						};
 
-						if !(currentWeapon _unit in INC_incognitoWpns) then {
+						if !(currentWeapon _unit in INC_incogWpns) then {
 							_weirdoLevel = _weirdoLevel + 1.5;
 							_spotDistance = _spotDistance + 0.5;
 						};
@@ -191,8 +191,8 @@ if (!local _unit) exitWith {};
 
 			sleep _responseTime;
 
-			//Suspicious checks depending on incognito status
-			if !(_unit getVariable ["INC_goneIncognito",false]) then {
+			//Suspicious checks depending on incog status
+			if !(_unit getVariable ["INC_goneIncog",false]) then {
 
 				//Check if unit is wearing anything suspicious
 				if (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)} || {!(headgear _unit in INC_civilianHeadgear)}  || {!(backpack _unit in INC_civilianBackpacks)} || {(hmd _unit != "") && !(_HMDallowed)} || {uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])}) then {
@@ -274,13 +274,13 @@ if (!local _unit) exitWith {};
 			_spotDistance = 0.5;
 
 			//Incognito check to go here
-			if (((typeOf vehicle _unit) in INC_incognitoVehArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])} && {uniform _unit in INC_incognitoUniforms}) then {
+			if (((typeOf vehicle _unit) in INC_incogVehArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) then {
 
-				_unit setVariable ["INC_goneIncognito",true];
+				_unit setVariable ["INC_goneIncog",true];
 				_unit setVariable ["INC_canConcealWeapon",false];
 				_unit setVariable ["INC_canGoLoud",false];
 			} else {
-				_unit setVariable ["INC_goneIncognito",false];
+				_unit setVariable ["INC_goneIncog",false];
 				_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_gearHandler)];
 				_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_gearHandler)];
 			};
@@ -288,7 +288,7 @@ if (!local _unit) exitWith {};
 			//Penalise people for being oddballs by increasing the spotting radius - wearing wrong uniform / hmd
 			if ((isPlayer _unit) || {_fullAIfunctionality}) then {
 
-				if !(_unit getVariable ["INC_goneIncognito",false]) then {
+				if !(_unit getVariable ["INC_goneIncog",false]) then {
 
 					sleep _responseTime;
 
@@ -341,9 +341,15 @@ if (!local _unit) exitWith {};
 					};
 
 					//Incognito uniform check for non-tank vehicles
-					if (!((vehicle _unit) isKindOf "Tank") && {!(vest _unit in INC_incognitoVests)}) then {
+					if (!((vehicle _unit) isKindOf "Tank") && {!(vest _unit in INC_incogVests)}) then {
 
 						_weirdoLevel = _weirdoLevel + 2;
+					};
+
+					//Incognito uniform check for non-tank vehicles
+					if (!((vehicle _unit) isKindOf "Tank") && {!(uniform _unit in INC_incogUniforms)}) then {
+
+						_weirdoLevel = _weirdoLevel + 15;
 					};
 				};
 
@@ -358,7 +364,7 @@ if (!local _unit) exitWith {};
 
 			sleep _responseTime;
 
-			if !(_unit getVariable ["INC_goneIncognito",false]) then {
+			if !(_unit getVariable ["INC_goneIncog",false]) then {
 
 				//Suspicious vehicle check
 				if !(((typeof vehicle _unit) in INC_civilianVehicleArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) then {

@@ -409,7 +409,7 @@ switch (_operation) do {
 			case true: {
 
 				if (
-					(uniform _activeContainer in (INC_civilianUniforms + INC_incognitoUniforms)) &&
+					(uniform _activeContainer in (INC_civilianUniforms + INC_incogUniforms)) &&
 					{(uniform _activeContainer) != _origUnif}
 				) then {
 					_newUnif = uniform _activeContainer;
@@ -429,7 +429,7 @@ switch (_operation) do {
 							!(((_x select 0) find _origUnif) == 0) ||
 							{_origUnif == ""}
 						} &&
-						{(_x select 0) in (INC_civilianUniforms + INC_incognitoUniforms)}
+						{(_x select 0) in (INC_civilianUniforms + INC_incogUniforms)}
 					)
 				}) select 0);
 			};

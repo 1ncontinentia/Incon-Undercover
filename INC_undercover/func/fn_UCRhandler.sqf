@@ -54,7 +54,7 @@ if (isPlayer _unit) then {
 
 			_unit setVariable ["INC_disguiseRad",_disguiseRadius];
 
-			switch (_unit getVariable ["INC_goneIncognito",false]) do {
+			switch (_unit getVariable ["INC_goneIncog",false]) do {
 
 				case true: {
 

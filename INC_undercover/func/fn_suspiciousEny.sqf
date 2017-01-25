@@ -17,7 +17,7 @@ _this spawn {
 
 	if (45 > (random 100)) then {
 		private ["_comment"];
-		switch (_unit getVariable ["INC_goneIncognito",false]) do {
+		switch (_unit getVariable ["INC_goneIncog",false]) do {
 			case true: {
 				_comment = selectRandom ["Who the fuck are you?","I don't recognise you.","I don't like the look of you.","You look strange.","What are you doing?","I'd like to know which unit you're from.","Who are you with?","You're not supposed to be here.","You're not with us are you?"];
 			};
