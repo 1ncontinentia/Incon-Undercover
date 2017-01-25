@@ -203,7 +203,7 @@ switch (_operation) do {
 					} else {hint "No safe uniforms found nearby."};
 				};
 
-			},[],1,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
+			},[],4,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
 		];
 
 		if (_temporary) then {

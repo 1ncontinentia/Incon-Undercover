@@ -8,5 +8,6 @@ class gearHandler {allowedTargets=0;};
 class getAlerted {allowedTargets=0;};
 class getConfigInfo {allowedTargets=0;};
 class recruitHandler {allowedTargets=0;};
-class ucrMain {allowedTargets=0;};
+class suspiciousEny {allowedTargets=0;};
 class UCRhandler {allowedTargets=0;};
+class ucrMain {allowedTargets=0;};

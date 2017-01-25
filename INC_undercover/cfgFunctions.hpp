@@ -14,7 +14,8 @@ class INC_undercover
 		class getAlerted {description = "Returns the number of given side who know about the unit";};
 		class getConfigInfo {description = "Gets config information on a given faction / unit.";};
 		class recruitHandler {description = "Handles all civilian recruitment.";};
-		class ucrMain {description = "Contains primary UCR functions."};
+		class suspiciousEny {description = "Suspicious enemy behaviour.";};
 		class UCRhandler {description = "Gets detection scripts running on unit.";};
+		class ucrMain {description = "Contains primary UCR functions."};
 	};
 };
