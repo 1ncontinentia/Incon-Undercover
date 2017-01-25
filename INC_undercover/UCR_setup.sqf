@@ -10,13 +10,13 @@ Please check each setting carefully otherwise the script may not function proper
 
 _undercoverUnitSide = west;             //What side is/are the undercover unit(s) on? (Can be east, west or independent - only one side supported)
 
-//-------------------------Enemy Settings-------------------------
-/*
-Note: the difference between regular and asymmetric enemies relates only to their detection behaviour. Either will work similarly but with the following differences:
-Regular enemies will share your identity between all units of that side after a short while once you become compromised, making it more important to have quick, clean kills.
-Asymmetric enemies on the other hand will be able to detect your true identity from further away due to their local knowledge, but won't necessarily share your identity with other cells.
-In essence, you can get closer to regular enemies without blowing your cover but once blown, it will stay blown for longer.
-*/
+//-------------------------General Settings-------------------------
+
+_debug = false; //Set to true for debug hints
+_hints = true;  //Hints show changes of state etc
+_fullAIfunctionality = true; //Enable all checks on AI (may degrade performace slightly for large groups)
+
+_racism = true;                         //Enemies will notice if you aren't the race of the faction you're pretending to be (making you easier to detect if nothing is covering your face)
 
 _regEnySide = east;                     //Units of this side will be classed as regular enemies (Side: can be east, west, independent, or sideEmpty) - if you don't need this, type 'sideEmpty' (without quotation marks) into this field or comment the line out (i.e. put // before _regEnySide, as in //_regEnySide = east;).
 _regBarbaric = false;                   //(Bool - true or false) Will this side lash out on civilians if it takes casualties and doesn't know the attacker?
@@ -28,17 +28,9 @@ _asymDetectRadius = 25;                 //Minimum detection radius for asym troo
 
 _trespassMarkers = [];                  //Names of additional markers (any with "INC_tre" somewhere in the marker name will automatically be included) for areas that would be considered trespassing
 
-//-------------------------Disguise settings-------------------------
-/*
-Disguises allow the player and his subordinates to pose as non-hostiles as long as they don't act suspiciously.
-Safe items are items that you can wear and not blow your cover.
-Be aware though that the script is geared more towards undercover work dressed as civilians and will currently penalise anyone carrying a weapon.
-If you are seen carrying military equipment (weapons, grenades, explosives, NVGs, binoculars / laser designators), it will blow your disguise.
-Having night vision goggles strapped to your head will blow your disguise too, even if you aren't actually using them!! (This can be turned off below).
-*/
-_civilianFactionVests = ["CIV_F","CIV_F_TANOA"]; //Array of factions whose vests are safe for undercover units to wear (must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
-_civilianFactionUniforms = ["CIV_F","CIV_F_TANOA"]; //Array of factions whose clothes are safe for undercover units to wear (must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
-_civilianFactionHeadgear = ["CIV_F","CIV_F_TANOA"]; //Array of factions whose clothes are safe for undercover units to wear (must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
+//-------------------------Civilian Disguise settings-------------------------
+
+_civFactions = ["CIV_F","CIV_F_TANOA"]; //Array of factions whose vests are safe for undercover units to wear (must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
 
 //(Array of classnames) Safe vests (on top of the specific factions above - must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
 _civilianVests = [];
@@ -59,16 +51,14 @@ _HMDallowed = false; //(Bool - true or false) Are HMDs (night vision goggles etc
 
 _noOffRoad = true; //Vehicles driving more than 50 meters from the nearest road will be considered hostile
 
-_incognitoFactions = ["OPF_F","OPF_T_F"]; //Array of enemy factions whose items can be worn as a disguise
-_incognitoVehArray = []; //(Array of classnames) Array of enemy vehicles which will disguise the player (wearing the wrong uniform will increase the range you'll be detected by if it's a truck or car)
-
+//-------------------------Enemy Disguise settings-------------------------
+_incogFactions = ["OPF_F","OPF_T_F"]; //Array of enemy factions whose items and vehicles will allow the player to impersonate the enemy
+_incogVehArray = []; //(Array of classnames) Additional incognito vehicles (vehicles from the faction above will automatically count)
 
 //-------------------------Civilian recruitment settings-------------------------
 /*
 By enabling civilian recruitment, undercover can recruit any ambient civilians they see into their group (if their reputation allows / the civvy wants to join).
-Civilians will operate under similar restrictions to the player; if they are armed, conducting hostile actions, or seen wearing prohibited gear, their cover will be blown.
-If your civilian teammate has a concealed weapon in their uniform or backpack, you can order them to get it out by using the action orders menu (command menu -> 6).
-If they are armed and have space to hide a weapon in their uniform or backpack, you can order them to conceal their weapon using the same action menu.
+Civilians will operate under similar restrictions to the player.
 You can also dismiss your new teammates and they will leave your group and carry on doing whatever it is they fancy doing (usually sitting cross-legged in the middle of a field).
 */
 
@@ -83,12 +73,3 @@ _civItemArray = ["ACE_Cellphone","ACE_Banana","ACE_Flashlight_KSF1","ACE_Spraypa
 
 //Civilian backpack classes (array of classnames)
 _civPackArray = ["B_FieldPack_blk","B_FieldPack_cbr","B_FieldPack_khk","B_FieldPack_oucamo","B_Carryall_cbr"];
-
-//Persistent player group settings (EXPERIMENTAL)
-_persistentGroup = true;        //Persist AI in player group between ALiVE persistent sessions (requires INCON_groupPersist and INIDBI2 loaded on server)
-
-//-------------------------Misc settings-------------------------
-
-_debug = false; //Set to true for debug hints
-_hints = true;  //Hints show changes of state etc
-_fullAIfunctionality = true; //Enable all checks on AI (may degrade performace slightly for large groups)

@@ -5,7 +5,7 @@ Author: Incontinentia
 
 */
 
-private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civilianFactionVests","_civilianFactionUniforms","_civPackArray","_incognitoVests","_incognitoUniforms","_incognitoFactions"];
+private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
 
 params [["_unit",objNull]];
 
@@ -43,32 +43,44 @@ if (isNil "INC_asymEnySide") then {
 
 	sleep 0.5;
 
-	_civilianVests append (["vests",_civilianFactionVests] call INCON_fnc_getConfigInfo);
-	_civilianUniforms append (["uniforms",_civilianFactionUniforms] call INCON_fnc_getConfigInfo);
+	_civilianVests append (["vests",_civFactions] call INCON_fnc_getConfigInfo);
+	_civilianUniforms append (["uniforms",_civFactions] call INCON_fnc_getConfigInfo);
 
 	sleep 0.5;
 
-	_civilianHeadgear append (["headgear",_civilianFactionHeadgear] call INCON_fnc_getConfigInfo);
-	_civilianHeadgear append (["possibleHeadgear",_civilianFactionHeadgear] call INCON_fnc_getConfigInfo);
+	_civilianHeadgear append (["headgear",_civFactions] call INCON_fnc_getConfigInfo);
+	_civilianHeadgear append (["possibleHeadgear",_civFactions] call INCON_fnc_getConfigInfo);
 	_civilianBackpacks append _civPackArray;
 
 	sleep 0.5;
 
-	_incognitoVests = [""];
-	_incognitoUniforms = [];
-	_incognitoHeadgear = [""];
-	_incognitoBackpacks = [""];
-	_incognitoWpns = [""];
+	_incogVests = [""];
+	_incogUniforms = [];
+	_incogHeadgear = [""];
+	_incogBackpacks = [""];
+	_incogWpns = [""];
 
-	_incognitoVests append (["vests",_incognitoFactions] call INCON_fnc_getConfigInfo);
-	_incognitoUniforms append (["uniforms",_incognitoFactions] call INCON_fnc_getConfigInfo);
-	_incognitoWpns append (["weapons",_incognitoFactions] call INCON_fnc_getConfigInfo);
+	_incogVests append (["vests",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogUniforms append (["uniforms",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogWpns append (["weapons",_incogFactions] call INCON_fnc_getConfigInfo);
 
 	sleep 0.5;
 
-	_incognitoHeadgear append (["headgear",_incognitoFactions] call INCON_fnc_getConfigInfo);
-	_incognitoHeadgear append (["possibleHeadgear",_incognitoFactions] call INCON_fnc_getConfigInfo);
-	_incognitoBackpacks append (["backpacks",_incognitoFactions] call INCON_fnc_getConfigInfo);
+	_incogVeh = ([[_incogFactions],"getFacVehs"] call INCON_fnc_ucrMain);
+	_incogVeh append _incogVehArray;
+
+	_civVeh =  ([[_civFactions],"getFacVehs"] call INCON_fnc_ucrMain);
+	_civVeh append _civilianVehicleArray;
+
+	missionNamespace setVariable ["INC_incogIdentities",(["possibleIdentities",_incogFactions] call INCON_fnc_getConfigInfo),true];
+
+	missionNamespace setVariable ["INC_civIdentities",(["possibleIdentities",_civFactions] call INCON_fnc_getConfigInfo),true];
+
+	sleep 0.5;
+
+	_incogHeadgear append (["headgear",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogHeadgear append (["possibleHeadgear",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogBackpacks append (["backpacks",_incogFactions] call INCON_fnc_getConfigInfo);
 
 	sleep 0.5;
 
@@ -76,16 +88,16 @@ if (isNil "INC_asymEnySide") then {
 	missionNamespace setVariable ["INC_civilianUniforms",_civilianUniforms,true];
 	missionNamespace setVariable ["INC_civilianHeadgear",_civilianHeadgear,true];
 	missionNamespace setVariable ["INC_civilianBackpacks",_civilianBackpacks,true];
-	missionNamespace setVariable ["INC_civilianVehicleArray",_civilianVehicleArray,true];
+	missionNamespace setVariable ["INC_civilianVehicleArray",_civVeh,true];
 
 	sleep 0.5;
 
-	missionNamespace setVariable ["INC_incognitoVests",_incognitoVests,true];
-	missionNamespace setVariable ["INC_incognitoUniforms",(_incognitoUniforms - [""]),true];
-	missionNamespace setVariable ["INC_incognitoHeadgear",_incognitoHeadgear,true];
-	missionNamespace setVariable ["INC_incognitoBackpacks",_incognitoBackpacks,true];
-	missionNamespace setVariable ["INC_incognitoVehArray",_incognitoVehArray,true];
-	missionNamespace setVariable ["INC_incognitoWpns",_incognitoWpns,true];
+	missionNamespace setVariable ["INC_incogVests",_incogVests,true];
+	missionNamespace setVariable ["INC_incogUniforms",(_incogUniforms - [""]),true];
+	missionNamespace setVariable ["INC_incogHeadgear",_incogHeadgear,true];
+	missionNamespace setVariable ["INC_incogBackpacks",_incogBackpacks,true];
+	missionNamespace setVariable ["INC_incogVehArray",_incogVeh,true];
+	missionNamespace setVariable ["INC_incogWpns",_incogWpns,true];
 
 	sleep 0.5;
 
