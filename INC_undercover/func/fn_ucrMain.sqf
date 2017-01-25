@@ -229,28 +229,47 @@ switch (_operation) do {
 	};
 
 	case "getUnitIDs": {
-		_input params ["_unit"];
+		_input params ["_unit",["_checkType","face"]];
+		private ["_cfgFaces"];
 
-		private ["_IDarray"];
+		switch (_checkType) do {
 
-		_IDarray = getArray (_unit >> "identityTypes");
-		{
-			_result pushbackunique _x;
-		} forEach _IDarray;
+			case "face": {
 
-		_return = _IDarray;
+				_cfgFaces = configFile >> "cfgFaces";
+
+				for "_i" from 0 to (count _cfgFaces - 1) do {
+			    _entry = _cfgFaces select _i;
+
+			    if (isclass (_entry >> face _unit)) exitWith {
+			        _return = (getArray (_entry >> (face _unit) >> "identityTypes"));
+							true
+			    };
+				};
+			};
+
+			case "class": {
+				_return = getArray (configFile >> "CfgVehicles" >> (typeOf _unit) >> "identityTypes");
+			};
+
+			case "full": {
+				_return = ([[_unit],"getUnitIDs","class"] call INCON_fnc_ucrMain);
+				{_return pushbackunique _x} forEach ([[_unit],"getUnitIDs","face"] call INCON_fnc_ucrMain);
+			};
+		};
 	};
 
 	case "factionIDcheck": {
-		_input params ["_unit",["_factions",["OPF_F"]],["_simpleCheck",true]];
+
+		_input params ["_unit",["_factions",["OPF_F"]],["_checkType","full"],["_simpleCheck",true]];
 
 		private ["_factionIDs","_unitIDs","_overlappingIDs"];
 
+		_overlappingIDs = [];
+
 		_factionIDs = (["possibleIdentities",_factions] call INCON_fnc_getConfigInfo);
 
-		_unitIDs = [[_unit],"getUnitIDs"] call INCON_fnc_ucrMain;
-
-		_overlappingIDs = [];
+		_unitIDs = [[_unit],"getUnitIDs",_checkType] call INCON_fnc_ucrMain;
 
 		switch (_simpleCheck) do {
 			case true: {
@@ -261,8 +280,6 @@ switch (_operation) do {
 				_return = _overlappingIDs;
 			};
 		};
-
-		_return = _IDarray;
 	};
 };
 
