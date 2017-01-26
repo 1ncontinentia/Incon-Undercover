@@ -39,8 +39,8 @@ if (isPlayer _unit) then {
 
 	waitUntil {
 
-		//Proximity check for players (doesn't run if the unit is compromised)
-		if((isPlayer _unit) || {_fullAIfunctionality}) then {
+		//Proximity check for players (doesn't run if the unit isn't trying to be sneaky)
+		if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit}) then {
 
 			private ["_disguiseValue","_disguiseRadius"];
 
