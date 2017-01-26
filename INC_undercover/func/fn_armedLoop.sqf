@@ -91,7 +91,7 @@ if (!local _unit) exitWith {};
 			sleep _responseTime;
 
 			//Penalise people for being oddballs
-			if ((isPlayer _unit) || {_fullAIfunctionality}) then {
+			if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit}) then {
 
 				switch (_unit getVariable ["INC_goneIncog",false]) do {
 
@@ -321,10 +321,43 @@ if (!local _unit) exitWith {};
 
 			//Incognito check to go here
 			if (((typeOf vehicle _unit) in INC_incogVehArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) then {
+				switch (_unit getVariable ["INC_goneIncog",false]) do {
+					case false: {
+						private ["_regAlerted","_regKnowsAboutUnit","_asymAlerted","_asymKnowsAboutUnit"];
 
-				_unit setVariable ["INC_goneIncog",true];
-				_unit setVariable ["INC_canConcealWeapon",false];
-				_unit setVariable ["INC_canGoLoud",false];
+						if !(_unit getVariable ["INC_isCompromised",false]) then {
+
+
+							//Checks if INC_regEnySide has seen him recently and sets variables accordingly
+							_regAlerted = [INC_regEnySide,_unit,20] call INCON_fnc_countAlerted;
+							if (_regAlerted != 0) then {
+								_regKnowsAboutUnit = true;
+							} else {
+								_regKnowsAboutUnit = false;
+							};
+
+
+							//Checks if INC_asymEnySide has seen him recently
+							_asymAlerted = [INC_asymEnySide,_unit,20] call INCON_fnc_countAlerted;
+							if (_asymAlerted != 0) then {
+								_asymKnowsAboutUnit = true;
+							} else {
+								_asymKnowsAboutUnit = false;
+							};
+
+							//If either side has seen the unit, make him compromised
+							if ((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) then {
+								[_unit] call INCON_fnc_compromised;
+							};
+						};
+
+						_unit setVariable ["INC_goneIncog",true];
+						_unit setVariable ["INC_faceFits",  (_unit getVariable ["INC_looksLikeIncog",true])];
+						_unit setVariable ["INC_canConcealWeapon",false];
+						_unit setVariable ["INC_canGoLoud",false];
+					};
+				};
+
 			} else {
 				_unit setVariable ["INC_goneIncog",false];
 				_unit setVariable ["INC_faceFits", (_unit getVariable ["INC_looksLikeCiv",true])];
