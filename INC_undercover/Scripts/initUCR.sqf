@@ -230,20 +230,21 @@ if (isPlayer _unit) then {
 	sleep 0.5;
 
 	//Run a low-impact version of the undercover script on AI subordinates (no proximity check)
-	if (_unit isEqualTo (leader group _unit)) then {
+	if (isPlayer _unit) then {
 		[_unit] spawn {
 			params ["_unit"];
 			{
-				if !(_x getVariable ["isUndercover",false]) then {
-					sleep 0.2;
-					[_x] execVM "INC_undercover\Scripts\initUCR.sqf";
-					sleep 0.2;
-					_x setVariable ["noChanges",true,true];
-					_x setVariable ["isUndercover", true];
-					sleep 0.2;
-					[[_x,_unit],"addConcealActions"] call INCON_fnc_ucrMain;
-				};
-			} forEach units group _unit;
+				sleep 0.2;
+				[_x] execVM "INC_undercover\Scripts\initUCR.sqf";
+				sleep 0.2;
+				_x setVariable ["noChanges",true,true];
+				_x setVariable ["isUndercover", true];
+				sleep 0.2;
+				[[_x,_unit],"addConcealActions"] call INCON_fnc_ucrMain;
+			} forEach ((units _unit) select {
+				!(_x getVariable ["isUndercover",false]) &&
+				{!isPlayer _x}
+			});
 		};
 	};
 };
