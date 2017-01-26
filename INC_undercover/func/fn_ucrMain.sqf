@@ -253,8 +253,7 @@ switch (_operation) do {
 			};
 
 			case "full": {
-				_return = ([[_unit],"getUnitIDs","class"] call INCON_fnc_ucrMain);
-				{_return pushbackunique _x} forEach ([[_unit],"getUnitIDs","face"] call INCON_fnc_ucrMain);
+				_return = ([[_unit],"getUnitIDs","class"] call INCON_fnc_ucrMain) + ([[_unit],"getUnitIDs","face"] call INCON_fnc_ucrMain);
 			};
 		};
 	};
@@ -280,6 +279,21 @@ switch (_operation) do {
 				_return = _overlappingIDs;
 			};
 		};
+	};
+
+	case "IDcheck": {
+
+		_input params ["_unitIDs","_faction1IDs","_faction2IDs"];
+
+		private ["_factionIDs","_unitIDs","_overlappingIDs","_looksLikeCiv","_looksLikeIncog"];
+
+		_looksLike1 = false;
+		_looksLike2 = false;
+
+		{if (_x in _faction1IDs) exitWith {_looksLike1 = true}} forEach _unitIDs;
+		{if (_x in _faction2IDs) exitWith {_looksLike2 = true}} forEach _unitIDs;
+
+		_return = [_looksLike1,_looksLike2];
 	};
 
   case "getFacVehs": {
