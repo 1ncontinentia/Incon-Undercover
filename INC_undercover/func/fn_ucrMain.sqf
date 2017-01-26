@@ -239,12 +239,12 @@ switch (_operation) do {
 				_cfgFaces = configFile >> "cfgFaces";
 
 				for "_i" from 0 to (count _cfgFaces - 1) do {
-			    _entry = _cfgFaces select _i;
+				    _entry = _cfgFaces select _i;
 
-			    if (isclass (_entry >> face _unit)) exitWith {
-			        _return = (getArray (_entry >> (face _unit) >> "identityTypes"));
-							true
-			    };
+				    if (isclass (_entry >> face _unit)) exitWith {
+				        _return = (getArray (_entry >> (face _unit) >> "identityTypes"));
+								true
+				    };
 				};
 			};
 

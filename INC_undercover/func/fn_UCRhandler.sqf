@@ -71,7 +71,7 @@ if (isPlayer _unit) then {
 					sleep 0.5;
 
 					_nearAsym = count (
-						(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 2)) select {
+						(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 1.5)) select {
 							(side _x == INC_asymEnySide) &&
 							{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
 							{(_x knowsAbout _unit) > 2} &&

@@ -11,6 +11,21 @@ _this spawn {
 
 	sleep (random 15);
 
+	if ((5 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+		[_unit] call INCON_fnc_compromised;
+		sleep (random 3);
+		{
+			[_x] call INCON_fnc_compromised;
+			sleep (random 3);
+		} forEach ((units _unit) select {
+			(_x getVariable ["INC_anyKnowsSO",false]) &&
+			{_x distance _unit < (10 * (_unit getVariable ["INC_disguiseValue",1]))} &&
+			{((22 * (_x getVariable ["INC_disguiseValue",1])) > (random 100))}
+		});
+		true
+	};
+
 	if !((22 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
 	};
