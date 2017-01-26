@@ -11,7 +11,7 @@ _this spawn {
 
 	sleep (random 15);
 
-	if !((30 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+	if !((22 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
 	};
 
@@ -32,11 +32,13 @@ _this spawn {
 
 	sleep (random 15);
 
-	if !((40 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+	if !((30 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
 	};
 
 	waitUntil {
+
+		if ((!alive _suspiciousEnemy) || {!captive _unit}) exitWith {true};
 
 		if (30 > random 100) then {_suspiciousEnemy doMove ([(getPosWorld _unit),20] call CBA_fnc_Randpos);};
 
@@ -49,6 +51,15 @@ _this spawn {
 		if (((((speed _unit) + 4) / 1.6) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 			_suspiciousEnemy setVariable ["INC_isSuspicious",false];
 			[_unit] call INCON_fnc_compromised;
+			sleep (random 3);
+			{
+				[_x] call INCON_fnc_compromised;
+				sleep (random 3);
+			} forEach ((units _unit) select {
+				(_x getVariable ["INC_anyKnowsSO",false]) &&
+				{_x distance _unit < (10 * (_unit getVariable ["INC_disguiseValue",1]))} &&
+				{((22 * (_x getVariable ["INC_disguiseValue",1])) > (random 100))}
+			});
 			true
 		};
 
@@ -57,6 +68,6 @@ _this spawn {
 			true
 		};
 
-		(!((_suspiciousEnemy getHideFrom _unit) distanceSqr _unit < 30) || {!alive _suspiciousEnemy} || {!captive _unit})
+		(!((_suspiciousEnemy getHideFrom _unit) distanceSqr _unit < 20) || {!alive _suspiciousEnemy} || {!captive _unit})
 	};
 };
