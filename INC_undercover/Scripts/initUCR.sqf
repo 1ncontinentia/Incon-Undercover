@@ -217,8 +217,8 @@ if (isPlayer _unit) then {
 				_unit globalChat (format ["%1 cover intact: %2, compromised: %3",_unit,(captive _unit),(_unit getVariable ["INC_isCompromised",false])]);
 				_unit globalChat (format ["%1 trespassing: %2",_unit,((_unit getVariable ["INC_proxAlert",false]) || {(_unit getVariable ["INC_trespassAlert",false])})]);
 				_unit globalChat (format ["%1 suspicious level: %2",_unit,(_unit getVariable ["INC_suspiciousValue",1])]);
-				_unit globalChat (format ["%1 weirdo level: %2",_unit,(_unit getVariable ["INC_disguiseValue",1])]);
-				_unit globalChat (format ["%1 spot distance: %2",_unit,(_unit getVariable ["INC_radiusMulti",1])]);
+				_unit globalChat (format ["%1 weirdo check active: %2, value %3",_unit,(captive _unit),(_unit getVariable ["INC_disguiseValue",1])]);
+				_unit globalChat (format ["%1 spot distance multiplier active: %2, value %3",_unit,(captive _unit),(_unit getVariable ["INC_radiusMulti",1])]);
 				_unit globalChat (format ["Enemy know about %1: %2",_unit,(_unit getVariable ["INC_AnyKnowsSO",false])]);
 				!(_unit getVariable ["isUndercover",false])
 			};
@@ -288,6 +288,10 @@ waitUntil {
 	//Once the player is doing suspicious stuff, make them vulnerable to being compromised
 	_unit setVariable ["INC_suspicious", true]; //Hold the cooldown script until the unit is no longer doing suspicious things
 	[_unit, false] remoteExec ["setCaptive", _unit]; //Makes enemies hostile to the unit
+
+	//These variables shouldn't run while the unit isn't captive
+	_unit setVariable ["INC_weirdoLevel",1];
+	_unit setVariable ["INC_radiusMulti",1];
 
 	[_unit] call INCON_fnc_cooldown; //Gets the cooldown script going
 
