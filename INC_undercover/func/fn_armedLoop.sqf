@@ -132,11 +132,16 @@ if (!local _unit) exitWith {};
 						if ((((headgear _unit) find "elmet") >= 0) || {((goggles _unit) find "alaclava") >= 0}) then {
 
 							_weirdoLevel = _weirdoLevel + 2;
+							_spotDistance = _spotDistance + 1.5;
+						};
+
+						if !(headgear _unit in INC_civilianHeadgear) then {
+							_weirdoLevel = _weirdoLevel + 1;
 							_spotDistance = _spotDistance + 1;
 						};
 
-						if (!(headgear _unit in INC_civilianHeadgear) || {(hmd _unit != "") && !(_HMDallowed)}) then {
-							_weirdoLevel = _weirdoLevel + 2;
+						if ((hmd _unit != "") && !(_HMDallowed)) then {
+							_weirdoLevel = _weirdoLevel + 3;
 							_spotDistance = _spotDistance + 1;
 						};
 

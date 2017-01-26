@@ -89,7 +89,7 @@ For the sake of this explanation, we'll separate behaviours into three categorie
 
 * Weird behaviour will not make enemies see the unit as hostile instantly, but each additional weird behaviour will increase the likelihood of nearby enemies who could blow the units cover. Weird behaviour in proximity to enemies may cause some to take interest or become outright hostile straight away if you are acting strange enough. If the unit isn't able to stop acting strangely or the suspicious enemies are not dealt with quickly (or you manage to escape somehow), they may compromise the unit and any of teammates who are also acting strangely nearby.
 
-* Attention-drawing behaviour isn't necessarily weird, but it does make enemies notice you from further away. While dressed as the enemy, wearing the wrong helmet for your disguise is harder to detect from a distance than wearing the wrong vest, but both are similarly weird. Wearing a vest will therefore add to your attention-drawing behaviour. Running, for instance, isn't so weird but will draw attention from enemies who are further away. Most weird behaviours will be attention-drawing too. The more attention-drawing behaviours you do, the further away units will start taking an interest in you, and therefore, the more likely they are to compromise you if you are doing anything weird (like wearing NVGs while dressed as a civilian). The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the undercover unit's attention-drawing behaviours, incognito status and vehicle, as well as environmental factors like moon intensity, overcast, rain and fog.
+* Attention-drawing behaviour isn't necessarily weird, but it does make enemies notice you from further away. While dressed as the enemy, wearing the wrong helmet for your disguise is harder to detect from a distance than wearing the wrong vest, but both are similarly weird. Wearing a vest will therefore add to your attention-drawing behaviour. Running, for instance, isn't so weird but will draw attention from enemies who are further away. Most weird behaviours will be attention-drawing too. The more attention-drawing behaviours you do, the further away units will start taking an interest in you, and therefore, the more likely they are to compromise you if you are doing anything weird (like wearing NVGs while dressed as a civilian). The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the undercover unit's attention-drawing behaviours, incognito status and vehicle, as well as environmental factors like moon intensity, overcast, rain and fog. It is recommended to not increase the detection radius much beyond the default. 
 
 If the unit is compromised, the unit must kill all enemies who know about them before they spread the units identity across the AO.
 After that, the unit becomes fully compromised and must change his disguise (clothes and either goggles / headgear) to go undercover again.
@@ -122,11 +122,12 @@ When in a vehicle, the following may count as weird behaviour:
 WHEN NOT IN DISGUISE AS ENEMY:
 
 When on foot, the following may count as weird behaviour:
-* Wearing a helmet or balaclava
+* Wearing a helmet, HMD or balaclava
 * Running / sprinting (when not under fire)
 * Crouching / crawling (when not under fire)
 * Wearing a uniform that the unit was recently compromised in
 * Smelling of cordite (having shot recently)
+* Raising your weapon
 
 And suspicious:
 * Wearing a suspicious uniform or vest
