@@ -16,9 +16,9 @@ if (!local _unit) exitWith {};
 
 //Armed / Incognito Stuff
 //=======================================================================//
-[_unit,_HMDallowed,_noOffRoad,_debug,_hints,_regDetectRadius,_asymDetectRadius,_fullAIfunctionality] spawn {
+[_unit,_HMDallowed,_noOffRoad,_debug,_hints,_regDetectRadius,_asymDetectRadius,_fullAIfunctionality,_racism] spawn {
 
-	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius","_fullAIfunctionality"];
+	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius","_fullAIfunctionality","_racism"];
 
 	private _responseTime = 0.2;
 
@@ -75,10 +75,12 @@ if (!local _unit) exitWith {};
 						};
 
 						_unit setVariable ["INC_goneIncog",true];
+						_unit setVariable ["INC_faceFits",  (_unit getVariable ["INC_looksLikeIncog",true])];
 					};
 				};
 			} else {
 				_unit setVariable ["INC_goneIncog",false];
+				_unit setVariable ["INC_faceFits", (_unit getVariable ["INC_looksLikeCiv",true])];
 			};
 
 			sleep _responseTime;
@@ -132,8 +134,20 @@ if (!local _unit) exitWith {};
 							_weirdoLevel = _weirdoLevel + 2;
 							_spotDistance = _spotDistance + 1;
 						};
+
+						if (!(headgear _unit in INC_civilianHeadgear) || {(hmd _unit != "") && !(_HMDallowed)}) then {
+							_weirdoLevel = _weirdoLevel + 2;
+							_spotDistance = _spotDistance + 1;
+						};
+
+						if !(backpack _unit in INC_civilianBackpacks) then {
+							_weirdoLevel = _weirdoLevel + 2;
+							_spotDistance = _spotDistance + 1;
+						};
 					};
 				};
+
+				sleep _responseTime;
 
 				//Running and jumping are seen as weird unless there has been shooting near the unit
 				if !(_unit getVariable ["INC_shotNear",false]) then {
@@ -170,13 +184,48 @@ if (!local _unit) exitWith {};
 					};
 				};
 
+				sleep _responseTime;
+
+				//Racial profiling checks
+				if !(_unit getVariable ["INC_faceFits",true]) then {
+
+
+					if (goggles _unit == "") then {
+						if (_unit getVariable ["INC_goneIncog",false]) then {
+							_weirdoLevel = _weirdoLevel + 2;
+							_spotDistance = _spotDistance + 0.5;
+						};
+
+						_weirdoLevel = _weirdoLevel + 2;
+						_spotDistance = _spotDistance + 1.5;
+
+					} else {
+
+						if ((((goggles _unit) find "andanna") >= 0) || {((goggles _unit) find "carf") >= 0}) then {
+							_weirdoLevel = _weirdoLevel + 1;
+							_spotDistance = _spotDistance + 0.5;
+
+						} else {
+
+							//If the unit isn't wearing a bandana but is wearing something else, and is either dressed as a civilian or incognito and not wearing a balaclava...
+							if (
+								!(_unit getVariable ["INC_goneIncog",false]) ||
+								{
+									(_unit getVariable ["INC_goneIncog",false]) &&
+									{(((goggles _unit) find "alaclava") == -1)}
+								}
+							) then {
+								_weirdoLevel = _weirdoLevel + 2;
+								_spotDistance = _spotDistance + 1;
+							};
+						};
+					};
+				};
+
 				//If the unit has shot his weapon recently...
 				if (_unit getVariable ["INC_firedRecent",false]) then {
 					_weirdoLevel = _weirdoLevel + 2;
 				};
-
-
-				sleep _responseTime;
 
 				sleep _responseTime;
 
@@ -195,7 +244,7 @@ if (!local _unit) exitWith {};
 			if !(_unit getVariable ["INC_goneIncog",false]) then {
 
 				//Check if unit is wearing anything suspicious
-				if (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)} || {!(headgear _unit in INC_civilianHeadgear)}  || {!(backpack _unit in INC_civilianBackpacks)} || {(hmd _unit != "") && !(_HMDallowed)} || {uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])}) then {
+				if (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)} || {uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])}) then {
 
 					_suspiciousValue = _suspiciousValue + 1;
 				};
@@ -208,8 +257,6 @@ if (!local _unit) exitWith {};
 					_suspiciousValue = _suspiciousValue + 1;
 				};
 
-				sleep _responseTime;
-
 				//Trespass check
 				if (_unit getVariable ["INC_trespassAlert",false]) then {
 
@@ -219,7 +266,6 @@ if (!local _unit) exitWith {};
 
 			if (_unit getVariable ["INC_justFired",false]) then {
 				_suspiciousValue = _suspiciousValue + 2;
-
 
 				_unit setVariable ["INC_firedRecent",true];
 
@@ -281,12 +327,13 @@ if (!local _unit) exitWith {};
 				_unit setVariable ["INC_canGoLoud",false];
 			} else {
 				_unit setVariable ["INC_goneIncog",false];
+				_unit setVariable ["INC_faceFits", (_unit getVariable ["INC_looksLikeCiv",true])];
 				_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_gearHandler)];
 				_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_gearHandler)];
 			};
 
 			//Penalise people for being oddballs by increasing the spotting radius - wearing wrong uniform / hmd
-			if ((isPlayer _unit) || {_fullAIfunctionality}) then {
+			if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit}) then {
 
 				if !(_unit getVariable ["INC_goneIncog",false]) then {
 
@@ -307,7 +354,7 @@ if (!local _unit) exitWith {};
 					_weirdoLevel = _weirdoLevel + ((speed _unit)/ 40);
 					_spotDistance = _spotDistance + ((speed _unit)/ 8);
 
-			        switch (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)}) do {
+			    switch (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)}) do {
 
 						case true: {
 

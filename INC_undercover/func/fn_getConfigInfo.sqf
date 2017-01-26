@@ -129,7 +129,7 @@ switch (_gearType) do {
     };
 
     case "possibleIdentities": {
-      _result = ["Default"];
+      _result = [];
       {
           _unit = _x;
           _IDarray = getArray (_unit >> "identityTypes");
