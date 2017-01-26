@@ -244,7 +244,12 @@ if (!local _unit) exitWith {};
 			if !(_unit getVariable ["INC_goneIncog",false]) then {
 
 				//Check if unit is wearing anything suspicious
-				if (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)} || {uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])}) then {
+				if (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)}) then {
+
+					_suspiciousValue = _suspiciousValue + 1;
+				};
+
+				if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
 
 					_suspiciousValue = _suspiciousValue + 1;
 				};
