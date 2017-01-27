@@ -50,26 +50,8 @@ if (!local _unit) exitWith {};
 
 						if !(_unit getVariable ["INC_isCompromised",false]) then {
 
-
-							//Checks if INC_regEnySide has seen him recently and sets variables accordingly
-							_regAlerted = [INC_regEnySide,_unit,20] call INCON_fnc_countAlerted;
-							if (_regAlerted != 0) then {
-								_regKnowsAboutUnit = true;
-							} else {
-								_regKnowsAboutUnit = false;
-							};
-
-
-							//Checks if INC_asymEnySide has seen him recently
-							_asymAlerted = [INC_asymEnySide,_unit,20] call INCON_fnc_countAlerted;
-							if (_asymAlerted != 0) then {
-								_asymKnowsAboutUnit = true;
-							} else {
-								_asymKnowsAboutUnit = false;
-							};
-
 							//If either side has seen the unit, make him compromised
-							if ((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) then {
+							if (([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact}) then {
 								[_unit] call INCON_fnc_compromised;
 							};
 						};
@@ -374,26 +356,8 @@ if (!local _unit) exitWith {};
 
 						if !(_unit getVariable ["INC_isCompromised",false]) then {
 
-
-							//Checks if INC_regEnySide has seen him recently and sets variables accordingly
-							_regAlerted = [INC_regEnySide,_unit,20] call INCON_fnc_countAlerted;
-							if (_regAlerted != 0) then {
-								_regKnowsAboutUnit = true;
-							} else {
-								_regKnowsAboutUnit = false;
-							};
-
-
-							//Checks if INC_asymEnySide has seen him recently
-							_asymAlerted = [INC_asymEnySide,_unit,20] call INCON_fnc_countAlerted;
-							if (_asymAlerted != 0) then {
-								_asymKnowsAboutUnit = true;
-							} else {
-								_asymKnowsAboutUnit = false;
-							};
-
 							//If either side has seen the unit, make him compromised
-							if ((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) then {
+							if (([INC_regEnySide,_unit,20] call INCON_fnc_isKnownExact) || {[INC_asymEnySide,_unit,20] call INCON_fnc_isKnownExact}) then {
 								[_unit] call INCON_fnc_compromised;
 							};
 						};

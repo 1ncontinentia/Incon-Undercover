@@ -162,9 +162,9 @@ if (isPlayer _unit) then {
 
 		sleep 4;
 
-		private _alertedRegKnows = ([_unit, INC_regEnySide] call INCON_fnc_getAlerted);
+		private _alertedRegKnows = ([_unit, INC_regEnySide] call INCON_fnc_isKnownToSide);
 
-		private _alertedAsymKnows = ([_unit, INC_asymEnySide] call INCON_fnc_getAlerted);
+		private _alertedAsymKnows = ([_unit, INC_asymEnySide] call INCON_fnc_isKnownToSide);
 
 		private _anyAlerted = false;
 
@@ -201,12 +201,8 @@ _unit addEventHandler["FiredMan", {
 		//If anybody is aware of the unit and the unit isn't incognito, then compromise him
 		if (_unit getVariable ["INC_anyKnowsSO",false]) then {
 
-			//Do nothing unless they know where the dude is
-			_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
-			_asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
-
 			//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
-			if ((_regAlerted != 0) || {_asymAlerted != 0}) exitWith {
+			if (([INC_regEnySide,_unit,40] call INCON_fnc_isKnownExact) || {([INC_asymEnySide,_unit,40] call INCON_fnc_isKnownExact)}) exitWith {
 
 				[_unit] call INCON_fnc_compromised;
 			};
@@ -268,7 +264,7 @@ if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_envLoopActive",fal
 				missionNamespace setVariable ["INC_envDisgMulti",0.2];
 			} else {
 				missionNamespace setVariable ["INC_envDisgMulti",(_daylightMulti - (fog/4) - (rain/5))];
-			}; 
+			};
 
 			missionNamespace setVariable ["INC_envJumpygMulti",_jumpinessMulti];
 

@@ -109,8 +109,8 @@ if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multipl
 				_activeVeh = (vehicle _unit);
 				if !(
 
-					(([INC_regEnySide,_unit,10] call INCON_fnc_countAlerted) == 0) &&
-					{(([INC_asymEnySide,_unit,10] call INCON_fnc_countAlerted) == 0)}
+					([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) &&
+					{([INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact)}
 
 				) then {
 					_activeVeh setVariable ["INC_naughtyVehicle",true];
@@ -128,8 +128,8 @@ if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multipl
 
 				if (
 
-					(([INC_regEnySide,_unit,30] call INCON_fnc_countAlerted) == 0) &&
-					{(([INC_asymEnySide,_unit,30] call INCON_fnc_countAlerted) == 0)}
+					([INC_regEnySide,_unit,40] call INCON_fnc_isKnownExact) &&
+					{([INC_asymEnySide,_unit,40] call INCON_fnc_isKnownExact)}
 
 				) then {
 

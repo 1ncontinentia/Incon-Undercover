@@ -299,11 +299,9 @@ waitUntil {
 			((_unit getVariable ["INC_suspiciousValue",1]) >= 3) &&
 			{(_unit getVariable ["INC_AnyKnowsSO",false])}
 		) then {
-			private _regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
-			private _asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
 
-			//Once people know exactly where he is, who he is, and that he is both armed and trespassing, make him compromised
-			if ((_regAlerted != 0) || {(_asymAlerted != 0)}) exitWith {
+			//Once people know exactly where he is, and that he is doing loads of suspicious stuff, make him compromised
+			if (([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) || {([INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact)}) exitWith {
 
 				[_unit] call INCON_fnc_compromised;
 			};

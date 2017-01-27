@@ -40,21 +40,10 @@ _unit setVariable ["INC_cooldown", true];
 	};
 
 	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
-	_regAlerted = [INC_regEnySide,_unit,50] call INCON_fnc_countAlerted;
-	if (_regAlerted != 0) then {
-		_regKnowsAboutUnit = true;
-	} else {
-		_regKnowsAboutUnit = false;
-	};
-
+	_regKnowsAboutUnit = [INC_regEnySide,_unit,50] call INCON_fnc_isKnownExact;
 
 	//Checks if INC_asymEnySide has seen him recently
-	_asymAlerted = [INC_asymEnySide,_unit,50] call INCON_fnc_countAlerted;
-	if (_asymAlerted != 0) then {
-		_asymKnowsAboutUnit = true;
-	} else {
-		_asymKnowsAboutUnit = false;
-	};
+	_asymKnowsAboutUnit = [INC_asymEnySide,_unit,50] call INCON_fnc_isKnownExact;
 
 	if ((isPlayer _unit) && (_debug)) then {hint "Cooldown active."};
 
