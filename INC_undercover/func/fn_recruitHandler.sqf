@@ -161,7 +161,7 @@ switch (_operation) do {
 			_civName = name _civ;
 			deleteVehicle _civ;
 
-			_skill = (0.7 + (random 0.25));
+			_skill = (0.4 + (random 0.55));
 
 			_recruitedCiv = (group _groupLead) createUnit [_unitType,[0,0,0],[],0,""];
 			_recruitedCiv setVariable ["noChanges",true,true];
