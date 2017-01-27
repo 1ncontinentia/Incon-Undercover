@@ -183,20 +183,20 @@ if (isPlayer _unit) then {
 _unit addEventHandler["FiredMan", {
 	params["_unit"];
 
-	//Smell of cordite on clothes...
-	if !(_unit getVariable ["INC_justFired",false]) then {
-
-		_unit setVariable ["INC_justFired",true];
-
-		[_unit] spawn {
-			params ["_unit"];
-			sleep (15 + (random 5));
-			_unit setVariable ["INC_justFired",false];
-		};
-	};
-
 	//If he's already compromised, do nothing
 	if !(_unit getVariable ["INC_isCompromised",false]) then {
+
+		//Smell of cordite on clothes...
+		if !(_unit getVariable ["INC_justFired",false]) then {
+
+			_unit setVariable ["INC_justFired",true];
+
+			[_unit] spawn {
+				params ["_unit"];
+				sleep (15 + (random 5));
+				_unit setVariable ["INC_justFired",false];
+			};
+		};
 
 		//If anybody is aware of the unit and the unit isn't incognito, then compromise him
 		if (_unit getVariable ["INC_anyKnowsSO",false]) then {

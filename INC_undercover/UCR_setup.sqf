@@ -12,7 +12,7 @@ _undercoverUnitSide = west;             //What side is/are the undercover unit(s
 
 //-------------------------General Settings-------------------------
 
-_debug = true; //Set to true for debug hints
+_debug = false; //Set to true for debug hints
 _hints = true;  //Hints show changes of state etc
 _fullAIfunctionality = true; //Enable all checks on AI (may degrade performace slightly for large groups)
 
