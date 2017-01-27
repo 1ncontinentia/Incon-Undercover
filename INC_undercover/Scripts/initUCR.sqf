@@ -218,7 +218,7 @@ if (isPlayer _unit) then {
 				_unit globalChat (format ["%1 trespassing: %2",_unit,((_unit getVariable ["INC_proxAlert",false]) || {(_unit getVariable ["INC_trespassAlert",false])})]);
 				_unit globalChat (format ["%1 suspicious level: %2",_unit,(_unit getVariable ["INC_suspiciousValue",1])]);
 				_unit globalChat (format ["%1 weirdo check active: %2, value %3",_unit,(captive _unit),(_unit getVariable ["INC_disguiseValue",1])]);
-				_unit globalChat (format ["%1 distance multi active: %2, value %3",_unit,(captive _unit),(_unit getVariable ["INC_radiusMulti",1])]);
+				_unit globalChat (format ["%1 distance multi active: %2, value %3 / %4",_unit,(captive _unit),(_unit getVariable ["INC_radiusMulti",1]),(round (_unit getVariable ["INC_disguiseRad",1]))]);
 				_unit globalChat (format ["Enemy know about %1: %2",_unit,(_unit getVariable ["INC_AnyKnowsSO",false])]);
 				!(_unit getVariable ["isUndercover",false])
 			};

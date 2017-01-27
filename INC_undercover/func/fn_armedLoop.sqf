@@ -411,6 +411,19 @@ if (!local _unit) exitWith {};
 				_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_gearHandler)];
 			};
 
+			sleep _responseTime;
+
+			//Headlights check for moving land vehicle at night
+			if (
+				!(missionNamespace getVariable ["INC_isDaytime",true]) &&
+				{!(_unit getVariable ["INC_goneIncog",false])} &&
+				{!isLightOn vehicle _unit} &&
+				{(vehicle _unit) isKindOf "LandVehicle"} &&
+				{speed _unit > 5}
+			) then {
+				_suspiciousValue = _suspiciousValue + 1;
+			};
+
 			//Penalise people for being oddballs by increasing the spotting radius - wearing wrong uniform / hmd
 			if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit}) then {
 
@@ -418,23 +431,11 @@ if (!local _unit) exitWith {};
 
 					sleep _responseTime;
 
-					//Headlights check for moving land vehicle at night
-					if (
-						!(missionNamespace getVariable ["INC_isDaytime",true]) &&
-						{isLightOn vehicle _unit} &&
-						{(vehicle _unit) isKindOf "LandVehicle"} &&
-						{speed _unit > 5}
-					) then {
-						_suspiciousValue = _suspiciousValue + 1;
-					};
-
-					sleep _responseTime;
-
 
 					if ((_noOffRoad) && {((vehicle _unit) isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
 
-						_weirdoLevel = _weirdoLevel + 2;
-						_spotDistance = _spotDistance + 2;
+						_weirdoLevel = _weirdoLevel + 4;
+						_spotDistance = _spotDistance + 4;
 					};
 
 					_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 40);
@@ -471,7 +472,7 @@ if (!local _unit) exitWith {};
 					//Headlights check for moving vehicle at night
 					if (
 						!(missionNamespace getVariable ["INC_isDaytime",true]) &&
-						{isLightOn vehicle _unit} &&
+						{!isLightOn vehicle _unit} &&
 						{speed _unit > 5} &&
 						{(vehicle _unit) isKindOf "LandVehicle"}
 					) then {
