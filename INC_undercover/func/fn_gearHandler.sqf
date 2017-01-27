@@ -170,18 +170,15 @@ switch (_operation) do {
 
 		private _wpn = currentWeapon _unit;
 
-		if ((_wpn == 'Throw') || {_wpn == ''}) exitWith {_return = false};
+		if ((_wpn == "") || {_wpn == "Throw"} || {_wpn == binocular _unit}) exitWith {_return = false};
 
 		_return = (
 			(
 				(isNull objectParent _unit) ||
 				{((assignedVehicleRole _unit) select 0) == "Turret"}
 			) && {
-				((currentWeapon _unit) isKindOf ['Pistol', configFile >> 'CfgWeapons']) ||
-				{(currentWeapon _unit) isKindOf ['Rifle', configFile >> 'CfgWeapons']}
-			} && {
-				(_unit canAddItemToUniform (currentWeapon _unit)) ||
-				{_unit canAddItemToBackpack (currentWeapon _unit)}
+				((primaryWeapon _unit != "") && {(_unit canAddItemToUniform (primaryWeapon _unit)) || {_unit canAddItemToBackpack (primaryWeapon _unit)}}) ||
+				{(handgunWeapon _unit != "") && {(_unit canAddItemToUniform (handgunWeapon _unit)) || {_unit canAddItemToBackpack (handgunWeapon _unit)}}}
 			}
 		);
 	};
@@ -195,7 +192,9 @@ switch (_operation) do {
 				(isNull objectParent _unit) ||
 				{((assignedVehicleRole _unit) select 0) == "Turret"}
 			) && {
-				(currentWeapon _unit == 'Throw') || {currentWeapon _unit == ''}
+				(currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}
+			} && {
+				(handgunWeapon _unit == "") && {primaryWeapon _unit == ""}
 			} && {
 				({
 					(_x isKindOf ['Pistol', configFile >> 'CfgWeapons']) ||
@@ -207,7 +206,7 @@ switch (_operation) do {
 
 	case "concealWeapon": {
 
-		private ["_wpn","_id"];
+		private ["_wpnType","_wpn","_id"];
 
 		_input params ["_unit"];
 
@@ -215,20 +214,42 @@ switch (_operation) do {
 
 		_wpn = currentWeapon _unit;
 
+		if ((primaryWeapon _unit != _wpn) || {handgunWeapon _unit != _wpn}) then {
+			_wpn = (([(primaryWeapon _unit),(handgunWeapon _unit)] select {
+				(_x != "") &&
+				{(_unit canAddItemToUniform _x) || {_unit canAddItemToBackpack _x}}
+			}) select 0);
+		};
+
 		_id = 999;
 
-		if (_wpn isKindOf ["Rifle", configFile >> "CfgWeapons"]) then {_id = 0};
-		if (_wpn isKindOf ["Pistol", configFile >> "CfgWeapons"]) then {_id = 1};
+		if (isNil "_wpn") exitWith {_return = false};
+
+		if (_wpn isEqualTo primaryWeapon _unit) then {_id = 0};
+		if (_wpn isEqualTo handgunWeapon _unit) then {_id = 1};
 
 		if (_id == 999) exitWith {_return = false};
 
-		[_unit,_wpn,_id] spawn {
-			params ["_unit","_wpn","_id"];
-			private ["_mag","_ammoCount","_items","_itemsToAdd","_id","_weaponStore","_weaponArray","_origItems"];
+		_wpnType = "primary";
 
-			_wpn = currentWeapon _unit;
-			_mag = currentMagazine _unit;
-			_ammoCount = _unit ammo (currentWeapon _unit);
+		if (_wpn == handgunWeapon _unit) then {
+			_wpnType = "handgun";
+		};
+
+		[_unit,_wpn,_id,_wpnType] spawn {
+			params ["_unit","_wpn","_id","_wpnType"];
+			private ["_mag","_ammoCount","_items","_baseWpn","_itemsToAdd","_id","_weaponStore","_weaponArray","_origItems"];
+
+			switch (_wpnType) do {
+				case "primary": {
+					_mag = primaryWeaponMagazine _unit select 0;
+				};
+				case "handgun": {
+					_mag = handgunMagazine _unit select 0;
+				};
+			};
+
+			_ammoCount = _unit ammo _wpn;
 			_items = _unit weaponAccessories _wpn;
 			_baseWpn = [_wpn] call BIS_fnc_baseWeapon;
 
@@ -261,7 +282,7 @@ switch (_operation) do {
 			_unit setVariable ["INC_weaponStore",_weaponStore];
 			_unit setVariable ["INC_weaponStoreActive",true];
 
-			if (isClass(configFile >> "CfgPatches" >> "ace_main")) then {
+			if ((isClass(configFile >> "CfgPatches" >> "ace_main")) && {primaryWeapon _unit == ""}) then {
 				_unit call ace_weaponselect_fnc_putWeaponAway;
 			};
 		};
@@ -277,21 +298,27 @@ switch (_operation) do {
 		_weapons = [];
 		_id = 999;
 
-		//Prioritising primary weapons, return an array of either primary or handgun weapons
-		{
-			if (_x isKindOf ["Rifle", configFile >> "CfgWeapons"]) then {
-				_weapons pushBack _x;
-				_id = 0;
-			};
-		} forEach (weapons _unit);
+		if ((primaryWeapon _unit != "") && {secondaryWeapon _unit != ""}) exitWith {_return = false};
 
-		if (_weapons isEqualTo []) then {
+		//Prioritising primary weapons, return an array of either primary or handgun weapons
+		if (primaryWeapon _unit == "") then {
 			{
-				if (_x isKindOf ["Pistol", configFile >> "CfgWeapons"]) then {
+				if ((_x isKindOf ["Rifle", configFile >> "CfgWeapons"]) && {primaryWeapon _unit == ""}) then {
 					_weapons pushBack _x;
-					_id = 1;
+					_id = 0;
 				};
 			} forEach (weapons _unit);
+		};
+
+		if (handgunWeapon _unit == "") then {
+			if (_weapons isEqualTo []) then {
+				{
+					if ((_x isKindOf ["Pistol", configFile >> "CfgWeapons"]) && {handgunWeapon _unit == ""}) then {
+						_weapons pushBack _x;
+						_id = 1;
+					};
+				} forEach (weapons _unit);
+			};
 		};
 
 		//If there's no weapons of either type, exit

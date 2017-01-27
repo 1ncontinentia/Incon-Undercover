@@ -63,10 +63,36 @@ switch (_operation) do {
 
 		[_unit, [
 
-			"<t color='#334FFF'>Conceal current weapon</t>", {
+			"<t color='#334FFF'>Conceal weapons</t>", {
+
 				params ["_unit"];
 
-				[[_unit],"concealWeapon"] call INCON_fnc_gearHandler;
+				[_unit] spawn {
+					params ["_unit"];
+
+					_wpnArray = ([primaryWeapon _unit, handgunWeapon _unit]) select {
+						(_x != "") &&
+						{(_unit canAddItemToUniform _x) || {_unit canAddItemToBackpack _x}}
+					};
+
+					for "_i" from 1 to (count _wpnArray) do {
+						[[_unit],"concealWeapon"] call INCON_fnc_gearHandler;
+						sleep 4;
+					};
+
+					sleep 2;
+
+					if !((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) then {
+						switch (isPlayer _unit) do {
+							case true: {
+								hint "Some weapons have been concealed";
+							};
+							case false: {
+								_unit groupChat "Couldn't fit them all in.";
+							};
+						};
+					};
+				};
 
 			},[],6,false,true,"","(_this == _target) && {_this getVariable ['INC_canConcealWeapon',false]}"
 
@@ -74,10 +100,35 @@ switch (_operation) do {
 
 		[_unit, [
 
-			"<t color='#FF33BB'>Get concealed weapon out</t>", {
+			"<t color='#FF33BB'>Get concealed weapons out</t>", {
+
 				params ["_unit"];
 
-				[[_unit],"unConcealWeapon"] call INCON_fnc_gearHandler;
+				[_unit] spawn {
+
+					params ["_unit"];
+
+					_wpnArray = ((weapons _unit) select {
+						((_x isKindOf ['Rifle', configFile >> 'CfgWeapons']) || {_x isKindOf ['Pistol', configFile >> 'CfgWeapons']})
+					});
+
+					for "_i" from 1 to (count _wpnArray) do {
+						if (_i >= 3) exitWith {true};
+						[[_unit],"unConcealWeapon"] call INCON_fnc_gearHandler;
+						sleep 4;
+					};
+
+					if (isPlayer _unit) exitWith {};
+
+					switch (currentWeapon _unit == primaryWeapon _unit) do {
+						case true: {
+							_unit groupChat "Got my rifle out.";
+						};
+						case false: {
+							_unit groupChat "Got my pistol out.";
+						};
+					};
+				};
 
 			},[],6,false,true,"","(_this == _target) && {_this getVariable ['INC_canGoLoud',false]}"
 
@@ -91,10 +142,25 @@ switch (_operation) do {
 				"<t color='#F70707'>GROUP GO LOUD</t>", {
 					params ["_unit"];
 
-					{if ((_x getVariable ['INC_canGoLoud',false]) && {!isPlayer _x}) then {
-						[[_x],"unConcealWeapon"] call INCON_fnc_gearHandler;
-						(_x) setCombatMode "YELLOW";
-					};} forEach (units _unit);
+					{
+						if ((_x getVariable ['INC_canGoLoud',false]) && {!isPlayer _x}) then {
+
+							[_x] spawn {
+								params ["_unit"];
+
+								_wpnArray = ((weapons _unit) select {
+									(_x isKindOf ['Rifle', configFile >> 'CfgWeapons']) ||
+									{_x isKindOf ['Pistol', configFile >> 'CfgWeapons']}
+								});
+
+								for "_i" from 1 to (count _wpnArray) do {
+									[[_unit],"unConcealWeapon"] call INCON_fnc_gearHandler;
+									sleep 3;
+								};
+							};
+							_x setCombatMode "YELLOW";
+						};
+					} forEach (units _unit);
 
 				},[],4,false,true,"","(_this == _target)"
 
