@@ -13,19 +13,33 @@ _result = [];
 _units = [];
 _cfgVehicles = configFile >> "CfgVehicles";
 
-for "_i" from 0 to (count _cfgVehicles - 1) do {
-  _entry = _cfgVehicles select _i;
+if (isNil "INC_cfgManEntries") then {
 
-  if (isclass _entry) then {
-    if (
-      (getText(_entry >> "faction") in _factions) &&
-      {getNumber(_entry >> "scope") >= 2} &&
-      {configname _entry isKindOf "Man"}
-    ) then {
-      _units pushback _entry;
+    private _cfgMen = [];
+
+    for "_i" from 0 to (count _cfgVehicles - 1) do {
+        _entry = _cfgVehicles select _i;
+
+        if (isclass _entry) then {
+            if (
+                (getNumber(_entry >> "scope") >= 2) &&
+                {configname _entry isKindOf "Man"}
+            ) then {
+                _cfgMen pushback _entry;
+            };
+        };
     };
-  };
+
+    missionNamespace setVariable ["INC_cfgManEntries", _cfgMen, true];
 };
+
+{
+    if (
+        (getText(_x >> "faction") in _factions)
+    ) then {
+        _units pushback _x;
+    };
+} forEach INC_cfgManEntries;
 
 switch (_gearType) do {
 
