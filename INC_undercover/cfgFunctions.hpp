@@ -11,6 +11,7 @@ class INC_undercover
 		class cooldown {description = "Initiates a cooldown after the unit has done something naughty";};
 		class gearHandler {description = "Contains functions for gear checks and actions."};
 		class getConfigInfo {description = "Gets config information on a given faction / unit.";};
+		class initUcrVars {description = "Sets variables for the mission based on setup.sqf.";};
 		class isKnownToSide {description = "Returns whether there are alive groups of the given side who know about the unit.";};
 		class isKnownExact {description = "Returns whether there are alive groups of the given side who know about the unit's location to a defined level of precision.";};
 		class recruitHandler {description = "Handles all civilian recruitment.";};

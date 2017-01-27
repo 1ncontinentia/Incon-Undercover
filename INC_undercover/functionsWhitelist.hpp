@@ -7,6 +7,7 @@ class isKnownExact {allowedTargets=0;};
 class gearHandler {allowedTargets=0;};
 class getConfigInfo {allowedTargets=0;};
 class isKnownToSide {allowedTargets=0;};
+class initUcrVars {allowedTargets=0;};
 class recruitHandler {allowedTargets=0;};
 class suspiciousEny {allowedTargets=0;};
 class UCRhandler {allowedTargets=0;};
