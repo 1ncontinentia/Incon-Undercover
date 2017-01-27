@@ -159,6 +159,8 @@ switch (_operation) do {
 								};
 							};
 							_x setCombatMode "YELLOW";
+
+							_x suppressFor 10; 
 						};
 					} forEach (units _unit);
 
