@@ -16,9 +16,9 @@ if (!local _unit) exitWith {};
 
 //Armed / Incognito Stuff
 //=======================================================================//
-[_unit,_HMDallowed,_noOffRoad,_debug,_hints,_regDetectRadius,_asymDetectRadius,_fullAIfunctionality,_racism] spawn {
+[_unit,_HMDallowed,_noOffRoad,_debug,_hints,_regDetectRadius,_asymDetectRadius,_fullAIfunctionality,_racism,_racProfFacCiv,_racProfFacEny] spawn {
 
-	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius","_fullAIfunctionality","_racism"];
+	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius","_fullAIfunctionality","_racism","_racProfFacCiv","_racProfFacEny"];
 
 	private _responseTime = 0.2;
 
@@ -34,7 +34,7 @@ if (!local _unit) exitWith {};
 
 			if !(isNull objectParent _unit) exitWith {true};
 
-			private ["_suspiciousValue","_weirdoLevel","_spotDistance","_nearShotAt"];
+			private ["_suspiciousValue","_weirdoLevel","_spotDistance"];
 
 			_suspiciousValue = 1; //Suspicious behaviour value: higher = more suspicious
 
@@ -137,7 +137,7 @@ if (!local _unit) exitWith {};
 
 						if !(headgear _unit in INC_civilianHeadgear) then {
 							_weirdoLevel = _weirdoLevel + 1;
-							_spotDistance = _spotDistance + 1;
+							_spotDistance = _spotDistance + 0.5;
 						};
 
 						if ((hmd _unit != "") && !(_HMDallowed)) then {
@@ -146,8 +146,13 @@ if (!local _unit) exitWith {};
 						};
 
 						if !(backpack _unit in INC_civilianBackpacks) then {
-							_weirdoLevel = _weirdoLevel + 2;
-							_spotDistance = _spotDistance + 1;
+							_weirdoLevel = _weirdoLevel + 1;
+							_spotDistance = _spotDistance + 0.5;
+						};
+
+						if ((binocular _unit == currentWeapon _unit) && {binocular _unit != ""}) then {
+							_weirdoLevel = _weirdoLevel + 4;
+							_spotDistance = _spotDistance + 2;
 						};
 					};
 				};
@@ -157,9 +162,22 @@ if (!local _unit) exitWith {};
 				//Running and jumping are seen as weird unless there has been shooting near the unit
 				if !(_unit getVariable ["INC_shotNear",false]) then {
 
-			        switch !(stance _unit == "STAND") do {
+			        switch (stance _unit == "STAND") do {
 
 						case true: {
+
+							if (speed _unit > 8) then {
+								_weirdoLevel = _weirdoLevel + 0.3;
+								_spotDistance = _spotDistance + 1.5;
+
+								if (speed _unit > 17) then {
+									_weirdoLevel = _weirdoLevel + 1;
+									_spotDistance = _spotDistance + 3;
+								};
+							};
+						};
+
+						case false: {
 							_weirdoLevel = _weirdoLevel + 2;
 							_spotDistance = _spotDistance + 3;
 
@@ -173,19 +191,6 @@ if (!local _unit) exitWith {};
 								};
 							};
 						};
-
-						case false: {
-
-						    if (speed _unit > 8) then {
-								_weirdoLevel = _weirdoLevel + 0.3;
-								_spotDistance = _spotDistance + 1.5;
-
-							    if (speed _unit > 17) then {
-									_weirdoLevel = _weirdoLevel + 1;
-									_spotDistance = _spotDistance + 3;
-								};
-							};
-						};
 					};
 				};
 
@@ -194,34 +199,66 @@ if (!local _unit) exitWith {};
 				//Racial profiling checks
 				if !(_unit getVariable ["INC_faceFits",true]) then {
 
+					switch (_unit getVariable ["INC_goneIncog",false]) do {
+						case true: {
 
-					if (goggles _unit == "") then {
-						if (_unit getVariable ["INC_goneIncog",false]) then {
-							_weirdoLevel = _weirdoLevel + 2;
-							_spotDistance = _spotDistance + 0.5;
+							if (headgear _unit == "") then {
+								_weirdoLevel = _weirdoLevel + (2 * _racProfFacEny);
+								_spotDistance = _spotDistance + (2 * _racProfFacEny);
+							};
+
+							if (goggles _unit == "") then {
+
+								_weirdoLevel = _weirdoLevel + (4 * _racProfFacEny);
+								_spotDistance = _spotDistance + (2 * _racProfFacEny);
+
+							} else {
+
+								if ((((goggles _unit) find "andanna") >= 0) || {((goggles _unit) find "carf") >= 0}) then {
+									_weirdoLevel = _weirdoLevel + (2 * _racProfFacEny);
+									_spotDistance = _spotDistance + (0.5 * _racProfFacEny);
+
+								} else {
+
+									//If the unit isn't wearing a bandana but is wearing something else, and is either dressed as a civilian or incognito and not wearing a balaclava...
+									if (((goggles _unit) find "alaclava") == -1) then {
+
+										_weirdoLevel = _weirdoLevel + (3 * _racProfFacEny);
+										_spotDistance = _spotDistance + (1.5 * _racProfFacEny);
+									} else {
+
+										//If the unit is wearing a balaclava
+										_weirdoLevel = _weirdoLevel + (1.5 * _racProfFacEny);
+									};
+								};
+							};
+
 						};
 
-						_weirdoLevel = _weirdoLevel + 2;
-						_spotDistance = _spotDistance + 1.5;
+						case false: {
 
-					} else {
+							if (headgear _unit == "") then {
+								_weirdoLevel = _weirdoLevel + (1 * _racProfFacCiv);
+								_spotDistance = _spotDistance + (2 * _racProfFacCiv);
+							};
 
-						if ((((goggles _unit) find "andanna") >= 0) || {((goggles _unit) find "carf") >= 0}) then {
-							_weirdoLevel = _weirdoLevel + 1;
-							_spotDistance = _spotDistance + 0.5;
 
-						} else {
+							if (goggles _unit == "") then {
 
-							//If the unit isn't wearing a bandana but is wearing something else, and is either dressed as a civilian or incognito and not wearing a balaclava...
-							if (
-								!(_unit getVariable ["INC_goneIncog",false]) ||
-								{
-									(_unit getVariable ["INC_goneIncog",false]) &&
-									{(((goggles _unit) find "alaclava") == -1)}
-								}
-							) then {
-								_weirdoLevel = _weirdoLevel + 2;
-								_spotDistance = _spotDistance + 1;
+								_weirdoLevel = _weirdoLevel + (3 * _racProfFacCiv);
+								_spotDistance = _spotDistance + (1.5 * _racProfFacCiv);
+
+							} else {
+
+								if ((((goggles _unit) find "andanna") >= 0) || {((goggles _unit) find "carf") >= 0}) then {
+									_weirdoLevel = _weirdoLevel + (2 * _racProfFacCiv);
+									_spotDistance = _spotDistance + (1 * _racProfFacCiv);
+
+								} else {
+										_weirdoLevel = _weirdoLevel + (2 * _racProfFacCiv);
+										_spotDistance = _spotDistance + (1 * _racProfFacCiv);
+
+								};
 							};
 						};
 					};
@@ -237,10 +274,6 @@ if (!local _unit) exitWith {};
 				if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
 					_weirdoLevel = _weirdoLevel + 3;
 				};
-
-				_unit setVariable ["INC_weirdoLevel",_weirdoLevel];  //This variable acts as a detection radius multiplier
-
-				_unit setVariable ["INC_radiusMulti",_spotDistance]; //This variable acts as a detection radius multiplier
 			};
 
 			sleep _responseTime;
@@ -262,7 +295,7 @@ if (!local _unit) exitWith {};
 				sleep _responseTime;
 
 				//Check if unit is armed
-				if !(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) then {
+				if !(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) then {
 
 					_suspiciousValue = _suspiciousValue + 1;
 				};
@@ -300,7 +333,7 @@ if (!local _unit) exitWith {};
 					{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
 					{(_x knowsAbout _unit) > 3.5} &&
 					{alive _x} &&
-					{((5 * (missionNamespace getVariable ["INC_envJumpygMulti",1])) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
+					{((missionNamespace getVariable ["INC_envJumpygMulti",1]) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
 				});
 
 				if (count _suspiciousEnemies != 0) then {
@@ -310,6 +343,10 @@ if (!local _unit) exitWith {};
 			};
 
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
+
+			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
+
+			_unit setVariable ["INC_radiusMulti",_spotDistance];
 
 			(!(isNull objectParent _unit) || {!alive _unit})
 		};
@@ -321,13 +358,13 @@ if (!local _unit) exitWith {};
 
 			if (isNull objectParent _unit) exitWith {true};
 
-			private ["_suspiciousValue","_weirdoLevel"];
+			private ["_suspiciousValue","_weirdoLevel","_spotDistance"];
 
 			_suspiciousValue = 1; //Suspicious behaviour value: higher = more suspicious
 
 			_weirdoLevel = 1; //Multiplier of radius for units near the player
 
-			_spotDistance = 0.5;
+			_spotDistance = 1; //Multiplier of radius for units near the player
 
 			//Incognito check to go here
 			if (((typeOf vehicle _unit) in INC_incogVehArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) then {
@@ -367,7 +404,6 @@ if (!local _unit) exitWith {};
 						_unit setVariable ["INC_canGoLoud",false];
 					};
 				};
-
 			} else {
 				_unit setVariable ["INC_goneIncog",false];
 				_unit setVariable ["INC_faceFits", (_unit getVariable ["INC_looksLikeCiv",true])];
@@ -382,7 +418,7 @@ if (!local _unit) exitWith {};
 
 					sleep _responseTime;
 
-					//Headlights check for moving vehicle at night
+					//Headlights check for moving land vehicle at night
 					if (
 						!(missionNamespace getVariable ["INC_isDaytime",true]) &&
 						{isLightOn vehicle _unit} &&
@@ -394,18 +430,27 @@ if (!local _unit) exitWith {};
 
 					sleep _responseTime;
 
-					_weirdoLevel = _weirdoLevel + ((speed _unit)/ 40);
-					_spotDistance = _spotDistance + ((speed _unit)/ 8);
 
-			    switch (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)}) do {
+					if ((_noOffRoad) && {((vehicle _unit) isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
+
+						_weirdoLevel = _weirdoLevel + 2;
+						_spotDistance = _spotDistance + 2;
+					};
+
+					_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 40);
+					_spotDistance = _spotDistance + (((speed _unit) + 1)/ 8);
+
+			    	switch (!(uniform _unit in INC_civilianUniforms) || {!(vest _unit in INC_civilianVests)}) do {
 
 						case true: {
 
 							_weirdoLevel = _weirdoLevel + 2.5;
+							_spotDistance = _spotDistance + 2;
 
 							if ((hmd _unit != "") && {!(_HMDallowed)}) then {
 
 								_weirdoLevel = _weirdoLevel + 2;
+								_spotDistance = _spotDistance + 0.5;
 							};
 						};
 
@@ -414,10 +459,14 @@ if (!local _unit) exitWith {};
 							if ((hmd _unit != "") && {!(_HMDallowed)}) then {
 
 								_weirdoLevel = _weirdoLevel + 1.5;
+								_spotDistance = _spotDistance + 0.5;
 							};
 						};
 					};
 				} else {
+
+					_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 40);
+					_spotDistance = _spotDistance + (((speed _unit) + 1)/ 8);
 
 					//Headlights check for moving vehicle at night
 					if (
@@ -434,22 +483,55 @@ if (!local _unit) exitWith {};
 					if (!((vehicle _unit) isKindOf "Tank") && {!(vest _unit in INC_incogVests)}) then {
 
 						_weirdoLevel = _weirdoLevel + 2;
+						_spotDistance = _spotDistance + 1;
 					};
 
 					//Incognito uniform check for non-tank vehicles
 					if (!((vehicle _unit) isKindOf "Tank") && {!(uniform _unit in INC_incogUniforms)}) then {
 
-						_weirdoLevel = _weirdoLevel + 15;
+						_weirdoLevel = _weirdoLevel + 10;
+						_spotDistance = _spotDistance + 2;
+					};
+
+					//Racial profiling checks
+					if (!(_unit getVariable ["INC_faceFits",true]) && {!((vehicle _unit) isKindOf "Tank")}) then {
+
+						if (headgear _unit == "") then {
+							_weirdoLevel = _weirdoLevel + (2 * _racProfFacEny);
+							_spotDistance = _spotDistance + (1 * _racProfFacEny);
+						};
+
+						if (goggles _unit == "") then {
+
+							_weirdoLevel = _weirdoLevel + (2 * _racProfFacEny);
+							_spotDistance = _spotDistance + (1 * _racProfFacEny);
+
+						} else {
+
+							if ((((goggles _unit) find "andanna") >= 0) || {((goggles _unit) find "carf") >= 0}) then {
+								_weirdoLevel = _weirdoLevel + (0.5 * _racProfFacEny);
+								_spotDistance = _spotDistance + (0.5 * _racProfFacEny);
+
+							} else {
+
+								//If the unit isn't wearing a bandana but is wearing something else, and is either dressed as a civilian or incognito and not wearing a balaclava...
+								if (((goggles _unit) find "alaclava") == -1) then {
+
+									_weirdoLevel = _weirdoLevel + (1 * _racProfFacEny);
+								} else {
+
+									//If the unit is wearing a balaclava
+									_weirdoLevel = _weirdoLevel + (0.5 * _racProfFacEny);
+								};
+							};
+						};
 					};
 				};
 
 				if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
 					_weirdoLevel = _weirdoLevel + 2;
+					_spotDistance = _spotDistance + 1;
 				};
-
-				_unit setVariable ["INC_weirdoLevel",_weirdoLevel]; //This variable acts as a detection radius multiplier
-
-				_unit setVariable ["INC_radiusMulti",_spotDistance]; //This variable acts as a detection radius multiplier
 			};
 
 			sleep _responseTime;
@@ -459,10 +541,6 @@ if (!local _unit) exitWith {};
 				//Suspicious vehicle check
 				if !(((typeof vehicle _unit) in INC_civilianVehicleArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) then {
 
-					if ((isPlayer _unit) && {(_debug) || {_hints}}) then {
-						hint "You are in a suspicious vehicle.";
-					};
-
 					_suspiciousValue = _suspiciousValue + 2;
 				};
 
@@ -470,10 +548,6 @@ if (!local _unit) exitWith {};
 
 				//Offroad check
 				if ((_noOffRoad) && {((vehicle _unit) isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
-
-					if ((isPlayer _unit) && {(_debug) || {_hints}}) then {
-						hint "You are in a suspicious vehicle.";
-					};
 
 					_suspiciousValue = _suspiciousValue + 1;
 				};
@@ -494,6 +568,10 @@ if (!local _unit) exitWith {};
 			};
 
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
+
+			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
+
+			_unit setVariable ["INC_radiusMulti",_spotDistance];
 
 			((isNull objectParent _unit) || {!alive _unit})
 		};

@@ -61,8 +61,8 @@ if (isPlayer _unit) then {
 					_nearReg = count (
 						(_unit nearEntities ((_regDetectRadius * _disguiseRadius) * 0.7)) select {
 							(side _x == INC_regEnySide) &&
-							{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
-							{(_x knowsAbout _unit) > 2} &&
+							{((_x getHideFrom (vehicle _unit)) distanceSqr _unit < 10)} &&
+							{(_x knowsAbout (vehicle _unit)) > 2} &&
 							{alive _x} &&
 							{(5 + (2 * _disguiseValue)) > (random 100)}
 						}
@@ -73,8 +73,8 @@ if (isPlayer _unit) then {
 					_nearAsym = count (
 						(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 1.5)) select {
 							(side _x == INC_asymEnySide) &&
-							{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
-							{(_x knowsAbout _unit) > 2} &&
+							{((_x getHideFrom (vehicle _unit)) distanceSqr _unit < 10)} &&
+							{(_x knowsAbout (vehicle _unit)) > 3} &&
 							{alive _x} &&
 							{(5 + (3 * _disguiseValue)) > (random 100)}
 						}
@@ -86,7 +86,7 @@ if (isPlayer _unit) then {
 					_nearReg = count (
 						(_unit nearEntities (_regDetectRadius * _disguiseRadius)) select {
 							(side _x == INC_regEnySide) &&
-							{(_x knowsAbout _unit) > 3} &&
+							{(_x knowsAbout (vehicle _unit)) > 3} &&
 							{alive _x}
 						}
 					);
@@ -96,7 +96,7 @@ if (isPlayer _unit) then {
 					_nearAsym = count (
 						(_unit nearEntities (_asymDetectRadius * _disguiseRadius)) select {
 							(side _x == INC_asymEnySide) &&
-							{(_x knowsAbout _unit) > 3} &&
+							{(_x knowsAbout (vehicle _unit)) > 2} &&
 							{alive _x}
 						}
 					);
@@ -111,11 +111,8 @@ if (isPlayer _unit) then {
 
 			if ((_nearAsym + _nearReg + _nearMines) != 0) then {
 				_unit setVariable ["INC_proxAlert",true];
-				if (_disguiseValue > (4 + random 20)) then {
-					[_unit] call INCON_fnc_compromised;
-				};
 			} else {
-				_unit setVariable ["INC_proxAlert",false]
+				_unit setVariable ["INC_proxAlert",false];
 			};
 		};
 

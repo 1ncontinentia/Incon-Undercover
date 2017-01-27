@@ -57,7 +57,7 @@ if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multipl
 	if (!isNull objectParent _unit) then {
 		_activeVeh = (vehicle _unit);
 		_activeVeh setVariable ["INC_naughtyVehicle",true];
-		{[_x] call INCON_fnc_compromised} forEach ((fullCrew _activeVeh) select {_x getVariable ["INC_AnyKnowsSO",false]}); 
+		{[_x] call INCON_fnc_compromised} forEach ((units _unit) select {(_x distance _unit) < 8});
 	};
 
 	// Cooldown Timer to simulate how long it would take for word to get out
@@ -65,8 +65,8 @@ if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multipl
 	sleep 30;
 
 	waitUntil {
-		sleep 1;
-		_cooldownTimer = (_cooldownTimer - 1);
+		sleep 3;
+		_cooldownTimer = (_cooldownTimer - 3);
 		(!(_unit getVariable ["INC_AnyKnowsSO",false]) || {_cooldownTimer <= 0})
 	};
 
