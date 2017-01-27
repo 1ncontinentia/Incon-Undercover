@@ -16,16 +16,14 @@ waitUntil {!(isNull player)};
 //Can only be run once per unit.
 if ((_unit getVariable ["INC_undercoverHandlerRunning",false]) || {(!local _unit)}) exitWith {};
 
-_unit setVariable ["INC_compLoopActive", false];
+_unit setVariable ["INC_undercoverHandlerRunning", true];
 _unit setVariable ["INC_isCompromised", false];
 _unit setVariable ["INC_suspicious", false];
 _unit setVariable ["INC_cooldown", false];
 _unit setVariable ["INC_shotAt",false];
 _unit setVariable ["INC_firedRecent",false];
 
-_unit setVariable ["INC_undercoverHandlerRunning", true];
-
-if (isPlayer _unit) then {{_x setVariable ["INC_notDismissable",true]} forEach (units group _unit)};
+if ((isPlayer _unit) && {time < 60}) then {{_x setVariable ["INC_notDismissable",true]} forEach (units group _unit)};
 
 _unit setVariable ["isUndercover", true, true]; //Allow scripts to pick up sneaky units alongside undercover civilians (who do not have the isSneaky variable)
 
@@ -34,8 +32,12 @@ sleep 1;
 if (((_debug) || {_hints}) && {isPlayer _unit}) then {hint "Undercover initialising..."};
 
 if (isNil "INC_asymEnySide") then {
-	[] call INCON_fnc_initUcrVars;
-	sleep 5; 
+	[player] call INCON_fnc_initUcrVars;
+};
+
+waitUntil {
+	sleep 1;
+	(missionNamespace getVariable ["INC_ucrInitComplete",false])
 };
 
 if (_racism) then {

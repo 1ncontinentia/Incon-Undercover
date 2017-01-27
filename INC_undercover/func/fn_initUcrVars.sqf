@@ -7,7 +7,9 @@ Author: Incontinentia
 
 private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
 
-[] spawn {
+_this spawn {
+
+	params [["_unit",player]]; 
 
 	#include "..\UCR_setup.sqf"
 
@@ -134,4 +136,6 @@ private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackp
 
 	//Spawn the rebel commader
 	[_unit,"spawnRebelCommander"] remoteExecCall ["INCON_fnc_ucrMain",2];
+
+	missionNamespace setVariable ["INC_ucrInitComplete",true,true];
 };

@@ -37,7 +37,7 @@ params ["_unit"];
 
 if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
-if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
+if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
 
 //Compromised loop
 [_unit,_debug] spawn {
@@ -45,8 +45,6 @@ if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multipl
 	params ["_unit",["_debug",false]];
 
 	private ["_activeVeh"];
-
-	_unit setVariable ["INC_compLoopActive", true];
 
 	// Publicize isCompromised variable to true. This prevents other scripts from setting captive while unit is still compromised.
 	_unit setVariable ["INC_isCompromised", true];
@@ -209,8 +207,4 @@ if (_unit getVariable ["INC_compLoopActive",false]) exitWith {}; //Stops multipl
 		[_unit] call INCON_fnc_cooldown;
 
 	};
-
-	//Allow the loop to run again
-	_unit setVariable ["INC_compLoopActive", false];
-
 };

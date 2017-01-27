@@ -143,7 +143,7 @@ switch (_operation) do {
 					params ["_unit"];
 
 					{
-						if ((_x getVariable ['INC_canGoLoud',false]) && {!isPlayer _x}) then {
+						if (!isPlayer _x) then {
 
 							[_x] spawn {
 								params ["_unit"];
@@ -160,7 +160,7 @@ switch (_operation) do {
 							};
 							_x setCombatMode "YELLOW";
 
-							_x suppressFor 10; 
+							_x suppressFor 10;
 						};
 					} forEach (units _unit);
 
