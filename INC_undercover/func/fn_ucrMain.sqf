@@ -275,29 +275,6 @@ switch (_operation) do {
 			},[],4,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
 		];
 
-		INC_stealGear = _unit addAction [
-			"<t color='#33FF42'>Steal Full Loadout</t>", {
-				params ["_unit"];
-
-				private ["_success"];
-
-				_success = [[_unit,true,7],"stealGear"] call INCON_fnc_gearHandler;
-
-				if (_success) then {
-					if (!isPlayer _unit) then {
-						private _comment = selectRandom ["Found one.","Got something","This'll do","Does my bum look big in this?","Fits nicely.","It's almost as if we're all the same dimensions.","Fits like a glove.","Beautiful.","I look like an idiot."];
-						_unit groupChat _comment;
-					} else {hint "Uniform changed."};
-				} else {
-					if (!isPlayer _unit) then {
-						private _comment = selectRandom ["I'm not sure where you want me to look.","Can you point it out a bit better?"];
-						_unit groupChat _comment;
-					} else {hint "No safe uniforms found nearby."};
-				};
-
-			},[],4,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
-		];
-
 		if (_temporary) then {
 
 			[_unit,_duration] spawn {

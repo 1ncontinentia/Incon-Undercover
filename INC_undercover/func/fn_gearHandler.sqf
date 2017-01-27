@@ -567,42 +567,6 @@ switch (_operation) do {
 			};
 		};
 	};
-
-	case "stealGear": {
-
-		_input params ["_unit",["_stealGear",true],["_radius",5]];
-
-		private ["_activeContainer","_newUnif","_origUnif","_newUnifItems","_droppedUniform","_containerArray"];
-
-		_containerArray = [];
-
-		_containerArray = (nearestObjects [_unit, ["Man"],_radius]) select {
-			(!alive _x)
-		};
-
-		if (count _containerArray == 0) exitWith {_return = false};
-
-		_return = true;
-
-		if (_stealGear) then {
-
-				[(_containerArray select 0),_unit] spawn {
-					params ["_deadGuy","_opportunist"];
-					private ["_gwh","_oldUniform","_deadUniform","_oldItems"];
-
-					[_opportunist,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
-
-					_deadGear = getUnitLoadout _deadGuy;
-					_aliveGear = getUnitLoadout _opportunist;
-
-					sleep 2;
-
-					_opportunist setUnitLoadout [_deadGear, false];
-					_deadGuy setUnitLoadout [_aliveGear,false]; 
-				};
-			};
-		};
-	};
 };
 
 _return
