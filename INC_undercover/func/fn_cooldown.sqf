@@ -36,7 +36,7 @@ _unit setVariable ["INC_cooldown", true];
 	//Stop the script running while the unit is compromised
 	waitUntil {
 		sleep 2;
-		!(_unit getVariable ["INC_isCompromised",false]);
+		!((_unit getVariable ["INC_isCompromised",false]) || {(_unit getVariable ["INC_suspiciousValue",1]) >= 2});
 	};
 
 	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
@@ -61,7 +61,7 @@ _unit setVariable ["INC_cooldown", true];
 	//SetsCaptive back to true if nobody has seen him, unless he is already compromised
 	if !((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) exitWith {
 
-		if !(_unit getVariable ["INC_isCompromised",false]) then {
+		if !((_unit getVariable ["INC_isCompromised",false]) || {(_unit getVariable ["INC_suspiciousValue",1]) >= 2}) then {
 			[_unit, true] remoteExec ["setCaptive", _unit];
 		};
 
@@ -75,7 +75,7 @@ _unit setVariable ["INC_cooldown", true];
 
 		waitUntil {
 			sleep 2;
-			(!(_unit getVariable ["INC_anyKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
+			(!(_unit getVariable ["INC_anyKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)} && {!(_unit getVariable ["INC_isCompromised",false])})
 		};
 
 		if !(_unit getVariable ["INC_isCompromised",false]) then {
@@ -91,7 +91,7 @@ _unit setVariable ["INC_cooldown", true];
 
 		waitUntil {
 			sleep 10;
-			(!(_unit getVariable ["INC_asymKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
+			(!(_unit getVariable ["INC_asymKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)} && {!(_unit getVariable ["INC_isCompromised",false])})
 		};
 
 	//Otherwise, only INC_regEnySide knows about the unit so wait until they no longer do.
@@ -99,7 +99,7 @@ _unit setVariable ["INC_cooldown", true];
 
 		waitUntil {
 			sleep 10;
-			(!(_unit getVariable ["INC_regKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)})
+			(!(_unit getVariable ["INC_regKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)} && {!(_unit getVariable ["INC_isCompromised",false])})
 		};
 
 		//Percentage chance that unit will become compromised anyway

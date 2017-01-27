@@ -259,8 +259,6 @@ sleep 1;
 //Main loop
 waitUntil {
 
-	sleep 1;
-
 	//Pause while the unit is compromised
 	waitUntil {
 		sleep 1;
@@ -270,7 +268,7 @@ waitUntil {
 	//wait until the unit is acting all suspicious
 	waitUntil {
 		sleep 1;
-		((_unit getVariable ["INC_suspiciousValue",1]) >= 2);
+		(((_unit getVariable ["INC_suspiciousValue",1]) >= 2) || {!captive _unit});
 	};
 
 	//Tell them they are being suspicious
@@ -289,10 +287,6 @@ waitUntil {
 	//Once the player is doing suspicious stuff, make them vulnerable to being compromised
 	_unit setVariable ["INC_suspicious", true]; //Hold the cooldown script until the unit is no longer doing suspicious things
 	[_unit, false] remoteExec ["setCaptive", _unit]; //Makes enemies hostile to the unit
-
-	//These variables shouldn't run while the unit isn't captive
-	_unit setVariable ["INC_weirdoLevel",1];
-	_unit setVariable ["INC_radiusMulti",1];
 
 	[_unit] call INCON_fnc_cooldown; //Gets the cooldown script going
 

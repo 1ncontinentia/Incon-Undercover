@@ -186,7 +186,19 @@ if (isPlayer _unit) then {
 _unit addEventHandler["FiredMan", {
 	params["_unit"];
 
-	//If he's compromised, do nothing
+	//Smell of cordite on clothes...
+	if !(_unit getVariable ["INC_justFired",false]) then {
+
+		_unit setVariable ["INC_justFired",true];
+
+		[_unit] spawn {
+			params ["_unit"];
+			sleep (15 + (random 5));
+			_unit setVariable ["INC_justFired",false];
+		};
+	};
+
+	//If he's already compromised, do nothing
 	if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 		//If anybody is aware of the unit and the unit isn't incognito, then compromise him
@@ -202,23 +214,11 @@ _unit addEventHandler["FiredMan", {
 				[_unit] call INCON_fnc_compromised;
 			};
 		};
-
-		//Smell of cordite on clothes...
-		if !(_unit getVariable ["INC_justFired",false]) then {
-
-			_unit setVariable ["INC_justFired",true];
-
-			[_unit] spawn {
-				params ["_unit"];
-				sleep (15 + (random 5));
-				_unit setVariable ["INC_justFired",false];
-			};
-		};
 	};
 }];
 
 //Shot at nearby EventHandler
-if((isPlayer _unit) || {_fullAIfunctionality}) then {
+if ((isPlayer _unit) || {_fullAIfunctionality}) then {
 	_unit addEventHandler["FiredNear", {
 		params["_unit"];
 
