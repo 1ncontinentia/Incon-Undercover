@@ -9,7 +9,7 @@ private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackp
 
 _this spawn {
 
-	params [["_unit",player]]; 
+	params [["_unit",player]];
 
 	#include "..\UCR_setup.sqf"
 
@@ -101,7 +101,7 @@ _this spawn {
 	};
 
 	_daylightDuration = INC_sunset - INC_sunrise;
-	_lightFactor = _daylightDuration / 24;
+	_lightFactor = _daylightDuration / 12;
 
 	missionNamespace setVariable ["INC_firstLight",(INC_sunrise - _lightFactor),true];
 	missionNamespace setVariable ["INC_lastLight",(INC_sunset + _lightFactor),true];
