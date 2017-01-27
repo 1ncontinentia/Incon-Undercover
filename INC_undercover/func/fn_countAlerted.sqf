@@ -18,7 +18,7 @@ _alertedUnits = [];
 
 _GroupsKnowAboutUnit = allGroups select {
 
-    (side _x isEqualTo _side) && {((leader _x getHideFrom _detectedUnit) distanceSqr _detectedUnit < _distSqr) && {alive leader _x} && {!captive leader _x}}
+    (side _x isEqualTo _side) && {((leader _x getHideFrom (vehicle _detectedUnit)) distanceSqr _detectedUnit < _distSqr) && {alive leader _x} && {!captive leader _x}}
 
 };
 
