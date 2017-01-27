@@ -137,6 +137,15 @@ switch (_operation) do {
 		if (!isPlayer _unit) then {
 			[[_unit,false],"SwitchUniformAction"] call INCON_fnc_ucrMain;
 
+		} else {
+
+			_unit addEventHandler ["InventoryClosed", {
+				params ["_unit"];
+				if ([[_unit,false],"switchUniforms"] call INCON_fnc_gearHandler) then {
+					[[_unit,true,4],"SwitchUniformAction"] call INCON_fnc_ucrMain;
+				};
+			}];
+
 			[_unit, [
 
 				"<t color='#F70707'>GROUP GO LOUD</t>", {
@@ -164,17 +173,9 @@ switch (_operation) do {
 						};
 					} forEach (units _unit);
 
-				},[],4,false,true,"","(_this == _target)"
+				},[],4,false,true,"","(_this == _target) && {(_this getVariable ['INC_canGoLoud',false]) && {(count units _this > 1)}}"
 
 			]] remoteExec ["addAction", _groupLead];
-		} else {
-
-			_unit addEventHandler ["InventoryClosed", {
-				params ["_unit"];
-				if ([[_unit,false],"switchUniforms"] call INCON_fnc_gearHandler) then {
-					[[_unit,true,4],"SwitchUniformAction"] call INCON_fnc_ucrMain;
-				};
-			}];
 		};
 
 		if ((_dismiss) || {!(_unit getVariable ["INC_notDismissable",false])}) then {
@@ -267,6 +268,29 @@ switch (_operation) do {
 				} else {
 					if (!isPlayer _unit) then {
 						private _comment = selectRandom ["Which one?","I'm not sure where you want me to look.","Can you point it out a bit better?"];
+						_unit groupChat _comment;
+					} else {hint "No safe uniforms found nearby."};
+				};
+
+			},[],4,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
+		];
+
+		INC_stealGear = _unit addAction [
+			"<t color='#33FF42'>Steal Full Loadout</t>", {
+				params ["_unit"];
+
+				private ["_success"];
+
+				_success = [[_unit,true,7],"stealGear"] call INCON_fnc_gearHandler;
+
+				if (_success) then {
+					if (!isPlayer _unit) then {
+						private _comment = selectRandom ["Found one.","Got something","This'll do","Does my bum look big in this?","Fits nicely.","It's almost as if we're all the same dimensions.","Fits like a glove.","Beautiful.","I look like an idiot."];
+						_unit groupChat _comment;
+					} else {hint "Uniform changed."};
+				} else {
+					if (!isPlayer _unit) then {
+						private _comment = selectRandom ["I'm not sure where you want me to look.","Can you point it out a bit better?"];
 						_unit groupChat _comment;
 					} else {hint "No safe uniforms found nearby."};
 				};
