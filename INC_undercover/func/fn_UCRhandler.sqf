@@ -40,6 +40,20 @@ if (isPlayer _unit) then {
 
 	waitUntil {
 
+		if !(isPlayer _unit) then {
+			switch (behaviour _unit == "SAFE") do {
+				case true: {
+					switch (captive _unit) do {
+						case true: {
+							disableAI "AUTOTARGET";
+						};
+
+						case false: {
+							enableAI "AUTOTARGET";
+						};
+					};
+				};
+				case false: {
 		//Proximity check for players (doesn't run if the unit isn't trying to be sneaky)
 		if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit}) then {
 
