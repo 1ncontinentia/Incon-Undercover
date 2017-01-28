@@ -40,9 +40,9 @@ if (!local _unit) exitWith {};
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 					//If either side has seen the unit, make him compromised
-					if (([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact}) then {
+					if (([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact}) then {
 
-						[_unit] call INCON_fnc_compromised;
+						[_unit] call INCON_ucr_fnc_compromised;
 					};
 				};
 			};
@@ -58,13 +58,13 @@ if (!local _unit) exitWith {};
 			_suspiciousValue = 1;
 			_weirdoLevel = 1;
 			_spotDistance = 1;
-			_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_gearHandler)];
-			_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_gearHandler)];
+			_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_ucr_fnc_gearHandler)];
+			_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_ucr_fnc_gearHandler)];
 
 			sleep _responseTime;
 
 			//Incognito check
-			_incog = [[_unit],"checkIncogFoot"] call INCON_fnc_ucrMain;
+			_incog = [[_unit],"checkIncogFoot"] call INCON_ucr_fnc_ucrMain;
 
 			sleep _responseTime;
 
@@ -357,7 +357,7 @@ if (!local _unit) exitWith {};
 				});
 
 				if (count _suspiciousEnemies != 0) then {
-					{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_fnc_suspiciousEny}} forEach _suspiciousEnemies;
+					{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_ucr_fnc_suspiciousEny}} forEach _suspiciousEnemies;
 				};
 			};
 
@@ -384,13 +384,13 @@ if (!local _unit) exitWith {};
 			_suspiciousValue = 1;
 			_weirdoLevel = 1;
 			_spotDistance = 1;
-			_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_fnc_gearHandler)];
-			_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_fnc_gearHandler)];
+			_unit setVariable ["INC_canConcealWeapon",([[_unit],"ableToConceal"] call INCON_ucr_fnc_gearHandler)];
+			_unit setVariable ["INC_canGoLoud",([[_unit],"ableToGoLoud"] call INCON_ucr_fnc_gearHandler)];
 
 			sleep _responseTime;
 
 			//Incognito check
-			_incog = [[_unit],"checkIncogVeh"] call INCON_fnc_ucrMain;
+			_incog = [[_unit],"checkIncogVeh"] call INCON_ucr_fnc_ucrMain;
 
 			sleep _responseTime;
 
@@ -541,7 +541,7 @@ if (!local _unit) exitWith {};
 
 					if (_unit getVariable ["INC_proxAlert",false]) then {
 
-						[_unit] call INCON_fnc_compromised;
+						[_unit] call INCON_ucr_fnc_compromised;
 					};
 
 					sleep _responseTime;

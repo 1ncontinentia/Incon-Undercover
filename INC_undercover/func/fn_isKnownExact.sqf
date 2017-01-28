@@ -1,6 +1,6 @@
 /*
 
-myVariable = [_regEnySide,_sneakyFucker] call INCON_fnc_isKnownExact;
+myVariable = [_regEnySide,_sneakyFucker] call INCON_ucr_fnc_isKnownExact;
 
 This script returns boolean on whether any living groups of a given side know a unit's location within the defined precision radius.
 

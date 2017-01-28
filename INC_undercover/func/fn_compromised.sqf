@@ -55,7 +55,7 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 	if (!isNull objectParent _unit) then {
 		_activeVeh = (vehicle _unit);
 		_activeVeh setVariable ["INC_naughtyVehicle",true];
-		{[_x] call INCON_fnc_compromised} forEach ((units _unit) select {(_x distance _unit) < 8});
+		{[_x] call INCON_ucr_fnc_compromised} forEach ((units _unit) select {(_x distance _unit) < 8});
 	};
 
 	// Cooldown Timer to simulate how long it would take for word to get out
@@ -107,8 +107,8 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 				_activeVeh = (vehicle _unit);
 				if !(
 
-					([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) &&
-					{([INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact)}
+					([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) &&
+					{([INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact)}
 
 				) then {
 					_activeVeh setVariable ["INC_naughtyVehicle",true];
@@ -126,8 +126,8 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 
 				if (
 
-					([INC_regEnySide,_unit,40] call INCON_fnc_isKnownExact) &&
-					{([INC_asymEnySide,_unit,40] call INCON_fnc_isKnownExact)}
+					([INC_regEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact) &&
+					{([INC_asymEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact)}
 
 				) then {
 
@@ -181,7 +181,7 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 
 		// Cooldown
-		[_unit] call INCON_fnc_cooldown;
+		[_unit] call INCON_ucr_fnc_cooldown;
 
 		private ["_disguiseValue","_newDisguiseValue"];
 
@@ -204,7 +204,7 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 		if ((_debug) && {isPlayer _unit}) then {hint "Disguise intact."};
 
 		// Cooldown
-		[_unit] call INCON_fnc_cooldown;
+		[_unit] call INCON_ucr_fnc_cooldown;
 
 	};
 };

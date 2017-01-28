@@ -40,10 +40,10 @@ _unit setVariable ["INC_cooldown", true];
 	};
 
 	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
-	_regKnowsAboutUnit = [INC_regEnySide,_unit,50] call INCON_fnc_isKnownExact;
+	_regKnowsAboutUnit = [INC_regEnySide,_unit,50] call INCON_ucr_fnc_isKnownExact;
 
 	//Checks if INC_asymEnySide has seen him recently
-	_asymKnowsAboutUnit = [INC_asymEnySide,_unit,50] call INCON_fnc_isKnownExact;
+	_asymKnowsAboutUnit = [INC_asymEnySide,_unit,50] call INCON_ucr_fnc_isKnownExact;
 
 	if ((isPlayer _unit) && (_debug)) then {hint "Cooldown active."};
 
@@ -94,7 +94,7 @@ _unit setVariable ["INC_cooldown", true];
 		//Percentage chance that unit will become compromised anyway
 		if ((45 > (random 100)) && {((INC_regEnySide knowsAbout _unit) > 3)}) then {
 
-			[_unit] call INCON_fnc_compromised;
+			[_unit] call INCON_ucr_fnc_compromised;
 		};
 	};
 

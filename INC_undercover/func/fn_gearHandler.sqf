@@ -47,7 +47,7 @@ switch (_operation) do {
 				_civ = _backpack getVariable "owner";
 				private _civComment = selectRandom ["Get the fuck out of my backpack","What are you doing?","Leave me alone!","Get out!","What are you playing at?"];
 				[[_civ, _civComment] remoteExec ["globalChat",0]];
-				[[_civ,"runAway"] remoteExecCall ["INCON_fnc_ucrMain",_civ]];
+				[[_civ,"runAway"] remoteExecCall ["INCON_ucr_fnc_ucrMain",_civ]];
 				}
 			];
 		}] remoteExec ["call", 0,true];
@@ -60,7 +60,7 @@ switch (_operation) do {
 		_input params ["_unit"];
 
 		private _wpn = selectRandom _civWpnArray;
-		private _magsArray = ([_wpn,"getCompatMags"] call INCON_fnc_gearHandler);
+		private _magsArray = ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
 
 		_return = true;
 
@@ -270,7 +270,7 @@ switch (_operation) do {
 				};
 			};
 
-			_comparisonArray = ([[_unit,_baseWpn,true],"getStoredWeaponItems"] call INCON_fnc_gearHandler);
+			_comparisonArray = ([[_unit,_baseWpn,true],"getStoredWeaponItems"] call INCON_ucr_fnc_gearHandler);
 
 			_weaponArray = [_baseWpn,_items,_comparisonArray,[_mag,_ammoCount]];
 			_weaponStore = _unit getVariable "INC_weaponStore";
@@ -336,14 +336,14 @@ switch (_operation) do {
 				!(_weaponArray isEqualTo []) &&
 				{(_weaponArray select 0) in weapons _unit} &&
 				{
-					(_weaponArray select 2) isEqualTo ([[_unit,(_weaponArray select 0),true],"getStoredWeaponItems"] call INCON_fnc_gearHandler)
+					(_weaponArray select 2) isEqualTo ([[_unit,(_weaponArray select 0),true],"getStoredWeaponItems"] call INCON_ucr_fnc_gearHandler)
 				}
 			) do {
 				case true: {
 					_wpn = _weaponArray select 0;
 					_itemsToAdd = _weaponArray select 1;
 
-					_itemsToAdd = _itemsToAdd select {_x in ((uniformItems _unit) + (vestItems _unit) + (backPackItems _unit) + ([[_unit,(_weaponArray select 0)],"getStoredWeaponItems"] call INCON_fnc_gearHandler))};
+					_itemsToAdd = _itemsToAdd select {_x in ((uniformItems _unit) + (vestItems _unit) + (backPackItems _unit) + ([[_unit,(_weaponArray select 0)],"getStoredWeaponItems"] call INCON_ucr_fnc_gearHandler))};
 
 					_unit removeItem _wpn;
 
@@ -370,9 +370,9 @@ switch (_operation) do {
 
 				case false: {
 					_wpn = selectRandom _weapons;
-					_ammoArray = ([[_unit,_wpn], "getStoredWeaponAmmoArray"] call INCON_fnc_gearHandler);
+					_ammoArray = ([[_unit,_wpn], "getStoredWeaponAmmoArray"] call INCON_ucr_fnc_gearHandler);
 					_ammoArray params [["_mag",""],["_ammoCount",0]];
-					_itemsToAdd = ([[_unit,_wpn], "getStoredWeaponItems"] call INCON_fnc_gearHandler);
+					_itemsToAdd = ([[_unit,_wpn], "getStoredWeaponItems"] call INCON_ucr_fnc_gearHandler);
 					_unit removeItem _wpn;
 
 					if !(_mag == "") then {_unit addMagazine _mag};
@@ -465,7 +465,7 @@ switch (_operation) do {
 		if (isNil "_newUnif") exitWith {
 			_return = false;
 			if (_autoReAttempt && {_attempt <= 3}) then {
-				_return = [[_unit,_switchUniform,(_attempt + 1)],"switchUniforms"] call INCON_fnc_gearHandler;
+				_return = [[_unit,_switchUniform,(_attempt + 1)],"switchUniforms"] call INCON_ucr_fnc_gearHandler;
 			};
 		};
 

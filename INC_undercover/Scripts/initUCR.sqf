@@ -32,7 +32,7 @@ sleep 1;
 if (((_debug) || {_hints}) && {isPlayer _unit}) then {hint "Undercover initialising..."};
 
 if (isNil "INC_asymEnySide") then {
-	[player] call INCON_fnc_initUcrVars;
+	[player] call INCON_ucr_fnc_initUcrVars;
 };
 
 waitUntil {
@@ -42,8 +42,8 @@ waitUntil {
 
 if (_racism) then {
 	private ["_unitIDs","_looksLikeArray"];
-	_unitIDs = ([[_unit],"getUnitIDs","full"] call INCON_fnc_ucrMain);
-	_looksLikeArray = ([[_unitIDs,INC_civIdentities,INC_incogIdentities],"IDcheck"] call INCON_fnc_ucrMain);
+	_unitIDs = ([[_unit],"getUnitIDs","full"] call INCON_ucr_fnc_ucrMain);
+	_looksLikeArray = ([[_unitIDs,INC_civIdentities,INC_incogIdentities],"IDcheck"] call INCON_ucr_fnc_ucrMain);
 	_looksLikeArray params ["_looksLikeCiv","_looksLikeIncog"];
 	_unit setVariable ["INC_looksLikeCiv",_looksLikeCiv];
 	_unit setVariable ["INC_looksLikeIncog",_looksLikeIncog];
@@ -120,7 +120,7 @@ if (isPlayer _unit) then {
 				_x setVariable ["noChanges",true,true];
 				_x setVariable ["isUndercover", true];
 				sleep 0.2;
-				[[_x,_unit],"addConcealActions"] call INCON_fnc_ucrMain;
+				[[_x,_unit],"addConcealActions"] call INCON_ucr_fnc_ucrMain;
 			} forEach ((units _unit) select {
 				!(_x getVariable ["isUndercover",false]) &&
 				{!isPlayer _x}
@@ -132,7 +132,7 @@ if (isPlayer _unit) then {
 sleep 1;
 
 //Get the undercover loops running on the unit
-[_unit] call INCON_fnc_UCRhandler;
+[_unit] call INCON_ucr_fnc_UCRhandler;
 
 sleep 1;
 
@@ -168,7 +168,7 @@ waitUntil {
 	_unit setVariable ["INC_suspicious", true]; //Hold the cooldown script until the unit is no longer doing suspicious things
 	[_unit, false] remoteExec ["setCaptive", _unit]; //Makes enemies hostile to the unit
 
-	[_unit] call INCON_fnc_cooldown; //Gets the cooldown script going
+	[_unit] call INCON_ucr_fnc_cooldown; //Gets the cooldown script going
 
 	//While he's acting suspiciously
 	while {
@@ -181,9 +181,9 @@ waitUntil {
 		) then {
 
 			//Once people know exactly where he is, and that he is doing loads of suspicious stuff, make him compromised
-			if (([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) || {([INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact)}) exitWith {
+			if (([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) || {([INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact)}) exitWith {
 
-				[_unit] call INCON_fnc_compromised;
+				[_unit] call INCON_ucr_fnc_compromised;
 			};
 		};
 	};

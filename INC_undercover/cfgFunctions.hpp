@@ -1,7 +1,7 @@
 
 class INC_undercover
 {
-	tag = "INCON";
+	tag = "INCON_ucr";
 	class undercoverRecruit
 	{
 		file = "INC_undercover\func";

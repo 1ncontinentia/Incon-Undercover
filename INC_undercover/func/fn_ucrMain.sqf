@@ -76,7 +76,7 @@ switch (_operation) do {
 					};
 
 					for "_i" from 1 to (count _wpnArray) do {
-						[[_unit],"concealWeapon"] call INCON_fnc_gearHandler;
+						[[_unit],"concealWeapon"] call INCON_ucr_fnc_gearHandler;
 						sleep 4;
 					};
 
@@ -114,7 +114,7 @@ switch (_operation) do {
 
 					for "_i" from 1 to (count _wpnArray) do {
 						if (_i >= 3) exitWith {true};
-						[[_unit],"unConcealWeapon"] call INCON_fnc_gearHandler;
+						[[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
 						sleep 4;
 					};
 
@@ -135,14 +135,14 @@ switch (_operation) do {
 		]] remoteExec ["addAction", _groupLead];
 
 		if (!isPlayer _unit) then {
-			[[_unit,false],"SwitchUniformAction"] call INCON_fnc_ucrMain;
+			[[_unit,false],"SwitchUniformAction"] call INCON_ucr_fnc_ucrMain;
 
 		} else {
 
 			_unit addEventHandler ["InventoryClosed", {
 				params ["_unit"];
-				if ([[_unit,false],"switchUniforms"] call INCON_fnc_gearHandler) then {
-					[[_unit,true,4],"SwitchUniformAction"] call INCON_fnc_ucrMain;
+				if ([[_unit,false],"switchUniforms"] call INCON_ucr_fnc_gearHandler) then {
+					[[_unit,true,4],"SwitchUniformAction"] call INCON_ucr_fnc_ucrMain;
 				};
 			}];
 
@@ -163,7 +163,7 @@ switch (_operation) do {
 								});
 
 								for "_i" from 1 to (count _wpnArray) do {
-									[[_unit],"unConcealWeapon"] call INCON_fnc_gearHandler;
+									[[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
 									sleep 3;
 								};
 							};
@@ -258,7 +258,7 @@ switch (_operation) do {
 
 				private ["_success"];
 
-				_success = [[_unit,true,1,true,7],"switchUniforms"] call INCON_fnc_gearHandler;
+				_success = [[_unit,true,1,true,7],"switchUniforms"] call INCON_ucr_fnc_gearHandler;
 
 				if (_success) then {
 					if (!isPlayer _unit) then {
@@ -285,7 +285,7 @@ switch (_operation) do {
 					sleep 3;
 					_timer = _timer - 3;
 
-					(!([[_unit,false],"switchUniforms"] call INCON_fnc_gearHandler) || {_timer <= 0})
+					(!([[_unit,false],"switchUniforms"] call INCON_ucr_fnc_gearHandler) || {_timer <= 0})
 				};
 
 				_unit removeAction INC_switchUniformAction;
@@ -322,7 +322,7 @@ switch (_operation) do {
 			};
 
 			case "full": {
-				_return = ([[_unit],"getUnitIDs","class"] call INCON_fnc_ucrMain) + ([[_unit],"getUnitIDs","face"] call INCON_fnc_ucrMain);
+				_return = ([[_unit],"getUnitIDs","class"] call INCON_ucr_fnc_ucrMain) + ([[_unit],"getUnitIDs","face"] call INCON_ucr_fnc_ucrMain);
 			};
 		};
 	};
@@ -335,9 +335,9 @@ switch (_operation) do {
 
 		_overlappingIDs = [];
 
-		_factionIDs = (["possibleIdentities",_factions] call INCON_fnc_getConfigInfo);
+		_factionIDs = (["possibleIdentities",_factions] call INCON_ucr_fnc_getConfigInfo);
 
-		_unitIDs = [[_unit],"getUnitIDs",_checkType] call INCON_fnc_ucrMain;
+		_unitIDs = [[_unit],"getUnitIDs",_checkType] call INCON_ucr_fnc_ucrMain;
 
 		switch (_simpleCheck) do {
 			case true: {
@@ -429,9 +429,9 @@ switch (_operation) do {
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 					//If either side has seen the unit, make him compromised
-					if (([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact}) then {
+					if (([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact}) then {
 
-						[_unit] call INCON_fnc_compromised;
+						[_unit] call INCON_ucr_fnc_compromised;
 					};
 				};
 
@@ -456,8 +456,8 @@ switch (_operation) do {
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 					//If either side has seen the unit, make him compromised
-					if (([INC_regEnySide,_unit,20] call INCON_fnc_isKnownExact) || {[INC_asymEnySide,_unit,20] call INCON_fnc_isKnownExact}) then {
-						[_unit] call INCON_fnc_compromised;
+					if (([INC_regEnySide,_unit,20] call INCON_ucr_fnc_isKnownExact) || {[INC_asymEnySide,_unit,20] call INCON_ucr_fnc_isKnownExact}) then {
+						[_unit] call INCON_ucr_fnc_compromised;
 					};
 				};
 

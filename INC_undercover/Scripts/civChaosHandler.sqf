@@ -49,7 +49,7 @@ if (missionNamespace getVariable ["civiliansTargeted",false]) exitWith {};
 
 				private _wpn = selectRandom (weapons _x);
 				_x removeWeapon _wpn;
-				private _mag = selectRandom ([_wpn,"getCompatMags"] call INCON_fnc_gearHandler);
+				private _mag = selectRandom ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
 				_x addMagazine _mag;
 				_x addWeapon _wpn;
 

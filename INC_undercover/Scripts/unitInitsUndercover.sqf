@@ -4,16 +4,16 @@ params ["_unit"];
 
 switch (side _unit) do {
 	case INC_regEnySide: {
-		[_unit,_regBarbaric,_undercoverUnitSide] call INCON_fnc_addEH;
+		[_unit,_regBarbaric,_undercoverUnitSide] call INCON_ucr_fnc_addEH;
 	};
 	case INC_asymEnySide: {
-		[_unit,_asymBarbaric,_undercoverUnitSide] call INCON_fnc_addEH;
+		[_unit,_asymBarbaric,_undercoverUnitSide] call INCON_ucr_fnc_addEH;
 	};
 };
 
 if (_civRecruitEnabled) then {
 	if (((side _unit) == CIVILIAN) && {!(_unit getVariable ["isUndercover",false])}) then {
-		[[_unit,_armedCivPercentage,_civRifleArray,_civPistolArray,_civPackArray],"recruitCiv"] remoteExecCall ["INCON_fnc_recruitHandler",0,true];
+		[[_unit,_armedCivPercentage,_civRifleArray,_civPistolArray,_civPackArray],"recruitCiv"] remoteExecCall ["INCON_ucr_fnc_recruitHandler",0,true];
 	};
 };
 

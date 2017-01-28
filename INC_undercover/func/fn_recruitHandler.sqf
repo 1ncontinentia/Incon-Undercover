@@ -19,7 +19,7 @@ switch (_operation) do {
         		    [[_civ, _civComment] remoteExec ["globalChat",0]];
         		};
 
-        		[[_civ,_undercoverUnit],"recruitAttempt"] remoteExecCall ["INCON_fnc_recruitHandler",_civ];
+        		[[_civ,_undercoverUnit],"recruitAttempt"] remoteExecCall ["INCON_ucr_fnc_recruitHandler",_civ];
 
         		_civ setVariable ["INC_alreadyTried",true];
 
@@ -44,16 +44,16 @@ switch (_operation) do {
         				removeUniform _giver;
         				_reciever forceAddUniform _giverUniform;
         				if (rating _reciever > 1000) then {_reciever addrating -1000};
-        				if (20 > (random (rating _reciever / 10))) then {_reciever call INCON_fnc_compromised};
+        				if (20 > (random (rating _reciever / 10))) then {_reciever call INCON_ucr_fnc_compromised};
 
         				private _civComment = selectRandom ["That's a real dick move.","Fuck you.","I hope you get caught!","You're a horrible human!","What are you playing at?","You've lost my support.","I'll take one for the cause now but not again."];
         				[[_giver, _civComment] remoteExec ["globalChat",0]];
         			};
 
         			case false: {
-        				[[_giver,"runAway"] remoteExecCall ["INCON_fnc_ucrMain",_giver]];
+        				[[_giver,"runAway"] remoteExecCall ["INCON_ucr_fnc_ucrMain",_giver]];
         				if (rating _reciever > 800) then {_reciever addrating -800};
-        				if (30 > (random (rating _reciever / 10))) then {_reciever call INCON_fnc_compromised};
+        				if (30 > (random (rating _reciever / 10))) then {_reciever call INCON_ucr_fnc_compromised};
         				private _civComment = selectRandom ["You can fuck off.","What am I going to wear?","Creep!","Go away!","Is this how you treat your women?","Sounds like a dirty ruse.","So now the truth comes out.","This is my favourite shirt.","You'd like that wouldn't you?"];
         				[[_giver, _civComment] remoteExec ["globalChat",0]];
         			};
@@ -65,16 +65,16 @@ switch (_operation) do {
         ]] remoteExec ["addAction", 0,true];
 
         if (30 > (random 100)) then {
-        	[_unit,"addBackpack"] call INCON_fnc_gearHandler;
+        	[_unit,"addBackpack"] call INCON_ucr_fnc_gearHandler;
         };
 
         if (_armedCivPercentage > (random 100)) then {
 
-        	[_unit,"addWeapon"] call INCON_fnc_gearHandler;
+        	[_unit,"addWeapon"] call INCON_ucr_fnc_gearHandler;
         };
 
         if (50 > (random 100)) then {
-        	[_unit,"addItems"] call INCON_fnc_gearHandler;
+        	[_unit,"addItems"] call INCON_ucr_fnc_gearHandler;
         };
     };
 
@@ -95,7 +95,7 @@ switch (_operation) do {
                     _civComment = selectRandom ["I've heard about you.","You can count on me.","I admire what you're doing.","You have my support.","Thank you for helping rid us of this scourge.","Thank you for helping our people.","I don't want them to see my face."];
                     [[_civ, _civComment] remoteExec ["globalChat",0]];
                     (group _civ) setGroupOwner (owner _undercoverUnit);
-                    [[_civ,_undercoverUnit],"recruitSuccess"] remoteExecCall ["INCON_fnc_recruitHandler",_undercoverUnit];
+                    [[_civ,_undercoverUnit],"recruitSuccess"] remoteExecCall ["INCON_ucr_fnc_recruitHandler",_undercoverUnit];
 
                 } else {
                     _civComment = selectRandom ["Keep up the good work guys.","You all just keep doing what you're doing.","You don't need me, I'll just hold you guys back.","You'll all be fine without me."];
@@ -118,7 +118,7 @@ switch (_operation) do {
                     _civComment = selectRandom ["This is for Cyril.","I'll get my fighting hat on.","I'm bored, why not.","I'll join you, but only because they ran over my rabbit.","I should really know better.","I'm going to regret this.","Fuck it, let's go.","My wife is going to kill me for this.","Well it's better than gardening."];
                     [[_civ, _civComment] remoteExec ["globalChat",0]];
                     (group _civ) setGroupOwner (owner _undercoverUnit);
-                    [[_civ,_undercoverUnit],"recruitSuccess"] remoteExecCall ["INCON_fnc_recruitHandler",_undercoverUnit];
+                    [[_civ,_undercoverUnit],"recruitSuccess"] remoteExecCall ["INCON_ucr_fnc_recruitHandler",_undercoverUnit];
 
                 } else {
 
@@ -149,7 +149,7 @@ switch (_operation) do {
 
 			sleep 0.1;
 
-			_unitType =  (selectRandom (["units",[(faction _groupLead)]] call INCON_fnc_getConfigInfo));
+			_unitType =  (selectRandom (["units",[(faction _groupLead)]] call INCON_ucr_fnc_getConfigInfo));
 
 			sleep 0.2;
 
@@ -202,7 +202,7 @@ switch (_operation) do {
 
 				sleep 1;
 
-				[[_recruitedCiv,_groupLead],"addConcealActions"] call INCON_fnc_ucrMain;
+				[[_recruitedCiv,_groupLead],"addConcealActions"] call INCON_ucr_fnc_ucrMain;
 				[[_recruitedCiv],"INC_undercover\Scripts\initUCR.sqf"] remoteExec ["execVM",_groupLead];
 
 				_recruitedCiv setCombatMode "GREEN";

@@ -26,7 +26,7 @@ _unit setVariable ["INC_weirdoLevel",1]; //How weird is the unit acting
 _unit setVariable ["INC_weaponStore",[["",[""]],["",[""]]]];
 
 if (isPlayer _unit) then {
-	[[_unit,_unit,false],"addConcealActions"] call INCON_fnc_ucrMain;
+	[[_unit,_unit,false],"addConcealActions"] call INCON_ucr_fnc_ucrMain;
 };
 
 
@@ -150,7 +150,7 @@ if (isPlayer _unit) then {
 	};
 };
 
-[_unit] call INCON_fnc_armedLoop;
+[_unit] call INCON_ucr_fnc_armedLoop;
 
 //Detection Stuff
 //=======================================================================//
@@ -162,9 +162,9 @@ if (isPlayer _unit) then {
 
 		sleep 4;
 
-		private _alertedRegKnows = ([_unit, INC_regEnySide] call INCON_fnc_isKnownToSide);
+		private _alertedRegKnows = ([_unit, INC_regEnySide] call INCON_ucr_fnc_isKnownToSide);
 
-		private _alertedAsymKnows = ([_unit, INC_asymEnySide] call INCON_fnc_isKnownToSide);
+		private _alertedAsymKnows = ([_unit, INC_asymEnySide] call INCON_ucr_fnc_isKnownToSide);
 
 		private _anyAlerted = false;
 
@@ -202,9 +202,9 @@ _unit addEventHandler["FiredMan", {
 		if (_unit getVariable ["INC_anyKnowsSO",false]) then {
 
 			//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
-			if (([INC_regEnySide,_unit,40] call INCON_fnc_isKnownExact) || {([INC_asymEnySide,_unit,40] call INCON_fnc_isKnownExact)}) exitWith {
+			if (([INC_regEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact) || {([INC_asymEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact)}) exitWith {
 
-				[_unit] call INCON_fnc_compromised;
+				[_unit] call INCON_ucr_fnc_compromised;
 			};
 		};
 	};

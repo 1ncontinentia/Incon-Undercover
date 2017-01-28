@@ -17,9 +17,9 @@ _this spawn {
 	missionNamespace setVariable ["INC_asymEnySide",_asymEnySide,true];
 	missionNamespace setVariable ["INC_civilianRecruitEnabled",_civRecruitEnabled,true];
 	sleep 0.1;
-	missionNamespace setVariable ["INC_incogIdentities",(["possibleIdentities",_incogFactions] call INCON_fnc_getConfigInfo),true];
+	missionNamespace setVariable ["INC_incogIdentities",(["possibleIdentities",_incogFactions] call INCON_ucr_fnc_getConfigInfo),true];
 	sleep 0.1;
-	missionNamespace setVariable ["INC_civIdentities",(["possibleIdentities",_civFactions] call INCON_fnc_getConfigInfo),true];
+	missionNamespace setVariable ["INC_civIdentities",(["possibleIdentities",_civFactions] call INCON_ucr_fnc_getConfigInfo),true];
 	sleep 0.1;
 
 	if (_debug) then {
@@ -31,15 +31,15 @@ _this spawn {
 	};
 
 	//Initial stuff
-	_civVests = _civilianVests + [""] + (["vests",_civFactions] call INCON_fnc_getConfigInfo);
+	_civVests = _civilianVests + [""] + (["vests",_civFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_civUniforms = _civilianUniforms + [""] + (["uniforms",_civFactions] call INCON_fnc_getConfigInfo);
+	_civUniforms = _civilianUniforms + [""] + (["uniforms",_civFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_civHeadgear = _civilianHeadgear + [""] + (["headgear",_civFactions] call INCON_fnc_getConfigInfo) + (["possibleHeadgear",_civFactions] call INCON_fnc_getConfigInfo);
+	_civHeadgear = _civilianHeadgear + [""] + (["headgear",_civFactions] call INCON_ucr_fnc_getConfigInfo) + (["possibleHeadgear",_civFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
 	_civPacks = _civilianBackpacks +  [""] + _civPackArray;
 	sleep 0.1;
-	_civVeh =  ([[_civFactions],"getFacVehs"] call INCON_fnc_ucrMain) + _civilianVehicleArray;
+	_civVeh =  ([[_civFactions],"getFacVehs"] call INCON_ucr_fnc_ucrMain) + _civilianVehicleArray;
 	sleep 0.1;
 
 	missionNamespace setVariable ["INC_civilianVests",_civVests,true];
@@ -60,17 +60,17 @@ _this spawn {
 
 	sleep 0.5;
 
-	_incogVests = [""] + (["vests",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogVests = [""] + (["vests",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogUniforms = (["uniforms",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogUniforms = (["uniforms",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogHeadgear = [""] + (["headgear",_incogFactions] call INCON_fnc_getConfigInfo) + (["possibleHeadgear",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogHeadgear = [""] + (["headgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo) + (["possibleHeadgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogBackpacks = [""] + (["backpacks",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogBackpacks = [""] + (["backpacks",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogWpns = [""] + (["weapons",_incogFactions] call INCON_fnc_getConfigInfo);
+	_incogWpns = [""] + (["weapons",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogVeh = ([[_incogFactions],"getFacVehs"] call INCON_fnc_ucrMain) + _incogVehArray;
+	_incogVeh = ([[_incogFactions],"getFacVehs"] call INCON_ucr_fnc_ucrMain) + _incogVehArray;
 	sleep 0.1;
 	missionNamespace setVariable ["INC_incogVests",_incogVests,true];
 	missionNamespace setVariable ["INC_incogUniforms",(_incogUniforms - [""]),true];
@@ -135,7 +135,7 @@ _this spawn {
 	sleep 0.5;
 
 	//Spawn the rebel commader
-	[_unit,"spawnRebelCommander"] remoteExecCall ["INCON_fnc_ucrMain",2];
+	[_unit,"spawnRebelCommander"] remoteExecCall ["INCON_ucr_fnc_ucrMain",2];
 
 	missionNamespace setVariable ["INC_ucrInitComplete",true,true];
 };

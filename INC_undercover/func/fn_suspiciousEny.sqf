@@ -15,10 +15,10 @@ _this spawn {
 
 	if ((3 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-		[_unit] call INCON_fnc_compromised;
+		[_unit] call INCON_ucr_fnc_compromised;
 		sleep (random 3);
 		{
-			[_x] call INCON_fnc_compromised;
+			[_x] call INCON_ucr_fnc_compromised;
 			sleep (random 3);
 		} forEach ((units _unit) select {
 			(_x getVariable ["INC_anyKnowsSO",false]) &&
@@ -84,10 +84,10 @@ _this spawn {
 				[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
 			};
 
-			[_unit] call INCON_fnc_compromised;
+			[_unit] call INCON_ucr_fnc_compromised;
 			sleep (random 3);
 			{
-				[_x] call INCON_fnc_compromised;
+				[_x] call INCON_ucr_fnc_compromised;
 				sleep (random 3);
 			} forEach ((units _unit) select {
 				(_x getVariable ["INC_anyKnowsSO",false]) &&
