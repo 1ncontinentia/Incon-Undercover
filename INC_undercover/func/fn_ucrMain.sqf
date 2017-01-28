@@ -1,3 +1,16 @@
+/* ----------------------------------------------------------------------------
+Function:
+
+Description:
+
+Parameters:
+
+Returns:
+
+Examples:
+
+Author:
+---------------------------------------------------------------------------- */
 
 params [["_input",objNull],["_operation","addConcealedRifle"]];
 

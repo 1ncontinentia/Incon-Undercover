@@ -1,3 +1,17 @@
+/* ----------------------------------------------------------------------------
+Function:
+
+Description:
+
+Parameters:
+
+Returns:
+
+Examples:
+
+Author:
+---------------------------------------------------------------------------- */
+
 private ["_alertedUnits","_alertedGroups","_getHideFromUnit"];
 
 params [["_side",sideEmpty],["_unit",player],["_distSqr",1400]];

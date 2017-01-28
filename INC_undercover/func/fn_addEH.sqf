@@ -1,3 +1,17 @@
+/* ----------------------------------------------------------------------------
+Function:
+
+Description:
+
+Parameters:
+
+Returns:
+
+Examples:
+
+Author:
+---------------------------------------------------------------------------- */
+
 params [["_unit",objNull],["_barbaric",false],["_undercoverUnitSide",west]];
 
 if ((_unit getVariable ["INC_undercoverSide",sideEmpty]) isEqualTo _undercoverUnitSide) exitWith {};

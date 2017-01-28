@@ -1,6 +1,18 @@
+/* ----------------------------------------------------------------------------
+Function:
+
+Description:
+
+Parameters:
+
+Returns:
+
+Examples:
+
+Author:
+---------------------------------------------------------------------------- */
 
 params ["_input",["_operation","recruitAttempt"]];
-
 
 switch (_operation) do {
 

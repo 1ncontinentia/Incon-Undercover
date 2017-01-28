@@ -1,3 +1,17 @@
+/* ----------------------------------------------------------------------------
+Name: 
+
+Description:
+
+Parameters:
+
+Returns:
+
+Examples:
+
+Author:
+---------------------------------------------------------------------------- */
+
 params [["_targetChance",100],["_rebelChance",40],["_percentageTarget",40],["_percentageRebel",50],["_timeToRebel",(random 600)]];
 
 if (missionNamespace getVariable ["civiliansTargeted",false]) exitWith {};

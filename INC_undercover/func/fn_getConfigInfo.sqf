@@ -1,9 +1,16 @@
-/*
+/* ----------------------------------------------------------------------------
+Function:
 
-Author: Spyderblack723
+Description:
 
-Modified by: Incontinentia
-*/
+Parameters:
+
+Returns:
+
+Examples:
+
+Author: Spyderblack723, modified by Incontinentia
+---------------------------------------------------------------------------- */
 
 private ["_units","_cfgVehicles","_result","_unit","_linkedItems","_pack","_uniform","_headgearList"];
 

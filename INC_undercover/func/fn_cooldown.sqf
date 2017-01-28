@@ -1,3 +1,17 @@
+/* ----------------------------------------------------------------------------
+Function:
+
+Description:
+
+Parameters:
+
+Returns:
+
+Examples:
+
+Author:
+---------------------------------------------------------------------------- */
+
 params ["_unit"];
 
 if ((_unit getVariable ["INC_cooldown",false]) || {!local _unit}) exitWith {};

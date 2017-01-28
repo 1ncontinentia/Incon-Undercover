@@ -1,3 +1,18 @@
+/* ----------------------------------------------------------------------------
+Function:
+
+Description:
+
+Parameters:
+
+Returns:
+
+Examples:
+
+Author:
+---------------------------------------------------------------------------- */
+
+
 params [["_unit",objNull],["_operation","armedLoop"]];
 
 #include "..\UCR_setup.sqf"
