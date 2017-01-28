@@ -1,22 +1,5 @@
-/*
-cooldown
-
-Author: Incontinentia
-
-Executes a cooldown after a unit has started doing something suspicious.
-Returns unit to setcaptive once the detecting side/s (if any) have lost track of the unit, providing the unit isn't compromised by then.
-
-Arguments
-_unit
-
-*/
-
 params ["_unit"];
 
-//Run the script locally on unit's machine
-//if (!local _unit) exitWith {};
-
-//Code can't be run on a unit that it's already running on
 if ((_unit getVariable ["INC_cooldown",false]) || {!local _unit}) exitWith {};
 
 _unit setVariable ["INC_cooldown", true];

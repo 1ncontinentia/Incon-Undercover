@@ -1,36 +1,3 @@
-/*
-Changes the _percentage number of units of a given side to side enemy. Useful for simulating internal conflict.
-
-Arguments
-
-_unit: The compromised unit
-INC_regEnySide: Regular / conventional enemy side
-INC_asymEnySide: Asymmetric enemy side (doesn't remember as long due to lack of information sharing between cells)
-
-
-Conditions to be met first:
-
-1. Unit has killed an enemy while spotted (killed eventhandler)
-
-2. Unit has killed several enemies while not spotted but known about (killed eventhandler)
-
-3. Unit has been spotted while armed and trespassing
-
-4: Unit has been seen shooting (fired EH)
-
-
-Order of events:
-
-Unit is hostile for a cooldown period.
-
-Once cooldown period is over, if there are still alerted units, unit becomes wanted.
-
-Wanted level will only descrease when nobody knows about the unit anymore (alerted units = 0 and knowsabout = 0).
-
-
-*/
-
-
 params ["_unit"];
 
 #include "..\UCR_setup.sqf"

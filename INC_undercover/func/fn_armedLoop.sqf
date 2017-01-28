@@ -1,12 +1,3 @@
-/*
-Checks for:
-Suspicious behaviour
-Weird behaviour
-
-Sets variables accordingly
-*/
-
-
 params [["_unit",objNull],["_operation","armedLoop"]];
 
 #include "..\UCR_setup.sqf"
@@ -150,7 +141,7 @@ if (!local _unit) exitWith {};
 						sleep _responseTime;
 
 						//Racial profiling checks
-						if !(_unit getVariable ["INC_faceFits",true]) then {
+						if (!(_unit getVariable ["INC_faceFits",true]) && {_racism}) then {
 
 							if (headgear _unit == "") then {
 								_weirdoLevel = _weirdoLevel + (2 * _racProfFacEny);
@@ -293,7 +284,7 @@ if (!local _unit) exitWith {};
 						sleep _responseTime;
 
 						//Racial profiling checks
-						if !(_unit getVariable ["INC_faceFits",true]) then {
+						if (!(_unit getVariable ["INC_faceFits",true]) && {_racism}) then {
 
 							if (headgear _unit == "") then {
 								_weirdoLevel = _weirdoLevel + (1 * _racProfFacCiv);
@@ -468,7 +459,7 @@ if (!local _unit) exitWith {};
 						sleep _responseTime;
 
 						//Racial profiling checks
-						if (!(_unit getVariable ["INC_faceFits",true]) && {!((vehicle _unit) isKindOf "Tank")}) then {
+						if (!(_unit getVariable ["INC_faceFits",true]) && {_racism} && {!((vehicle _unit) isKindOf "Tank")}) then {
 
 							if (headgear _unit == "") then {
 								_weirdoLevel = _weirdoLevel + (1 * _racProfFacEny);
@@ -580,7 +571,7 @@ if (!local _unit) exitWith {};
 						sleep _responseTime;
 
 						//Racial profiling checks
-						if !(_unit getVariable ["INC_faceFits",true]) then {
+						if (!(_unit getVariable ["INC_faceFits",true]) && {_racism}) then {
 
 							switch (true) do {
 

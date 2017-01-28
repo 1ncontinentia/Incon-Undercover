@@ -1,9 +1,3 @@
-/*
-Undercover Unit Handler Script
-
-Author: Incontinentia
-
-*/
 
 private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
 

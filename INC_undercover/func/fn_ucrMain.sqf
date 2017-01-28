@@ -1,11 +1,3 @@
-/*
-
-Civilian Recruitment / Arming
-
-Author: Incontinentia
-
-*/
-
 
 params [["_input",objNull],["_operation","addConcealedRifle"]];
 

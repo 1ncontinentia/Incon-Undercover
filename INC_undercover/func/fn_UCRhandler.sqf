@@ -1,15 +1,3 @@
-/*
-Checks for:
-Suspicious behaviour
-Weird behaviour
-Nearby enemies who could blow the unit's cover
-
-Creates:
-Loops for all checks
-Environmental loop
-Eventhandlers that auto compromise the unit if seen shooting
-*/
-
 
 params [["_unit",objNull],["_operation","armedLoop"]];
 

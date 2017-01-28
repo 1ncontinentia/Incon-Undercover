@@ -1,12 +1,7 @@
-/*
-
-This script returns boolean on whether any living groups of a given side know about the unit.
-
-*/
 
 params [["_unit",player],["_side",sideEmpty]];
 
-if (_side == sideEmpty) exitWith {false}; 
+if (_side == sideEmpty) exitWith {false};
 
 _unit = vehicle _unit;
 private _result = false;

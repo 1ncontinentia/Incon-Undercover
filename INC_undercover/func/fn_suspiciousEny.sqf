@@ -1,6 +1,3 @@
-/*
-Suspicious enemy loop
-*/
 
 _this spawn {
 	params ["_unit","_suspiciousEnemy"];

@@ -1,22 +1,3 @@
-/* ----------------------------------------------------------------------------
-Undercover Killed Event Handlers
-
-Author: Incontinentia
-
-Requires ALiVE for civilian respect changes.
-
-This script handles whether the undercover unit is compromised when a nearby enemy unit is killed.
-It also handles whether that death positively influences civilians towards the undercover unit's side.
-If recruitment is enabled, it is assumed that the civilians want members of the enemy side dead.
-
-Arguments:
-
-Unit (object) - the unit the eventhandler will be assigned to. Do not assign this to friendlies of the undercover unit.
-Barbaric (bool) - if true, the unit's side will potentially lash out against civilians if there are no known undercover units nearby.
-
----------------------------------------------------------------------------- */
-
-
 params [["_unit",objNull],["_barbaric",false],["_undercoverUnitSide",west]];
 
 if ((_unit getVariable ["INC_undercoverSide",sideEmpty]) isEqualTo _undercoverUnitSide) exitWith {};
