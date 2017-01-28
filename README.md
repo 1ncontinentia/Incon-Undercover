@@ -9,13 +9,13 @@ SP / Coop and Dedi compatible.
 
 ### USAGE
 
-1. Add all files from Incon-Undercover folder into your mission root folder. If you already have a description.ext or initPlayerLocal.sqf then add the code to your existing files (making sure not to duplicate cfg entries in your description.ext; for instance, if you already have cfgFunctions defined, just add the #include line).
+1. Add all files from Incon-Undercover folder into your mission folder. If you already have a description.ext or initPlayerLocal.sqf then add the code to your existing files. (Make sure to delete any previous version of my undercover scripts)
 
-2. Configure your settings in the UCR_setup.sqf file in the INC_undercover folder.
+2. Configure your settings in the UCR_setup.sqf file in the INC_undercover folder (pay close attention to these, one wrong setting can lead to some weird behaviour).
 
 3. For each out of bounds area, place a marker over the area with "INC_tre" somewhere in the marker name (e.g. "MyMarkerINC_tre" or "INC_tre_sillyMarkerName_15"). The script will handle the rest. But if you want, you can also include other markers by listing them in the relevant array in UCR_setup.sqf.
 
-4. Add Incon Persistence if you want your band of merry men to persist between ALiVE sessions (this is now a separate script but fully compatible).
+4. Add in Incon Persistence if you want your band of merry men to persist between ALiVE sessions (this is now a separate script but automatically persists reputation).
 
 5. For each playable undercover unit, put this in their unit init in the editor:
 
@@ -23,9 +23,7 @@ SP / Coop and Dedi compatible.
 this setVariable ["isSneaky",true,true];
 ```
 
-Non-player units in the undercover unit's group do not need anything; the script will run on them automatically on mission start. 
-
-Oh, and make sure to delete any previous version of my undercover script. This is a complete re-write and will cause issues if there are any overlapping functions. 
+Non-player units in the undercover unit's group do not need anything; the script will run on them automatically on mission start.
 
 
 
@@ -72,7 +70,7 @@ Oh, and make sure to delete any previous version of my undercover script. This i
 * Kill enemies without getting spotted and there is a chance they will lash out against civilians, with a potential to cause a civilian uprising (optional)
 * Arm ambient civilians with weapons and items which they may use during an uprising
 * Try to steal civilians' clothes from them (but be prepared that your reputation will take a hit or you may become compromised)
-* (Requires ALiVE) Turn recruited units into a profiled group to be used by AI commander of the same faction as the undercover unit (add to object init: this addaction ["Profile group","[player,'profileGroup'] remoteExecCall ['INCON_fnc_ucrMain',2]",[],1,false,true]);
+* (Requires ALiVE) Turn recruited units into a profiled group to be used by AI commander of the same faction as the undercover unit (add to object init: this addaction ["Profile group","[player,'profileGroup'] remoteExecCall ['INCON_ucr_fnc_ucrMain',2]",[],1,false,true]);
 
 
 ### Caveats / Compatibility:
