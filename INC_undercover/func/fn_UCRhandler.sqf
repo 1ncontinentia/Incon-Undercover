@@ -54,10 +54,15 @@ if (isPlayer _unit) then {
 					};
 				};
 				case false: {
+					enableAI "AUTOTARGET";
+				};
+			};
+		};
+
 		//Proximity check for players (doesn't run if the unit isn't trying to be sneaky)
 		if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit}) then {
 
-			private ["_disguiseValue","_disguiseRadius"];
+			private ["_disguiseValue","_disguiseRadius","_veh"];
 
 			_disguiseValue = ((_unit getVariable ["INC_compromisedValue",1]) * (_unit getVariable ["INC_weirdoLevel",1]));
 
@@ -69,6 +74,8 @@ if (isPlayer _unit) then {
 
 			_unit setVariable ["INC_disguiseRad",_disguiseRadius];
 
+			_veh = (vehicle _unit);
+
 			switch (_unit getVariable ["INC_goneIncog",false]) do {
 
 				case true: {
@@ -76,8 +83,8 @@ if (isPlayer _unit) then {
 					_nearReg = count (
 						(_unit nearEntities ((_regDetectRadius * _disguiseRadius) * 0.7)) select {
 							(side _x == INC_regEnySide) &&
-							{((_x getHideFrom (vehicle _unit)) distanceSqr _unit < 10)} &&
-							{(_x knowsAbout (vehicle _unit)) > 2} &&
+							{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
+							{(_x knowsAbout _veh) > 2} &&
 							{alive _x} &&
 							{(5 + (2 * _disguiseValue)) > (random 100)}
 						}
@@ -88,8 +95,8 @@ if (isPlayer _unit) then {
 					_nearAsym = count (
 						(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 1.5)) select {
 							(side _x == INC_asymEnySide) &&
-							{((_x getHideFrom (vehicle _unit)) distanceSqr _unit < 10)} &&
-							{(_x knowsAbout (vehicle _unit)) > 3} &&
+							{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
+							{(_x knowsAbout _veh) > 3} &&
 							{alive _x} &&
 							{(5 + (3 * _disguiseValue)) > (random 100)}
 						}
@@ -101,7 +108,7 @@ if (isPlayer _unit) then {
 					_nearReg = count (
 						(_unit nearEntities (_regDetectRadius * _disguiseRadius)) select {
 							(side _x == INC_regEnySide) &&
-							{(_x knowsAbout (vehicle _unit)) > 3} &&
+							{(_x knowsAbout _veh) > 3} &&
 							{alive _x}
 						}
 					);
@@ -111,7 +118,7 @@ if (isPlayer _unit) then {
 					_nearAsym = count (
 						(_unit nearEntities (_asymDetectRadius * _disguiseRadius)) select {
 							(side _x == INC_asymEnySide) &&
-							{(_x knowsAbout (vehicle _unit)) > 2} &&
+							{(_x knowsAbout _veh) > 2} &&
 							{alive _x}
 						}
 					);
