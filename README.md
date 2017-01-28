@@ -13,7 +13,11 @@ SP / Coop and Dedi compatible.
 
 2. Configure your settings in the UCR_setup.sqf file in the INC_undercover folder (pay close attention to these, one wrong setting can lead to some weird behaviour).
 
-3. For each playable undercover unit, put this in their unit init in the editor:
+3. For each out of bounds area, place a marker over the area with "INC_tre" somewhere in the marker name (e.g. "MyMarkerINC_tre" or "INC_tre_sillyMarkerName_15"). The script will handle the rest. But if you want, you can also include other markers by listing them in the relevant array in UCR_setup.sqf.
+
+4. Add in Incon Persistence if you want your band of merry men to persist between ALiVE sessions (this is now a separate script but automatically persists reputation).
+
+5. For each playable undercover unit, put this in their unit init in the editor:
 
 ```
 this setVariable ["isSneaky",true,true];
@@ -22,9 +26,6 @@ this setVariable ["isSneaky",true,true];
 Non-player units in the undercover unit's group do not need anything; the script will run on them automatically on mission start.
 
 
-4. For each out of bounds area, place a marker over the area with "INC_tre" somewhere in the marker name (e.g. "MyMarkerINC_tre" or "INC_tre_sillyMarkerName_15"). The script will handle the rest. But if you want, you can also include other markers by listing them in the relevant array in UCR_setup.sqf.
-
-5. Add in Incon Persistence if you want your band of merry men to persist between ALiVE sessions (this is now a separate script but automatically persists reputation).
 
 
 ### FEATURES
