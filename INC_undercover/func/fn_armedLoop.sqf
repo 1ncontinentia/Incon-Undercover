@@ -231,6 +231,19 @@ if (!local _unit) exitWith {};
 							_spotDistance = _spotDistance + 1.5;
 						};
 
+						{
+							if (side _x == INC_regEnySide) exitWith {
+								_weirdoLevel = _weirdoLevel + (_regDetectRadius - (_x distance _unit));
+								true
+							};
+							if (side _x == INC_asymEnySide) exitWith {
+								_weirdoLevel = _weirdoLevel + (_asymDetectRadius - (_x distance _unit));
+								true
+							};
+						} forEach (_unit nearEntities ((_regDetectRadius + _asymDetectRadius)/2));
+
+						sleep _responseTime;
+
 						if !(headgear _unit in INC_civilianHeadgear) then {
 							_weirdoLevel = _weirdoLevel + 1;
 							_spotDistance = _spotDistance + 0.5;
