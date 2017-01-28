@@ -365,7 +365,7 @@ switch (_operation) do {
 		_return = [_looksLike1,_looksLike2];
 	};
 
-  case "getFacVehs": {
+	case "getFacVehs": {
 		_input params [["_factions",["OPF_F"]]];
 
 		private ["_cfgVehicles"];
@@ -374,26 +374,26 @@ switch (_operation) do {
 
 		_cfgVehicles = configFile >> "CfgVehicles";
 
-    for "_i" from 0 to (count _cfgVehicles - 1) do {
-      _entry = _cfgVehicles select _i;
+		for "_i" from 0 to (count _cfgVehicles - 1) do {
+			_entry = _cfgVehicles select _i;
 
-      if (isclass _entry) then {
-        if (
-            (getText(_entry >> "faction") in _factions) &&
-            {getNumber(_entry >> "scope") >= 2} &&
-            {
-              (configname _entry isKindOf "Air") ||
-              {configname _entry isKindOf "Boat"} ||
-              {configname _entry isKindOf "LandVehicle"}
-            }
-        ) then {
-            _return pushback (configName _entry);
-        };
-      };
-    };
-  };
+			if (isclass _entry) then {
+				if (
+						(getText(_entry >> "faction") in _factions) &&
+						{getNumber(_entry >> "scope") >= 2} &&
+					{
+						(configname _entry isKindOf "Air") ||
+						{configname _entry isKindOf "Boat"} ||
+						{configname _entry isKindOf "LandVehicle"}
+					}
+				) then {
+					_return pushback (configName _entry);
+				};
+			};
+		};
+	};
 
-  case "getFacUnits": {
+	case "getFacUnits": {
 		_input params ["_factions"];
 
 		private ["_cfgVehicles"];
@@ -401,20 +401,74 @@ switch (_operation) do {
 		_return = [];
 		_cfgVehicles = configFile >> "CfgVehicles";
 
-    for "_i" from 0 to (count _cfgVehicles - 1) do {
-      _entry = _cfgVehicles select _i;
+		for "_i" from 0 to (count _cfgVehicles - 1) do {
+			_entry = _cfgVehicles select _i;
 
-      if (isclass _entry) then {
-        if (
-            (getText(_entry >> "faction") in _factions) &&
-            {getNumber(_entry >> "scope") >= 2} &&
-            {configname _entry isKindOf "Man"}
-        ) then {
-            _return pushback (configName _entry);
-        };
-      };
-    };
-  };
+			if (isclass _entry) then {
+				if (
+					(getText(_entry >> "faction") in _factions) &&
+					{getNumber(_entry >> "scope") >= 2} &&
+					{configname _entry isKindOf "Man"}
+				) then {
+					_return pushback (configName _entry);
+				};
+			};
+		};
+	};
+
+	case "checkIncogFoot": {
+
+		_input params ["_unit"];
+
+		if (uniform _unit in INC_incogUniforms) then {
+
+			_return = true;
+
+			if !(_unit getVariable ["INC_goneIncog",false]) then {
+
+				if !(_unit getVariable ["INC_isCompromised",false]) then {
+
+					//If either side has seen the unit, make him compromised
+					if (([INC_regEnySide,_unit,10] call INCON_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_fnc_isKnownExact}) then {
+
+						[_unit] call INCON_fnc_compromised;
+					};
+				};
+
+				_unit setVariable ["INC_goneIncog",true];
+				_unit setVariable ["INC_faceFits",  (_unit getVariable ["INC_looksLikeIncog",true])];
+			};
+		} else {
+
+			_unit setVariable ["INC_goneIncog",false];
+			_unit setVariable ["INC_faceFits", (_unit getVariable ["INC_looksLikeCiv",true])];
+		};
+	};
+
+	case "checkIncogVeh": {
+
+		_input params ["_unit"];
+
+		if (((typeOf vehicle _unit) in INC_incogVehArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) then {
+
+			if !(_unit getVariable ["INC_goneIncog",false]) then {
+
+				if !(_unit getVariable ["INC_isCompromised",false]) then {
+
+					//If either side has seen the unit, make him compromised
+					if (([INC_regEnySide,_unit,20] call INCON_fnc_isKnownExact) || {[INC_asymEnySide,_unit,20] call INCON_fnc_isKnownExact}) then {
+						[_unit] call INCON_fnc_compromised;
+					};
+				};
+
+				_unit setVariable ["INC_goneIncog",true];
+				_unit setVariable ["INC_faceFits",  (_unit getVariable ["INC_looksLikeIncog",true])];
+			};
+		} else {
+			_unit setVariable ["INC_goneIncog",false];
+			_unit setVariable ["INC_faceFits", (_unit getVariable ["INC_looksLikeCiv",true])];
+		};
+	};
 };
 
 _return
