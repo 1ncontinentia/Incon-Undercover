@@ -6,6 +6,7 @@ Description: Finds out whether there are any members of a given side who know ab
 Parameters:
 0: The unit to run the check on <OBJECT>
 1: The side that may have knowledge of the unit <SIDE>
+2: Force checks to foot unit only <BOOL>
 
 Returns:
 
@@ -18,11 +19,14 @@ Examples:
 Author: Incontinentia, with help from Tajin, Grumpy Old Man, sarogahtyp and davidoss
 ---------------------------------------------------------------------------- */
 
-params [["_unit",player],["_side",sideEmpty]];
+params [["_unit",player],["_side",sideEmpty],["_foot",false]];
 
 if (_side == sideEmpty) exitWith {false};
 
-_unit = vehicle _unit;
+if (!_foot) then {
+	_unit = vehicle _unit;
+};
+
 private _result = false;
 
 {if (((leader _x targetKnowledge _unit) select 0) && {alive leader _x}) exitWith {_result = true}; false} forEach (allGroups select {

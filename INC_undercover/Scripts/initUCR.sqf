@@ -104,7 +104,7 @@ if (isPlayer _unit) then {
 
 			waitUntil {
 				sleep 1;
-				_unit globalChat (format ["%1 cover intact: %2, compromised: %3",_unit,(captive _unit),(_unit getVariable ["INC_isCompromised",false])]);
+				_unit globalChat (format ["%1 cover intact: %2, comp f/v: %3 / %4",_unit,(captive _unit),(_unit getVariable ["INC_isCompromised",false]),((vehicle _unit) getVariable ["INC_naughtyVehicle",false])]);
 				_unit globalChat (format ["%1 trespassing: %2",_unit,((_unit getVariable ["INC_proxAlert",false]) || {(_unit getVariable ["INC_trespassAlert",false])})]);
 				_unit globalChat (format ["%1 suspicious level: %2",_unit,(_unit getVariable ["INC_suspiciousValue",1])]);
 				_unit globalChat (format ["%1 weirdo check active: %2, value %3",_unit,(captive _unit),(_unit getVariable ["INC_disguiseValue",1])]);

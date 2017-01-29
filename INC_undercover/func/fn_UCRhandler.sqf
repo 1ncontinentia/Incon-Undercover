@@ -238,6 +238,31 @@ _unit addEventHandler["FiredMan", {
 	};
 }];
 
+//Vehicle compromised
+_unit addEventHandler["GetInMan", {
+	params["_unit","_position","_vehicle","_turret"];
+
+	if (_vehicle getVariable ["INC_naughtyVehicle",false]) then {
+
+		if (([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact)}) exitWith {
+
+			[_unit,true] call INCON_ucr_fnc_compromised;
+		};
+	};
+}];
+
+_unit addEventHandler["GetOutMan", {
+	params["_unit","_position","_vehicle","_turret"];
+
+	if (_vehicle getVariable ["INC_naughtyVehicle",false]) then {
+
+		if (([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact)}) exitWith {
+
+			[_unit,true] call INCON_ucr_fnc_compromised;
+		};
+	};
+}];
+
 //Shot at nearby EventHandler
 if ((isPlayer _unit) || {_fullAIfunctionality}) then {
 	_unit addEventHandler["FiredNear", {
