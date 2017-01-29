@@ -1,13 +1,20 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: getConfigInfo
 
 Description:
 
-Parameters:
+Contains functions for getting relevant items from the config file, based on a list of units within the given factions.
 
-Returns:
+Parameters:
+0: Gear type - what kind of gear to search for <STRING>
+1: Factions - a list of factions to find the gear for <ARRAY>
+
+Returns: An array of items / weapons / identities belonging to the given factions.
 
 Examples:
+
+["units",[(faction _groupLead)]] call INCON_ucr_fnc_getConfigInfo;
+["headgear",["OPF_F"]] call INCON_ucr_fnc_getConfigInfo; 
 
 Author: Spyderblack723, modified by Incontinentia
 ---------------------------------------------------------------------------- */

@@ -1,19 +1,41 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: armedLoop
 
 Description:
 
-Parameters:
+Performs checks on undercover units which are then saved into the variables -
+* INC_goneIncog (if the unit has gone incognito or not)
+* INC_canConcealWeapon (whether the unit can conceal his weapon in a uniform or backpack)
+* INC_canGoLoud (whether the unit has a concealed weapon in his back back and can get it out)
+* INC_firedRecent (whether the unit has recently fired)
+* INC_suspiciousValue (number of suspicious things the unit is doing)
+* INC_weirdoLevel (how strange the unit is acting for a given context)
+* INC_radiusMulti (how much attention the unit is drawing for a given context)
+Automatically includes all variables from UCR_setup.sqf so most parameters are not needed.
 
-Returns:
+Parameters:
+0: Unit <OBJECT>
+
+Parameters taken from UCR_setup.sqf:
+2: Are HMDs allowed <BOOL>
+3: Are civilians allowed to drive offroad <BOOL>
+4: Regular forces defaul detection radius in meters - units will be seen as weird if they get within this distance of a regular enemy unit <NUMBER>
+5: Asym forces defaul detection radius in meters - units will be seen as weird if they get within this distance of an asymetric enemy unit <NUMBER>
+6: Include racial profile checks which determine whether the unit looks like the side he is impersonating <BOOL>
+7: Racial profile factor when disguised as a civilian - 1 = normal, 2 = double etc., increases the effect of racial profiling <NUMBER>
+8: Racial profile factor when disguised as an enemy - 1 = normal, 2 = double etc., increases the effect of racial profiling <NUMBER>
+
+Returns: nil
 
 Examples:
 
-Author:
+[_unit] call INCON_ucr_fnc_armedLoop;
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 
-params [["_unit",objNull],["_operation","armedLoop"]];
+params ["_unit"];
 
 #include "..\UCR_setup.sqf"
 
@@ -22,9 +44,9 @@ if (!local _unit) exitWith {};
 
 //Armed / Incognito Stuff
 //=======================================================================//
-[_unit,_HMDallowed,_noOffRoad,_debug,_hints,_regDetectRadius,_asymDetectRadius,_fullAIfunctionality,_racism,_racProfFacCiv,_racProfFacEny] spawn {
+[_unit,_HMDallowed,_noOffRoad,_regDetectRadius,_asymDetectRadius,_racism,_racProfFacCiv,_racProfFacEny] spawn {
 
-	params ["_unit","_HMDallowed","_noOffRoad","_debug","_hints","_regDetectRadius","_asymDetectRadius","_fullAIfunctionality","_racism","_racProfFacCiv","_racProfFacEny"];
+	params ["_unit","_HMDallowed","_noOffRoad","_regDetectRadius","_asymDetectRadius","_racism","_racProfFacCiv","_racProfFacEny"];
 
 	private _responseTime = 0.2;
 
@@ -46,7 +68,7 @@ if (!local _unit) exitWith {};
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 					//If either side has seen the unit, make him compromised
-					if (([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact}) then {
+					if (([_unit,INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {[_unit,INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact}) then {
 
 						[_unit] call INCON_ucr_fnc_compromised;
 					};

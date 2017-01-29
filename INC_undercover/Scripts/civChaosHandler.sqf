@@ -1,15 +1,21 @@
 /* ----------------------------------------------------------------------------
-Name: 
+Name: civChaosHandler
 
-Description:
+Description: Runs a scenario where civilians join the undercover unit's side and some take up arms. Needs to be run locally to the units who are rebelling. 
 
 Parameters:
+0: Target chance - how likely civilians are to be targeted in percent <NUMBER>
+1: Percentage change of rebellion  - how likely civilians are to respond with force <NUMBER>
+2: Percentage of civilians that are targeted <NUMBER>
+3: Percentage of civilians that may rebel <NUMBER>
+4: Length of delay after targetting for rebellion to happen in seconds <NUMBER>
 
-Returns:
+Returns: Nil
 
 Examples:
+[80,20], "INC_undercover\Scripts\civChaosHandler.sqf"] remoteExec ["execVM",2];
 
-Author:
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 params [["_targetChance",100],["_rebelChance",40],["_percentageTarget",40],["_percentageRebel",50],["_timeToRebel",(random 600)]];

@@ -1,15 +1,20 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: compromised
 
 Description:
 
-Parameters:
+Runs the compromised loop on the given unit. This sets captive off (returning the unit to his original side) and runs a cooldown which ends once a timer runs out or nobody knows about the undercover unit anymore, whichever happens first. After the cooldown, if any enemy units know about him still, the unit will remain compromised until he either changes disguise (out of sight of the enemy) or no living asymetric enemies know about him and regular knowsabout is less than 1.8 (if compromised by regular forces).
 
-Returns:
+Parameters:
+0: Unit <OBJECT>
+
+Returns: Nil
 
 Examples:
 
-Author:
+[_unit] call INCON_ucr_fnc_compromised;
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 params ["_unit"];
@@ -25,10 +30,13 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 
 	params ["_unit",["_debug",false]];
 
-	private ["_activeVeh"];
+	private ["_activeVeh","_regKnowsAboutUnit"];
 
-	// Publicize isCompromised variable to true. This prevents other scripts from setting captive while unit is still compromised.
+	// Publicize isCompromised variable to true.
 	_unit setVariable ["INC_isCompromised", true];
+
+	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
+	_regKnowsAboutUnit = [_unit,INC_regEnySide,50] call INCON_ucr_fnc_isKnownExact;
 
 	// SetCaptive after suspicious act has been committed
 	[_unit, false] remoteExec ["setCaptive", _unit];
@@ -49,6 +57,11 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 		(!(_unit getVariable ["INC_AnyKnowsSO",false]) || {_cooldownTimer <= 0})
 	};
 
+	if !(_regKnowsAboutUnit) then {
+
+		//Checks if INC_regEnySide has seen him recently
+		_regKnowsAboutUnit = [_unit,INC_regEnySide,250] call INCON_ucr_fnc_isKnownExact;
+	};
 
 	//If there are still alerted units alive...
 	if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
@@ -88,8 +101,8 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 				_activeVeh = (vehicle _unit);
 				if !(
 
-					([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) &&
-					{([INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact)}
+					([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) &&
+					{([_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact)}
 
 				) then {
 					_activeVeh setVariable ["INC_naughtyVehicle",true];
@@ -107,8 +120,8 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 
 				if (
 
-					([INC_regEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact) &&
-					{([INC_asymEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact)}
+					([_unit,INC_regEnySide,40] call INCON_ucr_fnc_isKnownExact) &&
+					{([_unit,INC_asymEnySide,40] call INCON_ucr_fnc_isKnownExact)}
 
 				) then {
 
@@ -151,7 +164,7 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 			sleep 1;
 
 			(
-				(!(_unit getVariable ["INC_AnyKnowsSO",false]) && {(1.8 > (INC_regEnySide knowsAbout _unit))}) ||
+				(!(_unit getVariable ["INC_AnyKnowsSO",false]) && {(1.8 > (INC_regEnySide knowsAbout _unit)) || {!_regKnowsAboutUnit}}) ||
 				{!alive _unit}
 			);
 		};

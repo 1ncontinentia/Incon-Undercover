@@ -1,15 +1,18 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: ucrMain
 
-Description:
+Description: Contains functions required for Incon Undercover.
 
 Parameters:
+0: Input <ANY>
+1: Operation <STRING>
 
-Returns:
+Returns: Depends on operation.
 
 Examples:
+[[_unit,false],"SwitchUniformAction"] call INCON_ucr_fnc_ucrMain;
 
-Author:
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 params [["_input",objNull],["_operation","addConcealedRifle"]];
@@ -434,7 +437,7 @@ switch (_operation) do {
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 					//If either side has seen the unit, make him compromised
-					if (([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) || {[INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact}) then {
+					if (([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {[_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact}) then {
 
 						[_unit] call INCON_ucr_fnc_compromised;
 					};
@@ -463,7 +466,7 @@ switch (_operation) do {
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 					//If either side has seen the unit, make him compromised
-					if (([INC_regEnySide,_unit,20] call INCON_ucr_fnc_isKnownExact) || {[INC_asymEnySide,_unit,20] call INCON_ucr_fnc_isKnownExact}) then {
+					if (([_unit, INC_regEnySide,20] call INCON_ucr_fnc_isKnownExact) || {[_unit, INC_asymEnySide,20] call INCON_ucr_fnc_isKnownExact}) then {
 						[_unit] call INCON_ucr_fnc_compromised;
 					};
 				};

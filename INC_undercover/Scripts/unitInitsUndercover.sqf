@@ -1,15 +1,22 @@
 /* ----------------------------------------------------------------------------
-Name:
+Name: initUnitsUndercover
 
-Description:
+Description: Gets all relevant scripts and eventhandlers running on units spawned at the beginning and during a mission.
 
 Parameters:
+0: Unit <OBJECT>
 
-Returns:
+Returns: Nil
 
 Examples:
 
-Author:
+class Extended_InitPost_EventHandlers {
+     class CAManBase {
+		init = "_this call (compile preprocessFileLineNumbers 'INC_undercover\scripts\unitInitsUndercover.sqf')";
+	};
+};
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 params ["_unit"];

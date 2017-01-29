@@ -1,15 +1,19 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: recruitHandler
 
-Description:
+Description: Handles all functions relating to civilian recruitment.
 
 Parameters:
+0: Input <ANY>
+0: Operation <STRING>
 
-Returns:
+Returns: Nil
 
 Examples:
 
-Author:
+[[_civ,_undercoverUnit],"recruitAttempt"] remoteExecCall ["INCON_ucr_fnc_recruitHandler",_civ];
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 params ["_input",["_operation","recruitAttempt"]];
@@ -222,6 +226,4 @@ switch (_operation) do {
 		};
 		_return = true;
 	};
-
-
 };

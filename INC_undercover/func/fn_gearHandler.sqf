@@ -1,15 +1,20 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: gearHandler
 
-Description:
+Description: Executes all gear-related functions for Incon Undercover.
 
 Parameters:
+0: Input <ANY>
+1: Operation <STRING>
 
-Returns:
+Returns: Depends on context.
 
 Examples:
 
-Author:
+["hgun_ACPC2_snds_F","getCompatMags"] call INCON_ucr_fnc_gearHandler;
+[[Jeff,"srifle_EBR_F"], "getStoredWeaponAmmoArray"] call INCON_ucr_fnc_gearHandler;
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 params [["_input",objNull],["_operation","addConcealedRifle"]];
@@ -94,6 +99,8 @@ switch (_operation) do {
 	};
 
 	case "addItems": {
+
+		_input params ["_unit"];
 
 		for "_i" from 0 to (round (random 3)) do {
 			private _itemToAdd = selectRandom _civItemArray;

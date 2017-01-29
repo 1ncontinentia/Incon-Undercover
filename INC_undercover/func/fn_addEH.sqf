@@ -1,15 +1,23 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: addEH
 
-Description:
+Description: Adds killed eventhandlers to enemies which can compromise undercover units nearby or cause chaos.
 
 Parameters:
 
-Returns:
+0: Unit <OBJECT>
+1: Allow brbaric behavior <BOOL> (default: false)
+2: Undercover unit side <SIDE> (default: west)
+
+Returns: Nil
 
 Examples:
 
+[_unit,false,east] call INCON_ucr_fnc_addEH;
+
 Author:
+
+Incontinentia
 ---------------------------------------------------------------------------- */
 
 params [["_unit",objNull],["_barbaric",false],["_undercoverUnitSide",west]];
@@ -44,7 +52,7 @@ if !(_barbaric) then {
 
 					if (_x getVariable ["isSneaky",false]) then {
 
-						if ((_side knowsAbout _x) > 3) then {
+						if ((_side knowsAbout _x) > 3.8) then {
 
 							true;
 
@@ -92,7 +100,7 @@ if (_barbaric) then {
 
 				private _nearbyUndercoverUnits = ((_unit nearEntities ["Man", 700]) select {
 
-					if (_x getVariable ["isSneaky",false] && {(_side knowsAbout _x) > 3.5}) then {
+					if (_x getVariable ["isSneaky",false] && {(_side knowsAbout _x) > 3.7}) then {
 
 							true;
 

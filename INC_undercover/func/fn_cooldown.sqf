@@ -1,15 +1,18 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: cooldown
 
-Description:
+Description: Runs checks to see if enemies have witnessed a suspicious act or behaviour and waits until the side who witnessed the suspicious act no longer know about him. Then sets captive back to true as long as the unit isn't doing anything suspicious again or is compromised. Also includes a chance of making the unit compromised if the regular enemy side knows about him.
 
 Parameters:
+0: Unit <OBJECT>
 
-Returns:
+Returns: Nil
 
 Examples:
 
-Author:
+[_unit] call INCON_ucr_fnc_cooldown;
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 params ["_unit"];
@@ -37,10 +40,10 @@ _unit setVariable ["INC_cooldown", true];
 	};
 
 	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
-	_regKnowsAboutUnit = [INC_regEnySide,_unit,50] call INCON_ucr_fnc_isKnownExact;
+	_regKnowsAboutUnit = [_unit, INC_regEnySide,50] call INCON_ucr_fnc_isKnownExact;
 
 	//Checks if INC_asymEnySide has seen him recently
-	_asymKnowsAboutUnit = [INC_asymEnySide,_unit,50] call INCON_ucr_fnc_isKnownExact;
+	_asymKnowsAboutUnit = [_unit, INC_asymEnySide,50] call INCON_ucr_fnc_isKnownExact;
 
 	if ((isPlayer _unit) && (_debug)) then {hint "Cooldown active."};
 
@@ -95,7 +98,7 @@ _unit setVariable ["INC_cooldown", true];
 		};
 	};
 
-	//Then set captive back to true as long as the isCompromised loop isn't running
+	//Then set captive back to true as long as the compromised loop isn't running
 	if !(_unit getVariable ["INC_isCompromised",false]) then {
 		[_unit, true] remoteExec ["setCaptive", _unit];
 	};

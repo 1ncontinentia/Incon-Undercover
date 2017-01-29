@@ -1,15 +1,18 @@
 /* ----------------------------------------------------------------------------
-Name:
+Name: initUCR
 
-Description:
+Description: Initiates undercover mode on the given unit and (if the unit is a player) on all group members of the unit.
 
 Parameters:
+0: Unit <OBJECT>
 
-Returns:
+Returns: Nil
 
 Examples:
 
-Author:
+[player] execVM "INC_undercover\Scripts\initUCR.sqf";
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
@@ -188,7 +191,7 @@ waitUntil {
 		) then {
 
 			//Once people know exactly where he is, and that he is doing loads of suspicious stuff, make him compromised
-			if (([INC_regEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact) || {([INC_asymEnySide,_unit,10] call INCON_ucr_fnc_isKnownExact)}) exitWith {
+			if (([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact)}) exitWith {
 
 				[_unit] call INCON_ucr_fnc_compromised;
 			};

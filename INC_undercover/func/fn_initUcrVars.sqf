@@ -1,15 +1,18 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: initUcrVars
 
-Description:
+Description: Sets variables that are required by other scripts in Incon Undercover.
 
 Parameters:
+0: Unit - the first unit to run the Incon Undercover script <OBJECT>
 
-Returns:
+Returns: Nil
 
 Examples:
 
-Author:
+[player] call INCON_ucr_fnc_initUcrVars;
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
@@ -144,7 +147,7 @@ _this spawn {
 	//Spawn the rebel commader
 	[_unit,"spawnRebelCommander"] remoteExecCall ["INCON_ucr_fnc_ucrMain",2];
 
-	missionNamespace setVariable ["INC_ucrInitComplete",true,true]; 
+	missionNamespace setVariable ["INC_ucrInitComplete",true,true];
 
 	_incogWpnsFinal = _incogWpns;
 

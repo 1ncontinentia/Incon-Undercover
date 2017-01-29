@@ -1,18 +1,20 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: UCRHandler
 
-Description:
+Description: Sets various loops and eventhandlers that are required for undercover detection.
 
 Parameters:
+0: The undercover unit <OBJECT>
 
-Returns:
+Returns: Nil
 
 Examples:
+[_unit] call INCON_ucr_fnc_UCRhandler;
 
-Author:
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
-params [["_unit",objNull],["_operation","armedLoop"]];
+params [["_unit",objNull]];
 
 #include "..\UCR_setup.sqf"
 
@@ -224,7 +226,7 @@ _unit addEventHandler["FiredMan", {
 		if (_unit getVariable ["INC_anyKnowsSO",false]) then {
 
 			//Once people know where he is, who he is, and that he has fired a weapon, make him compromised
-			if (([INC_regEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact) || {([INC_asymEnySide,_unit,40] call INCON_ucr_fnc_isKnownExact)}) exitWith {
+			if (([_unit, INC_regEnySide,40] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,40] call INCON_ucr_fnc_isKnownExact)}) exitWith {
 
 				[_unit] call INCON_ucr_fnc_compromised;
 			};

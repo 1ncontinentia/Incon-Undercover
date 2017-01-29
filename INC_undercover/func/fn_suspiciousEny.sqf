@@ -1,15 +1,19 @@
 /* ----------------------------------------------------------------------------
-Function:
+Function: suspiciosEny
 
-Description:
+Description: Handles suspicious behavior for enemies when alerted to strange behaviour by undercover units.
 
 Parameters:
+0: The unit who is acting strangely <OBJECT>
+1: The suspicious enemy <OBJECT>
 
-Returns:
+Returns: Nil
 
 Examples:
 
-Author:
+[_unit,_suspiciousEnemy] call INCON_ucr_fnc_suspiciousEny;
+
+Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 _this spawn {
