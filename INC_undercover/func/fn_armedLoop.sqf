@@ -177,14 +177,16 @@ if (!local _unit) exitWith {};
 								} else {
 
 									//If the unit isn't wearing a bandana but is wearing something else, and is either dressed as a civilian or incognito and not wearing a balaclava...
-									if (((goggles _unit) find "alaclava") == -1) then {
+									if ((((goggles _unit) find "alaclava") == -1) && {((headgear _unit) find "alaclava") == -1}) then {
 
 										_weirdoLevel = _weirdoLevel + (3 * _racProfFacEny);
 										_spotDistance = _spotDistance + (1.5 * _racProfFacEny);
 									} else {
 
 										//If the unit is wearing a balaclava
-										_weirdoLevel = _weirdoLevel + (1.5 * _racProfFacEny);
+										if (!(headgear _unit in INC_incogHeadgear) || {!(goggles _unit in INC_incogHeadgear)}) then {
+											_weirdoLevel = _weirdoLevel + (1.5 * _racProfFacEny);
+										};
 									};
 								};
 							};
@@ -225,19 +227,19 @@ if (!local _unit) exitWith {};
 					if ((captive _unit) && {_suspiciousValue == 1}) then {
 
 						//Check if unit is wearing anything suspicious
-						if ((((headgear _unit) find "elmet") >= 0) || {((goggles _unit) find "alaclava") >= 0}) then {
+						if ((((headgear _unit) find "elmet") >= 0) || {(((goggles _unit) find "alaclava") >= 0) || {((headgear _unit) find "alaclava") >= 0}}) then {
 
-							_weirdoLevel = _weirdoLevel + 3;
-							_spotDistance = _spotDistance + 1.5;
+							_weirdoLevel = _weirdoLevel + 5;
+							_spotDistance = _spotDistance + 2;
 						};
 
 						{
 							if (side _x == INC_regEnySide) exitWith {
-								_weirdoLevel = _weirdoLevel + (_regDetectRadius - (_x distance _unit));
+								_weirdoLevel = _weirdoLevel + ((_regDetectRadius - (_x distance _unit)) / 2);
 								true
 							};
 							if (side _x == INC_asymEnySide) exitWith {
-								_weirdoLevel = _weirdoLevel + (_asymDetectRadius - (_x distance _unit));
+								_weirdoLevel = _weirdoLevel + ((_asymDetectRadius - (_x distance _unit)) / 2);
 								true
 							};
 						} forEach (_unit nearEntities ((_regDetectRadius + _asymDetectRadius)/2));
@@ -450,7 +452,7 @@ if (!local _unit) exitWith {};
 					if (captive _unit) then {
 
 						_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 40);
-						_spotDistance = _spotDistance + (((speed _unit) + 1)/ 8);
+						_spotDistance = _spotDistance + (((speed _unit) + 1)/ 10);
 
 						//Headlights check for moving vehicle at night
 						if (
@@ -486,21 +488,23 @@ if (!local _unit) exitWith {};
 						    ) then {
 
 						        if !(uniform _unit in INC_incogUniforms) then {
-						            _weirdoLevel = _weirdoLevel + 20;
+						            _weirdoLevel = _weirdoLevel + 15;
 						            _spotDistance = _spotDistance + 8;
 						        };
 
 						        if (!(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) && {count assignedVehicleRole _unit == 2 && {!_vehFullClosed} && {(_vehDescription find "MRAP") == -1}}) then {
 
 						            if !(weaponLowered _unit) then {
-										_weirdoLevel = _weirdoLevel + 10;
+										_weirdoLevel = _weirdoLevel + 6;
 						                _spotDistance = _spotDistance + 4;
 
 						            } else {
-										_weirdoLevel = _weirdoLevel + 3;
+										_weirdoLevel = _weirdoLevel + 4;
 						            };
 						        };
 						    } else {
+
+								_racProfFacEny = _racProfFacEny * 0.5;
 						        if (!(uniform _unit in INC_incogUniforms) && {(_vehDescription find "MRAP") == -1 || {driver _vehicle == _unit}}) then {
 						            _weirdoLevel = _weirdoLevel + 12;
 						            _spotDistance = _spotDistance + 1;
@@ -540,15 +544,15 @@ if (!local _unit) exitWith {};
 
 									} else {
 
-										if (((goggles _unit) find "alaclava") >= 0) then {
+										if ((((goggles _unit) find "alaclava") >= 0) || {((headgear _unit) find "alaclava") >= 0}) then {
 
-											if !(goggles _unit in INC_incogHeadgear) then {
+											if (!(headgear _unit in INC_incogHeadgear) || {!(goggles _unit in INC_incogHeadgear)}) then {
 												_weirdoLevel = _weirdoLevel + (0.5 * _racProfFacEny);
 											};
 
 										} else {
 
-											if !(goggles _unit in INC_incogHeadgear) then {
+											if (!(headgear _unit in INC_incogHeadgear) || {!(goggles _unit in INC_incogHeadgear)}) then {
 												_weirdoLevel = _weirdoLevel + (1 * _racProfFacEny);
 											};
 											_weirdoLevel = _weirdoLevel + (0.5 * _racProfFacEny);
