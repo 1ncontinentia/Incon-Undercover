@@ -66,6 +66,25 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 	//If there are still alerted units alive...
 	if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
 
+		switch (true) do {
+			case ([_unit,INC_regEnySide] call INCON_ucr_fnc_isKnownToSide): {
+				{[_x,[_unit,3]] remoteExec ["reveal",_x]} forEach (
+					(_unit nearEntities 1500) select {
+						(side _x == INC_regEnySide)
+					};
+				);
+			};
+
+			case ([_unit,INC_asymEnySide] call INCON_ucr_fnc_isKnownToSide): {
+				{[_x,[_unit,2]] remoteExec ["reveal",_x]} forEach (
+					(_unit nearEntities 800) select {
+						(side _x == INC_asymEnySide) &&
+						{"itemRadio" in assignedItems _x}
+					};
+				);
+			};
+		};
+
 		private ["_unitUniform","_unitGoggles","_unitHeadgear","_compUniform","_compHeadGear","_compVeh"];
 
 		if ((_debug) && {isPlayer _unit}) then {hint "Your description has been shared."};
