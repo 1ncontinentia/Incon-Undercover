@@ -43,21 +43,25 @@ if (isPlayer _unit) then {
 	waitUntil {
 
 		if !(isPlayer _unit) then {
-			switch (behaviour _unit == "SAFE") do {
-				case true: {
-					switch (captive _unit) do {
-						case true: {
-							_unit disableAI "AUTOTARGET";
-						};
+			if ((combatMode _unit) in ["BLUE", "GREEN", "WHITE"]) then {
+				switch ((behaviour _unit == "SAFE") || {(behaviour _unit == "AWARE")}) do {
+					case true: {
+						switch (captive _unit) do {
+							case true: {
+								_unit disableAI "AUTOTARGET";
+							};
 
-						case false: {
-							_unit enableAI "AUTOTARGET";
+							case false: {
+								_unit enableAI "AUTOTARGET";
+							};
 						};
 					};
+					case false: {
+						_unit enableAI "AUTOTARGET";
+					};
 				};
-				case false: {
-					_unit enableAI "AUTOTARGET";
-				};
+			} else {
+				_unit enableAI "AUTOTARGET";
 			};
 		};
 

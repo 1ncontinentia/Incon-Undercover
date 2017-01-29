@@ -130,18 +130,28 @@ if (!local _unit) exitWith {};
 							_spotDistance = _spotDistance + 0.5;
 						};
 
-						//Maybe disableAI autotarget / autocombat when captive, safe, incognito and holding fire?
-						if ((isPlayer _unit) && {(currentWeapon _unit == primaryWeapon _unit) && {!(weaponLowered _unit)}}) then {
-							_weirdoLevel = _weirdoLevel + 0.5;
-						};
-
 						if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
 							_weirdoLevel = _weirdoLevel + 3;
+						};
+
+
+						private ["_start","_end","_obj"];
+
+						_start = eyePos _unit;
+						_end = (_start vectorAdd (_unit weaponDirection currentWeapon _unit vectorMultiply 40));
+						_obj = (lineIntersectsSurfaces [_start, _end, _unit]) select 0 select 2;
+
+						if (_obj isKindOf "Man" && {side _obj in [INC_regEnySide,INC_asymEnySide]}) then {
+							_weirdoLevel = _weirdoLevel + 9;
+
 						};
 
 						sleep _responseTime;
 
 						if !(_unit getVariable ["INC_shotNear",false]) then {
+
+							if ((currentWeapon _unit == primaryWeapon _unit) && {!(weaponLowered _unit)}) then {
+							};
 
 					        switch (stance _unit == "STAND") do {
 
