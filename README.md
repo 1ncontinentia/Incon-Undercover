@@ -1,49 +1,33 @@
 # INCONTINENTIA'S UNDERCOVER / CIVILIAN RECRUITMENT
 
-This is a complex and performance friendly undercover simulation for players and their AI subordinates. Work as a guerrilla cell, go undercover, recruit comrades, and cause mayhem.
+This is a complex and performance friendly undercover simulation for players and their AI subordinates. Work as a guerrilla cell, go undercover, recruit comrades, and cause mayhem. 
 SP / Coop and Dedi compatible.
+
 
 ### Requires:
 
 * CBA
-
-### USAGE
-
-1. Add all files from Incon-Undercover folder into your mission folder. If you already have a description.ext or initPlayerLocal.sqf then add the code to your existing files. (Make sure to delete any previous version of my undercover scripts)
-
-2. Configure your settings in the UCR_setup.sqf file in the INC_undercover folder (pay close attention to these, one wrong setting can lead to some weird behaviour).
-
-3. For each out of bounds area, place a marker over the area with "INC_tre" somewhere in the marker name (e.g. "MyMarkerINC_tre" or "INC_tre_sillyMarkerName_15"). The script will handle the rest. But if you want, you can also include other markers by listing them in the relevant array in UCR_setup.sqf.
-
-4. Add in Incon Persistence if you want your band of merry men to persist between ALiVE sessions (this is now a separate script but automatically persists reputation).
-
-5. For each playable undercover unit, put this in their unit init in the editor:
-
-```
-this setVariable ["isSneaky",true,true];
-```
-
-Non-player units in the undercover unit's group do not need anything; the script will run on them automatically on mission start.
-
-
 
 
 ### FEATURES
 
 #### General
 
-* Optimised detection system: enemies respond in a realistic and credible way to undercover units without destroying performance (checks are minimal during firefights)
+* Probably the most complete undercover simulation script ever made for the Arma series. Almost every factor that can affect your cover (within engine limitations and the caveats mentioned below) has been accounted for. For example, if you run around dressed as the enemy with your weapon poined at other enemies, unless there has been shooting nearby recently, they will get suspicious far quicker than if you walk around looking chilled. Especially if your face doesn't fit in and you haven't covered it with a scarf or a bandanna... or you're wearing items that don't fit the disguise.. or your weapon isn't used by the faction.. or you happened to have been caught in that disguise before.. you get the picture!
+* Optimised to the max; should not noticably affect performance at all (especially during firefights or when not undercover)
 * Operates primarily on each client - server performance impact is therefore kept to a minimum even when multiple players are undercover at the same time
-* Works on players and their AI group members
+* Works with most faction mods, AI mods and should not break missions. 
 
 #### Comprehensive undercover / incognito simulation -
 
+* Works on players and their AI group members
 * Quick, easy setup: most aspects of the script are automatically implemented based on the settings you choose
-* Can run in the background even when the mission isn't focused around undercover operations - automatically reduces overhead when unit isn't undercover
+* Can run in the background even when the mission isn't focused around undercover operations - automatically reduces checking overhead when unit isn't undercover
 * No need to turn the script on or off - it just works
-* Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, or whether it is day or night, with each situation requiring players to behave appropriately
-* Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover - something as simple as lowering your weapon might mean the difference between a nearby enemy becoming suspicious and being able to walk right past a patrol unscathed
-* Suspicious enemies may challenge or watch and follow undercover units if they act weirdly; the more weird stuff you do, the more likely they are to see through your disguise (you can even use this to your advantage to draw enemies attention away from another unit - just don't get too cocky)
+* No checkboxes, compromised notifications or any other "gamey" stuff; just an optional hint when you're obviously hostile and when you aren't - the rest is up to you
+* Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, whether the unit's face fits or doesn't fit in with the faction they are pretending to be, or whether it is day or night, with each situation requiring players to behave appropriately
+* Suspicious enemies may challenge or watch and follow undercover units if they act weirdly; the more weird stuff you do, the more likely they are to see through your disguise (you can even use this to your advantage to draw enemies attention away from another unit while they do something naughty - just don't get too cocky)
+* Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover - something as simple as hopping into the back seat of an enemy MRAP or wearing a bandanna over your face might mean the difference between staying undercover or becoming compromised if an enemy patrol happens to get a bit too close
 * Enemies will detect if undercover units are the nationality of the group they are impersonating; covering your face with a scarf or bandanna will reduce this but not as much as choosing undercover units whose faces fit in with the people they are trying to impersonate
 * Once undercover units become compromised, enemies will remember the vehicles they are spotted in and clothes they are wearing
 * Change your clothing (both uniform and either headgear or goggles) and if no enemies see you doing it, your new disguise may stick
@@ -74,14 +58,35 @@ Non-player units in the undercover unit's group do not need anything; the script
 * (Requires ALiVE) Turn recruited units into a profiled group to be used by AI commander of the same faction as the undercover unit (add to object init: this addaction ["Profile group","[player,'profileGroup'] remoteExecCall ['INCON_ucr_fnc_ucrMain',2]",[],1,false,true]);
 
 
+### USAGE
+
+1. Add all files from Incon-Undercover folder into your mission folder. If you already have a description.ext or initPlayerLocal.sqf then add the code to your existing files. (Make sure to delete any previous version of my undercover scripts)
+
+2. Configure your settings in the UCR_setup.sqf file in the INC_undercover folder (pay close attention to these, one wrong setting can lead to some weird behaviour).
+
+3. For each out of bounds area, place a marker over the area with "INC_tre" somewhere in the marker name (e.g. "MyMarkerINC_tre" or "INC_tre_sillyMarkerName_15"). The script will handle the rest. But if you want, you can also include other markers by listing them in the relevant array in UCR_setup.sqf.
+
+4. Add in Incon Persistence if you want your band of merry men to persist between ALiVE sessions (this is now a separate script but automatically persists reputation).
+
+5. For each playable undercover unit, put this in their unit init in the editor:
+
+```
+this setVariable ["isSneaky",true,true];
+```
+
+Non-player units in the undercover unit's group do not need anything; the script will run on them automatically on mission start.
+
+
 ### Caveats / Compatibility:
 * Only one side can have undercover units at a time (so no east undercover and west undercover guys undercoverising each other at the same time)
 * Only one side can be defined as asymmetric at a time and only one side can be defined as regular - and both must be hostile to the undercover unit's side. So if having a three-way war, one side must be asym and the other regular. If those enemy sides are fighting each other, it is recommended to not have any incognito factions as an engine limitation means that incognito units (i.e. those disguised as the enemy) will be seen as friendly to all - could break the immersion if you're dressed as OPFOR and GreenFOR don't shoot at you when they should.
 * Should work with all AI mods (tested with ASR, bCombat and TPWCAS but no reason why others wouldn't work)
 
+
 ### Credits
 
 Massive thanks to Spyderblack723 for his help creating some of the functions and correcting my mistakes / oversights on the original release. Also for generally being super helpful over the past year as I've got into modding. Grumpy Old Man, Tajin and sarogahtyp are responsible for creating a performant detection script, which I then adapted and used as a basis for the undercover script, so thank you to those guys too. Also thanks to das attorney, davidoss, Bad Benson and Tankbuster for some top optimisation tips.
+
 
 ### In Detail: How it works
 
@@ -100,8 +105,11 @@ Each time unit gets fully compromised, the effects of any weird behaviour will b
 Suspicious / weird behaviours will vary according to:
 * Whether the unit is disguised as the enemy
 * Whether the unit is in a vehicle or on foot
+* Whether the vehicle is open or closed
+* Whether the unit has his weapon raised or lowered (if incognito)
 * What time of day and weather it is (dark / moonlit / overcast / fog at night, fog / rain during the day)
 * Whether the unit has been compromised before
+* Whether the unit looks like the group he is pretending to be
 
 #### Appropriate behaviour: a guide for new spies
 This is a short primer for the kinds of things to bear in mind while going undercover. It is by no means conclusive.
@@ -153,4 +161,4 @@ And suspicious:
 * Driving more than 30m offroad (optional)
 * Driving with headlights off at night
 
-It is good practice to make sure all aspects of your disguise are in keeping with your cover. If you are dressed like a civilian, act like one. If dressed like the enemy, don't draw attention to yourself.
+This is a short overview; it is good practice to make sure all aspects of your disguise are in keeping with your cover, even if it isn't listed in the behaviours above. If you are dressed like a civilian, act like one. If dressed like the enemy, don't draw attention to yourself. 
