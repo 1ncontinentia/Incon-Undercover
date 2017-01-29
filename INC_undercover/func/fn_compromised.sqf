@@ -3,10 +3,15 @@ Function: compromised
 
 Description:
 
-Runs the compromised loop on the given unit. This sets captive off (returning the unit to his original side) and runs a cooldown which ends once a timer runs out or nobody knows about the undercover unit anymore, whichever happens first. After the cooldown, if any enemy units know about him still, the unit will remain compromised until he either changes disguise (out of sight of the enemy) or no living asymetric enemies know about him and regular knowsabout is less than 1.8 (if compromised by regular forces).
+Runs the compromised loop on the given unit.
+
+If the unit is on foot, this sets captive off (returning the unit to his original side) and runs a cooldown which ends once a timer runs out or nobody knows about the undercover unit anymore, whichever happens first. After the cooldown, if any enemy units know about him still, the unit will remain compromised until he either changes disguise (out of sight of the enemy) or no living asymetric enemies know about him and regular knowsabout is less than 1.8 (if compromised by regular forces).
+
+If the unit is in a vehicle, it runs a foot-only version of the compromised script on any units known to enemies in the vehicle and sets the vehicle as INC_naughtyVehicle = true, which is then picked up by the armed script and used to setcaptive false on the vehicle driver. After a cooldown or when no enemies know about the vehicle, if no enemies know about the vehicle, it sets INC_naughtyVehicle to false.
 
 Parameters:
 0: Unit <OBJECT>
+1: Force compromised on foot units <BOOL>
 
 Returns: Nil
 
@@ -17,11 +22,49 @@ Examples:
 Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
-params ["_unit"];
+params ["_unit",["_foot",false]];
 
 #include "..\UCR_setup.sqf"
 
 if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
+
+//Vehicle compromised loop
+if ((!isNull objectParent _unit) && {!_foot}) exitWith {
+	_activeVeh = (vehicle _unit);
+	{[_x,true] call INCON_ucr_fnc_compromised} forEach ((units _unit) select {
+
+			(_x in (crew _activeVeh)) &&
+			{
+				([_unit,INC_regEnySide,true] call INCON_ucr_fnc_isKnownToSide) ||
+				{[_unit,INC_asymEnySide,true] call INCON_ucr_fnc_isKnownToSide} ||
+				{(_unit getVariable ["INC_disguiseValue",1]) >= (10 + (random 10))}
+			}
+		}
+	);
+
+	if !(_activeVeh getVariable ["INC_naughtyVehicle",false]) then {
+
+		_activeVeh setVariable ["INC_naughtyVehicle",true];
+
+		[_activeVeh] spawn {
+			params ["_activeVeh"];
+
+			_cooldownTimer = 270;
+			sleep 30;
+
+			waitUntil {
+				sleep 10;
+				_cooldownTimer = (_cooldownTimer - 10);
+				(!(([_activeVeh,INC_regEnySide,true] call INCON_ucr_fnc_isKnownToSide) || {[_activeVeh,INC_asymEnySide,true] call INCON_ucr_fnc_isKnownToSide}) || {_cooldownTimer <= 0})
+			};
+
+			if !(([_activeVeh,INC_regEnySide,true] call INCON_ucr_fnc_isKnownToSide) || {[_activeVeh,INC_asymEnySide,true] call INCON_ucr_fnc_isKnownToSide}) then {
+
+				_activeVeh setVariable ["INC_naughtyVehicle",false];
+			};
+		};
+	};
+};
 
 if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
 
@@ -40,12 +83,6 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 
 	// SetCaptive after suspicious act has been committed
 	[_unit, false] remoteExec ["setCaptive", _unit];
-
-	if (!isNull objectParent _unit) then {
-		_activeVeh = (vehicle _unit);
-		_activeVeh setVariable ["INC_naughtyVehicle",true];
-		{[_x] call INCON_ucr_fnc_compromised} forEach ((units _unit) select {(_x distance _unit) < 8});
-	};
 
 	// Cooldown Timer to simulate how long it would take for word to get out
 	_cooldownTimer = (30 + (random 240));
