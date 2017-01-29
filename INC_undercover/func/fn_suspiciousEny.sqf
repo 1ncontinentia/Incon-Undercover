@@ -44,7 +44,6 @@ _this spawn {
 
 	if !((15 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-		[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
 	};
 
 	if (45 > (random 100)) then {
@@ -54,7 +53,7 @@ _this spawn {
 				_comment = selectRandom ["Who the fuck are you?","I don't recognise you.","I don't like the look of you.","You look strange.","What are you doing?","I'd like to know which unit you're from.","Who are you with?","You're not supposed to be here.","You're not with us are you?"];
 			};
 			case false: {
-				_comment = selectRandom ["I recognise you from somewhere.","You hiding something?","Stop right there, let me get a good look at you.","Stop. Don't move.","Stay right there."];
+				_comment = selectRandom ["I recognise you from somewhere.","You hiding something?","Stop right there, let me get a good look at you.","Stop. Don't move.","Stay right there.","You better stop fucking about."];
 			};
 		};
 		[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
@@ -62,8 +61,9 @@ _this spawn {
 
 	sleep (random 15);
 
-	if !((15 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
+	if !((23 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+		[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
 	};
 
 	waitUntil {
@@ -84,6 +84,7 @@ _this spawn {
 			{(50 / (_unit distance _suspiciousEnemy)) > random 20}
 		) exitWith {
 			_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+			[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
 
 			if (45 > (random 100)) then {
 				private ["_comment"];
@@ -113,6 +114,7 @@ _this spawn {
 
 		if !((30 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
 			_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+			[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
 			true
 		};
 
