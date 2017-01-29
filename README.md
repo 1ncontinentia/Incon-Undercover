@@ -36,7 +36,7 @@ Non-player units in the undercover unit's group do not need anything; the script
 * Operates primarily on each client - server performance impact is therefore kept to a minimum even when multiple players are undercover at the same time
 * Works on players and their AI group members
 
-##### Comprehensive undercover / incognito simulation -
+#### Comprehensive undercover / incognito simulation -
 
 * Quick, easy setup: most aspects of the script are automatically implemented based on the settings you choose
 * Can run in the background even when the mission isn't focused around undercover operations - automatically reduces overhead when unit isn't undercover
@@ -51,18 +51,18 @@ Non-player units in the undercover unit's group do not need anything; the script
 * Different configurable detection systems for regular and asymetric enemy forces
 * Compatible with RHS, ACE, ALiVE, Zeus, ASR, bCombat, TPWCAS, VCOM... pretty much everything I've tried (some factions' helmets and bandannas may not be recognised but the overall effect of this will be minimal - if you desperately want all features, use vanilla or RHS versions of these assets)
 
-##### Stealth kills work -
+#### Stealth kills work -
 
 * If nobody sees you firing a shot, your cover will remain intact
 * BUT, enemies do remember suspicious units - if you kill someone and other enemies of that side already know who you are and that you are nearby, there is a chance your cover will be blown regardless
 * However, your cover will return if you kill everyone who knows about you before they can spread the word
 
-##### Different behaviour for regular and asymmetric forces
+#### Different behaviour for regular and asymmetric forces
 
 * Define a side as asymmetric and they will not be able to share your identity outside of the local area, but they will be better at spotting imposters
 * Define a side as regular and your cover will stay blown for much longer and for a much wider area once compromised, but they may not have such a good nose for imposters
 
-##### (Optional) Civilian Recruitment
+#### (Optional) Civilian Recruitment
 
 * Undercover units can recruit civilians to join their group
 * The more enemies you kill, and the more chaos you are associated with, the better your reputation will become
