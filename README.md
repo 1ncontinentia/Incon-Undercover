@@ -40,6 +40,7 @@ Non-player units in the undercover unit's group do not need anything; the script
 
 * Quick, easy setup: most aspects of the script are automatically implemented based on the settings you choose
 * Can run in the background even when the mission isn't focused around undercover operations - automatically reduces overhead when unit isn't undercover
+* No need to turn the script on or off - it just works
 * Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, or whether it is day or night, with each situation requiring players to behave appropriately
 * Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover - something as simple as lowering your weapon might mean the difference between a nearby enemy becoming suspicious and being able to walk right past a patrol unscathed
 * Suspicious enemies may challenge or watch and follow undercover units if they act weirdly; the more weird stuff you do, the more likely they are to see through your disguise (you can even use this to your advantage to draw enemies attention away from another unit - just don't get too cocky)
