@@ -45,16 +45,16 @@ if (isPlayer _unit) then {
 				case true: {
 					switch (captive _unit) do {
 						case true: {
-							disableAI "AUTOTARGET";
+							_unit disableAI "AUTOTARGET";
 						};
 
 						case false: {
-							enableAI "AUTOTARGET";
+							_unit enableAI "AUTOTARGET";
 						};
 					};
 				};
 				case false: {
-					enableAI "AUTOTARGET";
+					_unit enableAI "AUTOTARGET";
 				};
 			};
 		};

@@ -398,18 +398,22 @@ if (!local _unit) exitWith {};
 
 			if (isNull objectParent _unit) exitWith {true};
 
-			private ["_suspiciousValue","_weirdoLevel","_spotDistance","_displayName","_vehicle"];
+			private ["_suspiciousValue","_weirdoLevel","_spotDistance","_vehDescription","_vehFullOpen","_vehicle","_vehFullOpen","_vehFullClosed"];
 
 			_vehicle = vehicle _unit;
 
-			if ((_vehicle getVariable ["INC_displayName","UNASSIGNED"]) == "UNASSIGNED") then {
+			if ((_vehicle getVariable ["INC_vehDescription","UNASSIGNED"]) == "UNASSIGNED") then {
 
-				_displayName = (getText (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "displayName"));
+			    _vehDescription = format ["%1%2%3",(getText (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "displayName")),(typeOf _vehicle),(getText (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "editorSubcategory"))];
 
-				_vehicle setVariable ["INC_displayName",_displayName];
+			    _vehicle setVariable ["INC_vehDescription",_vehDescription];
 			};
 
-			_displayName = _vehicle getVariable ["INC_displayName","UNASSIGNED"];
+			_vehDescription = _vehicle getVariable ["INC_vehDescription","UNASSIGNED"];
+
+			_vehFullOpen =  ((getText (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "attenuationEffectType")) == "OpenCarAttenuation");
+
+			_vehFullClosed = ((getText (configfile >> "CfgVehicles" >> (typeOf _vehicle) >> "attenuationEffectType")) == "TankAttenuation");
 
 			_suspiciousValue = 1;
 			_weirdoLevel = 1;
@@ -431,7 +435,7 @@ if (!local _unit) exitWith {};
 					//Trespass check
 					if (_unit getVariable ["INC_proxAlert",false]) then {
 
-						_suspiciousValue = _suspiciousValue + 1;
+						[_unit] call INCON_ucr_fnc_compromised;
 					};
 
 					//Suspicious vehicle check
@@ -462,60 +466,56 @@ if (!local _unit) exitWith {};
 						sleep _responseTime;
 
 						//Incognito uniform check for non-tank, non-covered vehicles
-						if !((_vehicle isKindOf "Tank") || {(_displayName find "overed") >= 1}) then {
+						if ((((_vehDescription find "overed") == -1) || {_unit == driver _vehicle} || {count assignedVehicleRole _unit == 2}) && {(!_vehFullClosed) || {isTurnedOut _unit}}) then {
+						    if (
+						        (
 
-							//Open vehicles
-							if (((((typeOf _vehicle) find "ffroad") >= 1) || {(_displayName find "pen") >= 1}) && {_unit != driver _vehicle}) then {
+						            ((_vehDescription find "ffroad") >= 1) ||
+						            {(_vehDescription find "pen") >= 1} ||
+						            {(_vehDescription find "ransport") >= 1} ||
+						            {_vehFullOpen} ||
+						            {isTurnedOut _unit}
+						        ) && {
+						            ((_vehDescription find "overed") == -1) &&
+						            {!_vehFullClosed} &&
+						            {
+						                (count assignedVehicleRole _unit == 2) ||
+						                {_vehFullOpen}
+						            }
+						        }
+						    ) then {
 
-						    	if !(uniform _unit in INC_incogUniforms) then {
-									_weirdoLevel = _weirdoLevel + 12;
-									_spotDistance = _spotDistance + 10;
+						        if !(uniform _unit in INC_incogUniforms) then {
+						            _weirdoLevel = _weirdoLevel + 20;
+						            _spotDistance = _spotDistance + 8;
+						        };
 
-									if (((currentWeapon _unit == primaryWeapon _unit) || {currentWeapon _unit == secondaryWeapon _unit} || {currentWeapon _unit == handgunWeapon _unit})) then {
+						        if (!(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) && {count assignedVehicleRole _unit == 2 && {!_vehFullClosed} && {(_vehDescription find "MRAP") == -1}}) then {
 
-										if !(weaponLowered _unit) then {
-
-											_weirdoLevel = _weirdoLevel + 9;
-											_spotDistance = _spotDistance + 4;
-										} else {
-
-											_weirdoLevel = _weirdoLevel + 5;
-											_spotDistance = _spotDistance + 2;
-										};
-									};
-								};
-
-								//Incognito uniform check for non-tank vehicles
-								if !(vest _unit in INC_incogVests) then {
-
-									_weirdoLevel = _weirdoLevel + 2;
-									_spotDistance = _spotDistance + 1;
-								};
-							} else {
-								//Closed vehicles
-								if (!(((_displayName find "ffroad") >= 1) || {(_displayName find "pen") >= 1}) || {_unit == driver _vehicle}) then {
-
-									if !(uniform _unit in INC_incogUniforms) then {
+						            if !(weaponLowered _unit) then {
 										_weirdoLevel = _weirdoLevel + 10;
-										_spotDistance = _spotDistance + 2;
+						                _spotDistance = _spotDistance + 4;
 
-										if (((currentWeapon _unit == primaryWeapon _unit) || {currentWeapon _unit == secondaryWeapon _unit} || {currentWeapon _unit == handgunWeapon _unit})) then {
+						            } else {
+										_weirdoLevel = _weirdoLevel + 3;
+						            };
+						        };
+						    } else {
+						        if (!(uniform _unit in INC_incogUniforms) && {(_vehDescription find "MRAP") == -1 || {driver _vehicle == _unit}}) then {
+						            _weirdoLevel = _weirdoLevel + 12;
+						            _spotDistance = _spotDistance + 1;
 
-											if !(weaponLowered _unit) then {
+							        if (!(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) && {count assignedVehicleRole _unit == 2 && {!_vehFullClosed} && {(_vehDescription find "MRAP") == -1}}) then {
 
-												_weirdoLevel = _weirdoLevel + 6;
-												_spotDistance = _spotDistance + 3;
-											};
-										};
-									};
-
-									//Incognito uniform check for non-tank vehicles
-									if !(vest _unit in INC_incogVests) then {
-
-										_weirdoLevel = _weirdoLevel + 1;
-									};
-								};
-							};
+							            if !(weaponLowered _unit) then {
+							                _weirdoLevel = _weirdoLevel + 5;
+							                _spotDistance = _spotDistance + 3;
+							            } else {
+							                _weirdoLevel = _weirdoLevel + 3;
+							            };
+							        };
+						        };
+						    };
 
 							sleep _responseTime;
 
@@ -523,13 +523,13 @@ if (!local _unit) exitWith {};
 							if (!(_unit getVariable ["INC_faceFits",true]) && {_racism} && {!(_vehicle isKindOf "Tank")}) then {
 
 								if (headgear _unit == "") then {
-									_weirdoLevel = _weirdoLevel + (1 * _racProfFacEny);
+									_weirdoLevel = _weirdoLevel + (1.5 * _racProfFacEny);
 									_spotDistance = _spotDistance + (0.5 * _racProfFacEny);
 								};
 
 								if (goggles _unit == "") then {
 
-									_weirdoLevel = _weirdoLevel + (3 * _racProfFacEny);
+									_weirdoLevel = _weirdoLevel + (2.5 * _racProfFacEny);
 									_spotDistance = _spotDistance + (1 * _racProfFacEny);
 
 								} else {
@@ -561,17 +561,17 @@ if (!local _unit) exitWith {};
 						sleep _responseTime;
 
 						//Offroad check
-						if ((_noOffRoad) && {(_vehicle isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
+						if ((_noOffRoad) && {speed _unit > 5} && {(_vehicle isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
 
-							_weirdoLevel = _weirdoLevel + 2;
-							_spotDistance = _spotDistance + 3;
+							_weirdoLevel = _weirdoLevel + 3;
+							_spotDistance = _spotDistance + 2;
 						};
 
 						//Trespass check
 						if (_unit getVariable ["INC_trespassAlert",false]) then {
 
 							_weirdoLevel = _weirdoLevel + 2;
-							_spotDistance = _spotDistance + 1;
+							_spotDistance = _spotDistance + 2;
 						};
 					};
 				};
@@ -599,7 +599,7 @@ if (!local _unit) exitWith {};
 						sleep _responseTime;
 
 						//Offroad check
-						if ((_noOffRoad) && {(_vehicle isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
+						if ((_noOffRoad && {speed _unit > 1}) && {(_vehicle isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
 
 							_suspiciousValue = _suspiciousValue + 1;
 						};
@@ -618,10 +618,10 @@ if (!local _unit) exitWith {};
 
 					sleep _responseTime;
 
-					//Oddball check
+					//Oddball check --- add in speed
 					if ((captive _unit) && {_suspiciousValue == 1}) then {
 
-						if ((!_noOffRoad) && {(_vehicle isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
+						if (((!_noOffRoad && {speed _unit > 5}) && {driver _vehicle == _unit}) && {(_vehicle isKindOf "Land") && {((count (_unit nearRoads 30)) == 0)}}) then {
 
 							_weirdoLevel = _weirdoLevel + 4;
 							_spotDistance = _spotDistance + 4;
@@ -632,52 +632,56 @@ if (!local _unit) exitWith {};
 
 						sleep _responseTime;
 
-						//Oddball check for non-covered vehicles
-						if !((_displayName find "overed") >= 1) then {
+						if ((((_vehDescription find "overed") == -1) || {_unit == driver _vehicle} || {count assignedVehicleRole _unit == 2}) && {(!_vehFullClosed) || {isTurnedOut _unit}}) then {
+						    if (
+						        (
 
-							//Open vehicles
-							if ((((_displayName find "ffroad") >= 1) || {(_displayName find "pen") >= 1}) && {_unit != driver _vehicle}) then {
+						            ((_vehDescription find "ffroad") >= 1) ||
+						            {(_vehDescription find "pen") >= 1} ||
+						            {(_vehDescription find "ransport") >= 1} ||
+						            {_vehFullOpen} ||
+						            {isTurnedOut _unit}
+						        ) && {
+						            ((_vehDescription find "overed") == -1) &&
+						            {!_vehFullClosed} &&
+						            {
+						                (count assignedVehicleRole _unit == 2) ||
+						                {_vehFullOpen}
+						            }
+						        }
+						    ) then {
 
-						    	if (!((uniform _unit in INC_civilianUniforms) && {!(uniform _unit in INC_incogUniforms)})) then {
-									_weirdoLevel = _weirdoLevel + 9;
-									_spotDistance = _spotDistance + 3;
-								};
+						        if !(((uniform _unit in INC_civilianUniforms) || {(uniform _unit in INC_incogUniforms)})) then {
+						            _weirdoLevel = _weirdoLevel + 15;
+						            _spotDistance = _spotDistance + 8;
+						        };
 
-								if (((currentWeapon _unit == primaryWeapon _unit) || {currentWeapon _unit == secondaryWeapon _unit} || {currentWeapon _unit == handgunWeapon _unit})) then {
+						        if (!(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) && {count assignedVehicleRole _unit == 2 && {!_vehFullClosed} && {(_vehDescription find "MRAP") == -1}}) then {
 
-									if !(weaponLowered _unit) then {
+						            if !(weaponLowered _unit) then {
+										_weirdoLevel = _weirdoLevel + 12;
+						                _spotDistance = _spotDistance + 7;
 
-										_weirdoLevel = _weirdoLevel + 15;
-										_spotDistance = _spotDistance + 10;
-									} else {
+						            } else {
+										_weirdoLevel = _weirdoLevel + 3;
+						            };
+						        };
+						    } else {
+						        if !(((uniform _unit in INC_civilianUniforms) || {(uniform _unit in INC_incogUniforms)})) then {
+						            _weirdoLevel = _weirdoLevel + 6;
+						            _spotDistance = _spotDistance + 1;
+						        };
 
-										_weirdoLevel = _weirdoLevel + 15;
-										_spotDistance = _spotDistance + 2;
-									};
-								};
-							} else {
-								//Closed vehicles & driver
-								if (!(((_displayName find "ffroad") >= 1) || {(_displayName find "pen") >= 1}) || {_unit == driver _vehicle}) then {
+						        if (!(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) && {count assignedVehicleRole _unit == 2 && {!_vehFullClosed} && {(_vehDescription find "MRAP") == -1}}) then {
 
-
-							    	if (!((uniform _unit in INC_civilianUniforms) && {!(uniform _unit in INC_incogUniforms)})) then {
-										_weirdoLevel = _weirdoLevel + 4;
-										_spotDistance = _spotDistance + 1;
-									};
-
-
-									if (((currentWeapon _unit == primaryWeapon _unit) || {currentWeapon _unit == secondaryWeapon _unit} || {currentWeapon _unit == handgunWeapon _unit})) then {
-
-										if !(weaponLowered _unit) then {
-											_weirdoLevel = _weirdoLevel + 15;
-											_spotDistance = _spotDistance + 3;
-										} else {
-											_weirdoLevel = _weirdoLevel + 15;
-											_spotDistance = _spotDistance + 1;
-										};
-									};
-								};
-							};
+						            if !(weaponLowered _unit) then {
+						                _weirdoLevel = _weirdoLevel + 12;
+						                _spotDistance = _spotDistance + 2;
+						            } else {
+						                _weirdoLevel = _weirdoLevel + 8;
+						            };
+						        };
+						    };
 
 							sleep _responseTime;
 

@@ -456,6 +456,8 @@ switch (_operation) do {
 
 		if (((typeOf vehicle _unit) in INC_incogVehArray) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) then {
 
+			_return = true;
+
 			if !(_unit getVariable ["INC_goneIncog",false]) then {
 
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
