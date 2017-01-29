@@ -144,5 +144,14 @@ _this spawn {
 	//Spawn the rebel commader
 	[_unit,"spawnRebelCommander"] remoteExecCall ["INCON_ucr_fnc_ucrMain",2];
 
-	missionNamespace setVariable ["INC_ucrInitComplete",true,true];
+	missionNamespace setVariable ["INC_ucrInitComplete",true,true]; 
+
+	_incogWpnsFinal = _incogWpns;
+
+	{
+		_incogWpnsFinal pushBackUnique ([_x] call BIS_fnc_baseWeapon);
+		sleep 0.1;
+	} forEach _incogWpns;
+
+	missionNamespace setVariable ["INC_incogWpns",_incogWpnsFinal,true];
 };
