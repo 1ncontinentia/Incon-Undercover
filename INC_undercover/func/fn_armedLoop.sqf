@@ -151,6 +151,7 @@ if (!local _unit) exitWith {};
 						if !(_unit getVariable ["INC_shotNear",false]) then {
 
 							if ((currentWeapon _unit == primaryWeapon _unit) && {!(weaponLowered _unit)}) then {
+								_weirdoLevel = _weirdoLevel + 2;
 							};
 
 					        switch (stance _unit == "STAND") do {
@@ -614,6 +615,18 @@ if (!local _unit) exitWith {};
 
 				case false: {
 
+					//Suspicious vehicle check
+					if (!((typeof _vehicle) in INC_civilianVehicleArray) || {(_vehicle getVariable ["INC_naughtyVehicle",false])}) then {
+
+						_suspiciousValue = _suspiciousValue + 2;
+					};
+
+					//Trespass check
+					if (_unit getVariable ["INC_trespassAlert",false]) then {
+
+						_suspiciousValue = _suspiciousValue + 1;
+					};
+
 					if (driver _vehicle == _unit) then {
 
 						//Headlights check for moving land vehicle at night
@@ -626,22 +639,10 @@ if (!local _unit) exitWith {};
 							_suspiciousValue = _suspiciousValue + 1;
 						};
 
-						//Suspicious vehicle check
-						if (!((typeof _vehicle) in INC_civilianVehicleArray) || {(_vehicle getVariable ["INC_naughtyVehicle",false])}) then {
-
-							_suspiciousValue = _suspiciousValue + 2;
-						};
-
 						sleep _responseTime;
 
 						//Offroad check
 						if ((_noOffRoad && {speed _unit > 1}) && {(_vehicle isKindOf "Land")} && {((count (_unit nearRoads 30)) == 0)}) then {
-
-							_suspiciousValue = _suspiciousValue + 1;
-						};
-
-						//Trespass check
-						if (_unit getVariable ["INC_trespassAlert",false]) then {
 
 							_suspiciousValue = _suspiciousValue + 1;
 						};
