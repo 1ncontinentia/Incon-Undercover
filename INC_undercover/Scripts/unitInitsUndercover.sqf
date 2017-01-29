@@ -42,33 +42,36 @@ _unit addEventHandler["Killed", {
 
 	params["_unit"];
 
-	[_unit, [
-		"<t color='#FFC300'>Take uniform from dead unit</t>", {
+	if (uniform _unit in ((missionNamespace getVariable ["INC_incogUniforms",[]]) + (missionNamespace getVariable ["INC_civilianUniforms",[]]))) then {
 
-			_this spawn {
-				params ["_deadGuy","_opportunist"];
-				private ["_gwh","_oldUniform","_deadUniform","_oldItems"];
+		[_unit, [
+			"<t color='#FFC300'>Take uniform from dead unit</t>", {
 
-				[_opportunist,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
+				_this spawn {
+					params ["_deadGuy","_opportunist"];
+					private ["_gwh","_oldUniform","_deadUniform","_oldItems"];
 
-				_oldUniform = uniform _opportunist;
-				_deadUniform = uniform _deadGuy;
-				_oldItems = uniformItems _opportunist;
-				_deadGuyItems = uniformItems _deadGuy;
+					[_opportunist,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
 
-				sleep 0.2;
+					_oldUniform = uniform _opportunist;
+					_deadUniform = uniform _deadGuy;
+					_oldItems = uniformItems _opportunist;
+					_deadGuyItems = uniformItems _deadGuy;
 
-				_gwh = createVehicle ["GroundWeaponHolder", getPosATL _opportunist, [], 0, "CAN_COLLIDE"];
-				_gwh addItemCargoGlobal [_oldUniform, 1];
-				{_gwh addItemCargoGlobal [_x, 1];} forEach (_deadGuyItems);
+					sleep 0.2;
 
-				sleep 1;
+					_gwh = createVehicle ["GroundWeaponHolder", getPosATL _opportunist, [], 0, "CAN_COLLIDE"];
+					_gwh addItemCargoGlobal [_oldUniform, 1];
+					{_gwh addItemCargoGlobal [_x, 1];} forEach (_deadGuyItems);
 
-				removeUniform _deadGuy;
-				_opportunist forceAddUniform _deadUniform;
-				{(uniformContainer _opportunist) addItemCargoGlobal [_x, 1];} forEach (_oldItems);
-			};
+					sleep 1;
 
-		},[],6,true,true,"","((_this getVariable ['isUndercover',false]) && {uniform _target != ''})",3
-	]] remoteExec ["addAction", 0,true];
+					removeUniform _deadGuy;
+					_opportunist forceAddUniform _deadUniform;
+					{(uniformContainer _opportunist) addItemCargoGlobal [_x, 1];} forEach (_oldItems);
+				};
+
+			},[],6,true,true,"","((_this getVariable ['isUndercover',false]) && {uniform _target != ''})",3
+		]] remoteExec ["addAction", 0,true];
+	};
 }];
