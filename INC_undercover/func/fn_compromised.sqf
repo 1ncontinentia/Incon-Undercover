@@ -28,19 +28,26 @@ params ["_unit",["_foot",false]];
 
 if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
+if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
+
 //Vehicle compromised loop
 if ((!isNull objectParent _unit) && {!_foot}) exitWith {
 	_activeVeh = (vehicle _unit);
-	{[_x,true] call INCON_ucr_fnc_compromised} forEach ((units _unit) select {
 
-			(_x in (crew _activeVeh)) &&
-			{
-				([_unit,INC_regEnySide,true] call INCON_ucr_fnc_isKnownToSide) ||
-				{[_unit,INC_asymEnySide,true] call INCON_ucr_fnc_isKnownToSide} ||
-				{(_unit getVariable ["INC_disguiseValue",1]) >= (10 + (random 10))}
-			}
-		}
-	);
+	_suspiciousEnemies = ((_unit nearEntities [["Man","Car"],150]) select {
+		((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
+		{((_x getHideFrom (_activeVeh)) distanceSqr _unit < 10)} &&
+		{((_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
+	});
+
+	private _eny = selectRandom _suspiciousEnemies;
+
+	if (!isNil "_eny") then {
+
+		[_eny,[_unit,2.5]] remoteExec ["reveal",_eny];
+	};
+
+	[_unit,true] call INCON_ucr_fnc_compromised;
 
 	if !(_activeVeh getVariable ["INC_naughtyVehicle",false]) then {
 
@@ -65,8 +72,6 @@ if ((!isNull objectParent _unit) && {!_foot}) exitWith {
 		};
 	};
 };
-
-if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple instances of the code being ran on the unit
 
 //Compromised loop
 [_unit,_debug] spawn {
@@ -108,7 +113,7 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 				{[_x,[_unit,3]] remoteExec ["reveal",_x]} forEach (
 					(_unit nearEntities 1500) select {
 						(side _x == INC_regEnySide)
-					};
+					}
 				);
 			};
 
@@ -117,7 +122,7 @@ if (_unit getVariable ["INC_isCompromised",false]) exitWith {}; //Stops multiple
 					(_unit nearEntities 800) select {
 						(side _x == INC_asymEnySide) &&
 						{"itemRadio" in assignedItems _x}
-					};
+					}
 				);
 			};
 		};

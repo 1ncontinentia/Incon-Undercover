@@ -48,7 +48,7 @@ if (!local _unit) exitWith {};
 
 	params ["_unit","_HMDallowed","_noOffRoad","_regDetectRadius","_asymDetectRadius","_racism","_racProfFacCiv","_racProfFacEny"];
 
-	private _responseTime = 0.2;
+	private _responseTime = 0.15;
 
 	if !(isPlayer _unit) then {_responseTime = (_responseTime * 2)}; //Repsonsiveness of script reduced for performance on AI
 
@@ -141,8 +141,9 @@ if (!local _unit) exitWith {};
 						_end = (_start vectorAdd (_unit weaponDirection currentWeapon _unit vectorMultiply 40));
 						_obj = (lineIntersectsSurfaces [_start, _end, _unit]) select 0 select 2;
 
-						if (_obj isKindOf "Man" && {side _obj in [INC_regEnySide,INC_asymEnySide]}) then {
-							_weirdoLevel = _weirdoLevel + 9;
+						if ((!isNil "_obj") && {_obj isKindOf "Man" && {side _obj in [INC_regEnySide,INC_asymEnySide]}}) then {
+							_weirdoLevel = _weirdoLevel + 13;
+							_spotDistance = _spotDistance + 3;
 
 						};
 
@@ -152,6 +153,7 @@ if (!local _unit) exitWith {};
 
 							if ((currentWeapon _unit == primaryWeapon _unit) && {!(weaponLowered _unit)}) then {
 								_weirdoLevel = _weirdoLevel + 2;
+								_spotDistance = _spotDistance + 1;
 							};
 
 					        switch (stance _unit == "STAND") do {
@@ -218,7 +220,7 @@ if (!local _unit) exitWith {};
 
 										//If the unit is wearing a balaclava
 										if (!(headgear _unit in INC_incogHeadgear) || {!(goggles _unit in INC_incogHeadgear)}) then {
-											_weirdoLevel = _weirdoLevel + (1.5 * _racProfFacEny);
+											_weirdoLevel = _weirdoLevel + 1.5;
 										};
 									};
 								};
@@ -402,16 +404,17 @@ if (!local _unit) exitWith {};
 				_nearMines = {_x isKindOf "timeBombCore"} count (nearestObjects [_unit,[],5]);
 				_suspiciousValue = _suspiciousValue + _nearMines;
 
-				_suspiciousEnemies = ((_unit nearEntities [["Man","Car"],(_regDetectRadius * (_unit getVariable ["INC_disguiseValue",1]))]) select {
-					((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
-					{((_x getHideFrom _unit) distanceSqr _unit < 10)} &&
-					{(_x knowsAbout _unit) > 3} &&
-					{alive _x} &&
-					{((missionNamespace getVariable ["INC_envJumpygMulti",1]) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)}
-				});
+				if (_nearMines == 0) then {
 
-				if (count _suspiciousEnemies != 0) then {
-					{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_ucr_fnc_suspiciousEny}} forEach _suspiciousEnemies;
+					_suspiciousEnemies = ((_unit nearEntities [["Man","LandVehicle"],(_regDetectRadius * (_unit getVariable ["INC_disguiseRad",1]))]) select {
+						((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
+						{((_x getHideFrom _unit) distanceSqr _unit < 15)} &&
+						{((missionNamespace getVariable ["INC_envJumpygMulti",1]) * ((_unit getVariable ["INC_disguiseValue",1]) * 3)) > (random 100)}
+					});
+
+					if (count _suspiciousEnemies != 0) then {
+						{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_ucr_fnc_suspiciousEny}} forEach _suspiciousEnemies;
+					};
 				};
 			};
 
@@ -467,12 +470,6 @@ if (!local _unit) exitWith {};
 
 				case true: {
 
-					//Trespass check
-					if (_unit getVariable ["INC_proxAlert",false]) then {
-
-						[_unit] call INCON_ucr_fnc_compromised;
-					};
-
 					//Suspicious vehicle check
 					if (_vehicle getVariable ["INC_naughtyVehicle",false]) then {
 
@@ -484,7 +481,7 @@ if (!local _unit) exitWith {};
 					//Oddball check
 					if (captive _unit) then {
 
-						_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 40);
+						_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 50);
 						_spotDistance = _spotDistance + (((speed _unit) + 1)/ 10);
 
 						//Headlights check for moving vehicle at night
@@ -648,11 +645,6 @@ if (!local _unit) exitWith {};
 						};
 					};
 
-					if (_unit getVariable ["INC_proxAlert",false]) then {
-
-						[_unit] call INCON_ucr_fnc_compromised;
-					};
-
 					sleep _responseTime;
 
 					//Oddball check --- add in speed
@@ -781,6 +773,25 @@ if (!local _unit) exitWith {};
 						_unit setVariable ["INC_firedRecent",false];
 					};
 				};
+			};
+
+			//Proximity alert scenario
+			if (_unit getVariable ["INC_proxAlert",false]) then {
+
+				private ["_suspiciousEnemies"];
+
+				sleep _responseTime;
+
+				_suspiciousEnemies = ((_vehicle nearEntities [["Man","LandVehicle"],(_regDetectRadius * (_unit getVariable ["INC_disguiseRad",1]))]) select {
+					((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
+					{((_x getHideFrom _vehicle) distanceSqr _unit < 15)} &&
+					{((missionNamespace getVariable ["INC_envJumpygMulti",1]) * ((_unit getVariable ["INC_disguiseValue",1]) * 3)) > (random 100)}
+				});
+
+				if (count _suspiciousEnemies != 0) then {
+					{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_ucr_fnc_suspiciousEny}} forEach _suspiciousEnemies;
+				};
+
 			};
 
 			sleep _responseTime;

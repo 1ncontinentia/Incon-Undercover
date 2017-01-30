@@ -66,7 +66,7 @@ if (isPlayer _unit) then {
 		};
 
 		//Proximity check for players (doesn't run if the unit isn't trying to be sneaky)
-		if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit}) then {
+		if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit || {!isNull objectParent _unit && {!(_unit getVariable ["INC_isCompromised",false])}}}) then {
 
 			private ["_disguiseValue","_disguiseRadius","_veh"];
 
@@ -86,48 +86,56 @@ if (isPlayer _unit) then {
 
 				case true: {
 
-					_nearReg = count (
-						(_unit nearEntities ((_regDetectRadius * _disguiseRadius) * 0.7)) select {
-							(side _x == INC_regEnySide) &&
-							{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
-							{(_x knowsAbout _veh) > 2} &&
-							{alive _x} &&
-							{(5 + (2 * _disguiseValue)) > (random 100)}
-						}
-					);
+					if (_disguiseValue >= 2) then {
 
-					sleep 0.5;
+						_nearReg = count (
+							(_unit nearEntities ((_regDetectRadius * _disguiseRadius) * 0.7)) select {
+								(side _x == INC_regEnySide) &&
+								{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
+								{(_x knowsAbout _veh) > 2} &&
+								{(_disguiseValue * 2) > (random 100)}
+							}
+						);
 
-					_nearAsym = count (
-						(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 1.5)) select {
-							(side _x == INC_asymEnySide) &&
-							{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
-							{(_x knowsAbout _veh) > 3} &&
-							{alive _x} &&
-							{(5 + (3 * _disguiseValue)) > (random 100)}
-						}
-					);
+						sleep 0.5;
+
+						_nearAsym = count (
+							(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 1.5)) select {
+								(side _x == INC_asymEnySide) &&
+								{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
+								{(_x knowsAbout _veh) > 3} &&
+								{(_disguiseValue * 3) > (random 100)}
+							}
+						);
+					} else {
+						_nearReg = 0;
+						_nearAsym = 0;
+					};
 				};
 
 				case false: {
 
-					_nearReg = count (
-						(_unit nearEntities (_regDetectRadius * _disguiseRadius)) select {
-							(side _x == INC_regEnySide) &&
-							{(_x knowsAbout _veh) > 3} &&
-							{alive _x}
-						}
-					);
+					if (_disguiseValue >= 2) then {
 
-					sleep 0.5;
+						_nearReg = count (
+							(_unit nearEntities (_regDetectRadius * _disguiseRadius)) select {
+								(side _x == INC_regEnySide) &&
+								{(_x knowsAbout _veh) > 3}
+							}
+						);
 
-					_nearAsym = count (
-						(_unit nearEntities (_asymDetectRadius * _disguiseRadius)) select {
-							(side _x == INC_asymEnySide) &&
-							{(_x knowsAbout _veh) > 2} &&
-							{alive _x}
-						}
-					);
+						sleep 0.5;
+
+						_nearAsym = count (
+							(_unit nearEntities (_asymDetectRadius * _disguiseRadius)) select {
+								(side _x == INC_asymEnySide) &&
+								{(_x knowsAbout _veh) > 2}
+							}
+						);
+					} else {
+						_nearReg = 0;
+						_nearAsym = 0;
+					};
 				};
 			};
 
