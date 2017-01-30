@@ -46,12 +46,12 @@ _civilianHeadgear = [];
 //(Array of classnames) Safe backpacks (will automatically include civilian backpack classes - must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
 _civilianBackpacks = ["B_FieldPack_blk","B_FieldPack_cbr","B_FieldPack_khk","B_FieldPack_oucamo","G_FieldPack_Medic","B_Carryall_cbr","B_Carryall_khk","B_Carryall_oucamo","B_TacticalPack_blk","B_TacticalPack_rgr","B_TacticalPack_oli","B_Kitbag_cbr","B_Kitbag_rgr","B_Kitbag_sgg","B_Respawn_Sleeping_bag_blue_F","B_Respawn_Sleeping_bag_brown_F","B_Respawn_TentDome_F","B_Respawn_TentA_F","B_Parachute","ACE_NonSteerableParachute","ACE_TacticalLadder_Pack"];
 
-//(Array of classnames) Safe vehicles to drive in.
+//(Array of classnames) Safe vehicles to drive in (automatically includes vehicles from the civilian factions above).
 _civilianVehicleArray = [];
 
 _HMDallowed = false; //(Bool - true or false) Are HMDs (night vision goggles etc.) safe to wear for units pretending to be civilians? Set to false if wearing HMDs will cause suspicion (must be stored in backpack).
 
-_noOffRoad = true; //Vehicles driving more than 50 meters from the nearest road will be considered hostile
+_noOffRoad = true; //Civilian vehicles driving more than 50 meters from the nearest road will be considered hostile
 
 //-------------------------Enemy Disguise settings-------------------------
 _incogFactions = ["OPF_F","OPF_T_F"]; //Array of enemy factions whose items and vehicles will allow the player to impersonate the enemy
