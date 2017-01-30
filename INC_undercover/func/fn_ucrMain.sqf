@@ -144,6 +144,7 @@ switch (_operation) do {
 
 		if (!isPlayer _unit) then {
 			[[_unit,false],"SwitchUniformAction"] call INCON_ucr_fnc_ucrMain;
+			[[_unit,false,8],"SwapGearAction"] call INCON_ucr_fnc_ucrMain;
 
 		} else {
 
@@ -154,6 +155,13 @@ switch (_operation) do {
 				};
 			}];
 
+			_unit addEventHandler ["InventoryClosed", {
+				params ["_unit"];
+				if ([[_unit,false],"swapGear"] call INCON_ucr_fnc_gearHandler) then {
+					[[_unit,true,4],"SwapGearAction"] call INCON_ucr_fnc_ucrMain;
+				};
+			}];
+
 			[_unit, [
 
 				"<t color='#F70707'>GROUP GO LOUD</t>", {
@@ -161,6 +169,12 @@ switch (_operation) do {
 
 					{
 						if (!isPlayer _x) then {
+
+							_x enableAI "AUTOTARGET";
+							_x setCombatMode "YELLOW";
+							_x setBehaviour "COMBAT";
+
+							_x suppressFor 10;
 
 							[_x] spawn {
 								params ["_unit"];
@@ -174,14 +188,13 @@ switch (_operation) do {
 									[[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
 									sleep 3;
 								};
-							};
-							_x setCombatMode "YELLOW";
 
-							_x suppressFor 10;
+								sleep 2;
+							};
 						};
 					} forEach (units _unit);
 
-				},[],4,false,true,"","(_this == _target) && {(_this getVariable ['INC_canGoLoud',false]) && {(count units _this > 1)}}"
+				},[],4,false,true,"","(_this == _target) &&  {(count units _this > 1)} && {(_this getVariable ['INC_canGoLoud',false]) || {_this getVariable ['INC_goneIncog',false]}}"
 
 			]] remoteExec ["addAction", _groupLead];
 		};
@@ -299,6 +312,59 @@ switch (_operation) do {
 				_unit removeAction INC_switchUniformAction;
 
 				_unit setVariable ["INC_switchUniformActionActive",false];
+			};
+		};
+
+		_return = true;
+	};
+
+	case "SwapGearAction": {
+
+		_input params ["_unit",["_temporary",true],["_duration",12]];
+
+		if (_unit getVariable ["INC_swapActionActive",false]) exitWith {_return = false};
+
+		_unit setVariable ["INC_swapActionActive",true];
+
+		INC_stealGear = _unit addAction [
+			"<t color='#33FF42'>Swap Gear</t>", {
+				params ["_unit"];
+
+				private ["_success"];
+
+				_success = [[_unit,true,7],"swapGear"] call INCON_ucr_fnc_gearHandler;
+
+				if (_success) then {
+					if (!isPlayer _unit) then {
+						private _comment = selectRandom ["Found one.","Got something","This'll do","Does my bum look big in this?","Fits nicely.","It's almost as if we're all the same dimensions.","Fits like a glove.","Beautiful.","I look like an idiot."];
+						_unit groupChat _comment;
+					} else {hint "Uniform changed."};
+				} else {
+					if (!isPlayer _unit) then {
+						private _comment = selectRandom ["I'm not sure where you want me to look.","Can you point it out a bit better?"];
+						_unit groupChat _comment;
+					} else {hint "No safe uniforms found nearby."};
+				};
+
+			},[],4,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
+		];
+
+		if (_temporary) then {
+
+			[_unit,_duration] spawn {
+
+				params ["_unit",["_timer",12]];
+
+				waitUntil {
+					sleep 3;
+					_timer = _timer - 3;
+
+					(!([[_unit,false],"swapGear"] call INCON_ucr_fnc_gearHandler) || {_timer <= 0})
+				};
+
+				_unit removeAction INC_stealGear;
+
+				_unit setVariable ["INC_swapActionActive",false];
 			};
 		};
 

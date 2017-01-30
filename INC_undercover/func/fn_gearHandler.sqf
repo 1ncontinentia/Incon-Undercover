@@ -187,7 +187,7 @@ switch (_operation) do {
 		_return = (
 			(
 				(isNull objectParent _unit) ||
-				{((assignedVehicleRole _unit) select 0) == "Turret"}
+				{count assignedVehicleRole _unit == 2}
 			) && {
 				((primaryWeapon _unit != "") && {(_unit canAddItemToUniform (primaryWeapon _unit)) || {_unit canAddItemToBackpack (primaryWeapon _unit)}}) ||
 				{(handgunWeapon _unit != "") && {(_unit canAddItemToUniform (handgunWeapon _unit)) || {_unit canAddItemToBackpack (handgunWeapon _unit)}}}
@@ -202,7 +202,7 @@ switch (_operation) do {
 		_return = (
 			(
 				(isNull objectParent _unit) ||
-				{((assignedVehicleRole _unit) select 0) == "Turret"}
+				{count assignedVehicleRole _unit == 2}
 			) && {
 				(currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}
 			} && {
@@ -576,6 +576,83 @@ switch (_operation) do {
 						};
 					};
 				};
+			};
+		};
+	};
+
+	case "swapGear": {
+		//Bugged - do not use, need to remove primary weapon from unit reliably
+		_input params ["_unit",["_swapGear",true],["_radius",5]];
+
+		private ["_activeContainer","_newUnif","_origUnif","_newUnifItems","_droppedUniform","_containerArray"];
+
+		_containerArray = [];
+
+		_containerArray = (nearestObjects [_unit, ["Man"],_radius]) select {
+			(!alive _x)
+		};
+
+		if (count _containerArray == 0) exitWith {_return = false};
+
+		_return = true;
+
+		if (_swapGear) then {
+
+			[(_containerArray select 0),_unit] spawn {
+				params ["_deadGuy","_opportunist"];
+				private ["_gwh","_oldUniform","_deadUniform","_oldItems"];
+
+				[_opportunist,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
+
+				_deadGear = getUnitLoadout _deadGuy;
+				_aliveGear = getUnitLoadout _opportunist;
+
+				_deadGear params ["_deadPrimary","_deadSecondary","_deadHandgun"];
+				_aliveGear params ["_alivePrimary","_aliveSecondary","_aliveHandgun"];
+
+				sleep 0.1;
+
+				_deadGear set [0, _alivePrimary];
+
+				_deadGear set [1, _aliveSecondary];
+
+				_deadGear set [2, _aliveHandgun];
+
+				_aliveGear set [0, _deadPrimary];
+
+				_aliveGear set [1, _deadSecondary];
+
+				_aliveGear set [2, _deadHandgun];
+
+				/*_wpn = primaryWeapon _opportunist;
+				_wpnItems = primaryWeaponItems _opportunist;
+				_wpnMag = primaryWeaponMagazine _opportunist;
+				_wpnAmmo = ammo (primaryWeapon _opportunist);*/
+
+				sleep 2;
+
+				{
+					removeAllWeapons _x;
+					removeAllItems _x;
+					removeAllAssignedItems _x;
+					removeUniform _x;
+					removeVest _x;
+					removeBackpack _x;
+					removeHeadgear _x;
+					removeGoggles _x;
+				} forEach [_deadGuy,_opportunist];
+
+				sleep 0.5;
+
+				_opportunist setUnitLoadout [_deadGear, false];
+				_deadGuy setUnitLoadout [_aliveGear,false];
+
+				sleep 1;
+
+				/*_opportunist addMagazine _wpnMag;
+				_opportunist addWeapon _wpn;
+				{_opportunist addPrimaryWeaponItem _x} forEach _wpnItems;
+				_opportunitst setAmmo [_wpn,_wpnAmmo];*/
 			};
 		};
 	};

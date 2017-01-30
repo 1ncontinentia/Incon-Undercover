@@ -84,11 +84,11 @@ if (isPlayer _unit) then {
 		_this spawn {
 	        params ["_unit"];
 			_unit setVariable ["INC_undercoverHandlerRunning", false];
-			_unit setVariable ["INC_undercoverLoopsActive", false];
-			_unit setVariable ["INC_compLoopActive", false];
 			_unit setVariable ["INC_isCompromised", false];
 			_unit setVariable ["INC_suspicious", false];
 			_unit setVariable ["INC_cooldown", false];
+			_unit setVariable ["INC_shotAt",false];
+			_unit setVariable ["INC_firedRecent",false];
 			sleep 1;
 			[[_unit], "INC_undercover\Scripts\initUCR.sqf"] remoteExec ["execVM",_unit];
 		};
@@ -98,7 +98,7 @@ if (isPlayer _unit) then {
 
 	//Debug hints
 	if (_debug) then {
-		[_unit] spawn {
+		[player] spawn {
 			params ["_unit"];
 			sleep 5;
 
@@ -120,23 +120,22 @@ if (isPlayer _unit) then {
 	sleep 0.5;
 
 	//Run a low-impact version of the undercover script on AI subordinates (no proximity check)
-	if (isPlayer _unit) then {
-		[_unit] spawn {
-			params ["_unit"];
-			{
-				sleep 0.2;
-				[_x] execVM "INC_undercover\Scripts\initUCR.sqf";
-				sleep 0.2;
-				_x setVariable ["noChanges",true,true];
-				_x setVariable ["isUndercover", true];
-				sleep 0.2;
-				[[_x,_unit],"addConcealActions"] call INCON_ucr_fnc_ucrMain;
-			} forEach ((units _unit) select {
-				!(_x getVariable ["isUndercover",false]) &&
-				{!isPlayer _x}
-			});
-		};
+	[_unit] spawn {
+		params ["_unit"];
+		{
+			sleep 0.2;
+			[_x] execVM "INC_undercover\Scripts\initUCR.sqf";
+			sleep 0.2;
+			_x setVariable ["noChanges",true,true];
+			_x setVariable ["isUndercover", true];
+			sleep 0.2;
+			[[_x,_unit],"addConcealActions"] call INCON_ucr_fnc_ucrMain;
+		} forEach ((units _unit) select {
+			!(_x getVariable ["isUndercover",false]) &&
+			{!isPlayer _x}
+		});
 	};
+
 };
 
 sleep 1;
