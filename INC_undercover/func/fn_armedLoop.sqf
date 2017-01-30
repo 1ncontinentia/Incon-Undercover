@@ -108,7 +108,7 @@ if (!local _unit) exitWith {};
 						};
 
 						if !(vest _unit in INC_incogVests) then {
-							_weirdoLevel = _weirdoLevel + 2;
+							_weirdoLevel = _weirdoLevel + 4;
 							_spotDistance = _spotDistance + 1;
 						};
 
@@ -142,7 +142,7 @@ if (!local _unit) exitWith {};
 						_obj = (lineIntersectsSurfaces [_start, _end, _unit]) select 0 select 2;
 
 						if ((!isNil "_obj") && {_obj isKindOf "Man" && {side _obj in [INC_regEnySide,INC_asymEnySide]}}) then {
-							_weirdoLevel = _weirdoLevel + 13;
+							_weirdoLevel = _weirdoLevel + 8;
 							_spotDistance = _spotDistance + 3;
 
 						};
@@ -479,20 +479,23 @@ if (!local _unit) exitWith {};
 					sleep _responseTime;
 
 					//Oddball check
-					if (captive _unit) then {
+					if (captive _unit || {!isNull objectParent _unit && {!(_unit getVariable ["INC_isCompromised",false])}}) then {
 
-						_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 50);
-						_spotDistance = _spotDistance + (((speed _unit) + 1)/ 10);
+						if (driver _vehicle == _unit) then {
 
-						//Headlights check for moving vehicle at night
-						if (
-							!(missionNamespace getVariable ["INC_isDaytime",true]) &&
-							{!isLightOn _vehicle} &&
-							{speed _unit > 5} &&
-							{_vehicle isKindOf "LandVehicle"}
-						) then {
-							_weirdoLevel = _weirdoLevel + 4;
-							_spotDistance = _spotDistance + 3;
+							_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 50);
+							_spotDistance = _spotDistance + (((speed _unit) + 1)/ 10);
+
+							//Headlights check for moving vehicle at night
+							if (
+								!(missionNamespace getVariable ["INC_isDaytime",true]) &&
+								{!isLightOn _vehicle} &&
+								{speed _unit > 5} &&
+								{_vehicle isKindOf "LandVehicle"}
+							) then {
+								_weirdoLevel = _weirdoLevel + 4;
+								_spotDistance = _spotDistance + 3;
+							};
 						};
 
 						sleep _responseTime;
@@ -516,22 +519,25 @@ if (!local _unit) exitWith {};
 						            }
 						        }
 						    ) then {
-
+								_racProfFacEny = _racProfFacEny * 1;
 						        if !(uniform _unit in INC_incogUniforms) then {
 						            _weirdoLevel = _weirdoLevel + 15;
 						            _spotDistance = _spotDistance + 8;
 						        };
 
-						        if (!(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) && {count assignedVehicleRole _unit == 2 && {!_vehFullClosed} && {(_vehDescription find "MRAP") == -1}}) then {
+								if !(vest _unit in INC_incogVests) then {
+									_weirdoLevel = _weirdoLevel + 4;
+									_spotDistance = _spotDistance + 2;
+								};
 
-						            if !(weaponLowered _unit) then {
-										_weirdoLevel = _weirdoLevel + 6;
-						                _spotDistance = _spotDistance + 4;
+								if !(headgear _unit in INC_incogHeadgear) then {
+									_weirdoLevel = _weirdoLevel + 2;
 
-						            } else {
-										_weirdoLevel = _weirdoLevel + 4;
-						            };
-						        };
+									if (((headgear _unit) find "elmet") >= 0) then {
+										_weirdoLevel = _weirdoLevel + 1;
+										_spotDistance = _spotDistance + 0.5;
+									};
+								};
 						    } else {
 
 								_racProfFacEny = _racProfFacEny * 0.5;
@@ -539,15 +545,10 @@ if (!local _unit) exitWith {};
 						            _weirdoLevel = _weirdoLevel + 12;
 						            _spotDistance = _spotDistance + 1;
 
-							        if (!(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) && {count assignedVehicleRole _unit == 2 && {!_vehFullClosed} && {(_vehDescription find "MRAP") == -1}}) then {
-
-							            if !(weaponLowered _unit) then {
-							                _weirdoLevel = _weirdoLevel + 5;
-							                _spotDistance = _spotDistance + 3;
-							            } else {
-							                _weirdoLevel = _weirdoLevel + 3;
-							            };
-							        };
+									if !(vest _unit in INC_incogVests) then {
+										_weirdoLevel = _weirdoLevel + 3;
+										_spotDistance = _spotDistance + 1;
+									};
 						        };
 						    };
 
@@ -648,7 +649,7 @@ if (!local _unit) exitWith {};
 					sleep _responseTime;
 
 					//Oddball check --- add in speed
-					if ((captive _unit) && {_suspiciousValue == 1}) then {
+					if (captive _unit || {!isNull objectParent _unit && {!(_unit getVariable ["INC_isCompromised",false])}}) then {
 
 						if (driver _vehicle == _unit) then {
 
@@ -787,14 +788,20 @@ if (!local _unit) exitWith {};
 
 				_suspiciousEnemies = ((_vehicle nearEntities [["Man","LandVehicle"],(_regDetectRadius * (_unit getVariable ["INC_disguiseRad",1]))]) select {
 					((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
-					{((_x getHideFrom _vehicle) distanceSqr _unit < 15)} &&
+					{((_x getHideFrom _vehicle) distanceSqr _unit < 10)} &&
 					{((missionNamespace getVariable ["INC_envJumpygMulti",1]) * ((_unit getVariable ["INC_disguiseValue",1]) * 3)) > (random 100)}
 				});
 
 				if (count _suspiciousEnemies != 0) then {
-					{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_ucr_fnc_suspiciousEny}} forEach _suspiciousEnemies;
+					{
+						if !(_x getVariable ["INC_isSuspicious",false]) then {
+							[_unit,_x] call INCON_ucr_fnc_suspiciousEny;
+						};
+						if ((_unit getVariable ["INC_disguiseValue",1]) > (7 + (random 45))) then {
+							[_x,[_unit,3]] remoteExec ["reveal",_x];
+						};
+					} forEach _suspiciousEnemies;
 				};
-
 			};
 
 			sleep _responseTime;

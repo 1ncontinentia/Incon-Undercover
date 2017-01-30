@@ -65,6 +65,8 @@ if (isPlayer _unit) then {
 			};
 		};
 
+		sleep 0.1;
+
 		//Proximity check for players (doesn't run if the unit isn't trying to be sneaky)
 		if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit || {!isNull objectParent _unit && {!(_unit getVariable ["INC_isCompromised",false])}}}) then {
 
@@ -74,7 +76,7 @@ if (isPlayer _unit) then {
 
 			_disguiseRadius = ((_unit getVariable ["INC_compromisedValue",1]) * (_unit getVariable ["INC_radiusMulti",1]) * (missionNamespace getVariable ["INC_envDisgMulti",1]));
 
-			sleep 0.5;
+			sleep 0.2;
 
 			_unit setVariable ["INC_disguiseValue",_disguiseValue];
 
@@ -93,18 +95,24 @@ if (isPlayer _unit) then {
 								(side _x == INC_regEnySide) &&
 								{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
 								{(_x knowsAbout _veh) > 2} &&
-								{(_disguiseValue * 2) > (random 100)}
+								{
+									_disguiseValue > (5 + (random 10)) ||
+									{(_disguiseValue * (1 + ((_regDetectRadius * _disguiseRadius) / (_x distance _unit)))) > (random 100)}
+								}
 							}
 						);
 
-						sleep 0.5;
+						sleep 0.3;
 
 						_nearAsym = count (
 							(_unit nearEntities ((_asymDetectRadius * _disguiseRadius) * 1.5)) select {
 								(side _x == INC_asymEnySide) &&
 								{((_x getHideFrom _veh) distanceSqr _veh < 10)} &&
 								{(_x knowsAbout _veh) > 3} &&
-								{(_disguiseValue * 3) > (random 100)}
+								{
+									_disguiseValue > (5 + (random 10)) ||
+									{(_disguiseValue * (1 + ((_asymDetectRadius * _disguiseRadius) / (_x distance _unit)))) > (random 100)}
+								}
 							}
 						);
 					} else {
@@ -124,7 +132,7 @@ if (isPlayer _unit) then {
 							}
 						);
 
-						sleep 0.5;
+						sleep 0.3;
 
 						_nearAsym = count (
 							(_unit nearEntities (_asymDetectRadius * _disguiseRadius)) select {
@@ -139,11 +147,11 @@ if (isPlayer _unit) then {
 				};
 			};
 
-			sleep 0.5;
+			sleep 0.3;
 
 			_nearMines = {_x isKindOf "timeBombCore"} count (nearestObjects [_unit,[],4]);
 
-			sleep 0.5;
+			sleep 0.3;
 
 			if ((_nearAsym + _nearReg + _nearMines) != 0) then {
 				_unit setVariable ["INC_proxAlert",true];
@@ -152,7 +160,7 @@ if (isPlayer _unit) then {
 			};
 		};
 
-        sleep 0.5;
+        sleep 0.3;
 
 		if !(_unit getVariable ["INC_trespassAlert",true]) then {
 	        {

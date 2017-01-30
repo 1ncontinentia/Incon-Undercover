@@ -1,6 +1,6 @@
 # INCONTINENTIA'S UNDERCOVER / CIVILIAN RECRUITMENT
 
-This is a complex and performance friendly undercover simulation for players and their AI subordinates. Work as a guerrilla cell, go undercover, recruit comrades, and cause mayhem. 
+This is a complex and performance friendly undercover simulation for players and their AI subordinates. Work as a guerrilla cell, go undercover, recruit comrades, and cause mayhem.
 SP / Coop and Dedi compatible.
 
 
@@ -13,28 +13,27 @@ SP / Coop and Dedi compatible.
 
 #### General
 
-* Probably the most complete undercover simulation script ever made for the Arma series. Almost every factor that can affect your cover (within engine limitations and the caveats mentioned below) has been accounted for. For example, if you run around dressed as the enemy with your weapon poined at other enemies, unless there has been shooting nearby recently, they will get suspicious far quicker than if you walk around looking chilled. Especially if your face doesn't fit in and you haven't covered it with a scarf or a bandanna... or you're wearing items that don't fit the disguise.. or your weapon isn't used by the faction.. or you happened to have been caught in that disguise before.. you get the picture!
-* Optimised to the max; should not noticably affect performance at all (especially during firefights or when not undercover)
-* Operates primarily on each client - server performance impact is therefore kept to a minimum even when multiple players are undercover at the same time
-* Works with most faction mods, AI mods and should not break missions. 
+* Virtually every factor that can affect your cover (within engine limitations and the caveats mentioned below) has been accounted for.
+* Optimised to the max; should not noticably affect performance at all - no noticeable performance impact even during a stress test of 45+ undercover units simultaneously undercoverising several enemy patrols.
+* Operates primarily on each client - server / client interaction is therefore kept to a minimum even when multiple players are undercover at the same time
+* Compatible with RHS, ACE, ALiVE, Zeus, ASR, bCombat, TPWCAS, VCOM... pretty much everything its been tested on (some factions' helmets and bandannas may not be recognised but the overall effect of this will be minimal - if you desperately want all features, use vanilla or RHS versions of these assets)
 
 #### Comprehensive undercover / incognito simulation -
 
 * Works on players and their AI group members
 * Quick, easy setup: most aspects of the script are automatically implemented based on the settings you choose
-* Can run in the background even when the mission isn't focused around undercover operations - automatically reduces checking overhead when unit isn't undercover
+* Can run in the background even when the mission isn't focused around undercover operations - automatically reduces checking overhead when unit isn't undercover so it should be practically unnoticeable
 * No need to turn the script on or off - it just works
 * No checkboxes, compromised notifications or any other "gamey" stuff; just an optional hint when you're obviously hostile and when you aren't - the rest is up to you
 * Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, whether the unit's face fits or doesn't fit in with the faction they are pretending to be, or whether it is day or night, with each situation requiring players to behave appropriately
-* Suspicious enemies may challenge or watch and follow undercover units if they act weirdly; the more weird stuff you do, the more likely they are to see through your disguise (you can even use this to your advantage to draw enemies attention away from another unit while they do something naughty - just don't get too cocky)
-* Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover - something as simple as hopping into the back seat of an enemy MRAP or wearing a bandanna over your face might mean the difference between staying undercover or becoming compromised if an enemy patrol happens to get a bit too close
+* Suspicious enemies may challenge or watch and follow undercover units if they act weirdly; the more weird stuff you do, the more likely they are to see through your disguise (you can even use this to your advantage to draw enemies attention away from another unit while they do something suspicious - just don't get too cocky or they will open fire on you)
+* Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover - if you point your weapon at an enemy and they see you doing it, they will get suspicious very quickly. Equally, if an enemy sees you crawling around or planting explosives, you're not going to stay undercover for long.
 * Enemies will detect if undercover units are the nationality of the group they are impersonating; covering your face with a scarf or bandanna will reduce this but not as much as choosing undercover units whose faces fit in with the people they are trying to impersonate
-* Once undercover units become compromised, enemies will remember the vehicles they are spotted in and clothes they are wearing
-* Change your clothing (both uniform and either headgear or goggles) and if no enemies see you doing it, your new disguise may stick
+* All actions have consequences, good or bad. If the MRAP you're driving gets a bit close to a patrol, moving into the back of it and out of sight of the enemy might just save your skin. Equally, putting a balaclava on when you're a civilian will attract a lot of attention - which is especially not good if you're already carrying a military rucksack.
+* Once undercover units become compromised, enemies will remember the vehicles they are spotted in and clothes they are wearing - change your clothing (both uniform and either headgear or goggles) and if no enemies see you doing it, your new disguise may stick
 * Easily switch disguises: take enemy uniforms from nearby crates, vehicles, dead bodies and the ground (and order AI subordinates to do the same)
 * Quickly conceal and un-conceal your (and your subordinates') weapons if you have the inventory space - without faffing with inventories
 * Different configurable detection systems for regular and asymetric enemy forces
-* Compatible with RHS, ACE, ALiVE, Zeus, ASR, bCombat, TPWCAS, VCOM... pretty much everything I've tried (some factions' helmets and bandannas may not be recognised but the overall effect of this will be minimal - if you desperately want all features, use vanilla or RHS versions of these assets)
 
 #### Stealth kills work -
 
@@ -45,7 +44,7 @@ SP / Coop and Dedi compatible.
 #### Different behaviour for regular and asymmetric forces
 
 * Define a side as asymmetric and they will not be able to share your identity outside of the local area, but they will be better at spotting imposters
-* Define a side as regular and your cover will stay blown for much longer and for a much wider area once compromised, but they may not have such a good nose for imposters
+* Define a side as regular and your cover will stay blown for much longer and for a much wider area once compromised... but they may not have such a good nose for imposters
 
 #### (Optional) Civilian Recruitment
 
@@ -53,7 +52,7 @@ SP / Coop and Dedi compatible.
 * The more enemies you kill, and the more chaos you are associated with, the better your reputation will become
 * The better your reputation, the more likely civilians are to join you
 * Kill enemies without getting spotted and there is a chance they will lash out against civilians, with a potential to cause a civilian uprising (optional)
-* Arm ambient civilians with weapons and items which they may use during an uprising
+* Automatically arm ambient civilians with weapons and items which they may use if recruited or during an uprising
 * Try to steal civilians' clothes from them (but be prepared that your reputation will take a hit or you may become compromised)
 * (Requires ALiVE) Turn recruited units into a profiled group to be used by AI commander of the same faction as the undercover unit (add to object init: this addaction ["Profile group","[player,'profileGroup'] remoteExecCall ['INCON_ucr_fnc_ucrMain',2]",[],1,false,true]);
 
@@ -78,9 +77,11 @@ Non-player units in the undercover unit's group do not need anything; the script
 
 
 ### Caveats / Compatibility:
-* Only one side can have undercover units at a time (so no east undercover and west undercover guys undercoverising each other at the same time)
-* Only one side can be defined as asymmetric at a time and only one side can be defined as regular - and both must be hostile to the undercover unit's side. So if having a three-way war, one side must be asym and the other regular. If those enemy sides are fighting each other, it is recommended to not have any incognito factions as an engine limitation means that incognito units (i.e. those disguised as the enemy) will be seen as friendly to all - could break the immersion if you're dressed as OPFOR and GreenFOR don't shoot at you when they should.
-* Should work with all AI mods (tested with ASR, bCombat and TPWCAS but no reason why others wouldn't work)
+* Only one side can have undercover units at a time (so no east undercover and west undercover units undercoverising each other at the same time)
+* Only one side can be defined as asymmetric at a time and only one side can be defined as regular - and both must be hostile to the undercover unit's side. So if having a three-way war, one side must be asym and the other regular.
+* If having a three-way (...war), it is recommended to not have any incognito factions as an engine limitation means that incognito units (i.e. those disguised as the enemy) will be seen as friendly to all - could break the immersion if you're dressed as OPFOR and GreenFOR don't shoot at you when they should.
+* For mission makers - just be aware that the following could affect your mission: enemy units may wander from their original positions to follow undercover units if they become suspicious. Also, when compromised by regular forces, an undercover unit's description will be shared across other enemies in the local area after some time if they don't kill everyone who knows about them
+* Works on all tested mods. If you find an incompatibility, tell me!
 
 
 ### Credits
@@ -92,27 +93,25 @@ Massive thanks to Spyderblack723 for his help creating some of the functions and
 
 For the sake of this explanation, we'll separate behaviours into three categories: suspicious, attention-drawing and weird.
 
-* Any suspicious behvaviour will make enemies see the unit as hostile right away. Two minor suspicious behaviours seen at once (being both armed and trespassing) or one major one (shooting / killing an enemy) will compromise the unit. Units will remain suspicious as long as there are enemies who have reasonably fresh target knowledge of the unit, even if not doing anything suspicious anymore.
+* Any suspicious behvaviour will make enemies see the unit as hostile right away. Two minor suspicious behaviours (being both armed and trespassing when not dressed as an enemy) or one major one (shooting / killing an enemy) will compromise the unit if they are witnessed. Units will remain suspicious as long as there are enemies who have reasonably fresh target knowledge of the unit, even if not doing anything suspicious anymore.
 
-* Weird behaviour will not make enemies see the unit as hostile instantly, but each additional weird behaviour will increase the likelihood of nearby enemies who could blow the units cover. Weird behaviour in proximity to enemies may cause some to take interest or become outright hostile straight away if you are acting strange enough. If the unit isn't able to stop acting strangely or the suspicious enemies are not dealt with quickly (or you manage to escape somehow), they may compromise the unit and any teammates who are also acting strangely nearby.
+* Weird behaviour will not make enemies see the unit as hostile instantly, but each additional weird behaviour will increase the likelihood of nearby enemies blowing the unit's cover. Weird behaviour in proximity to enemies may cause some to take interest and follow the unit or become outright hostile straight away if you are acting strangely enough. If the unit isn't able to stop acting strangely or the suspicious enemies are not dealt with quickly (or you manage to escape somehow), they may compromise the unit and any teammates who are also acting strangely nearby.
 
-* Attention-drawing behaviour isn't necessarily weird, but it does make enemies notice you from further away. While dressed as the enemy, wearing the wrong helmet for your disguise is harder to detect from a distance than wearing the wrong vest, but both are similarly weird. Wearing a vest will therefore add to your attention-drawing behaviour. Running, for instance, isn't so weird but will draw attention from enemies who are further away. Most weird behaviours will be attention-drawing too. The more attention-drawing behaviours you do, the further away units will start taking an interest in you, and therefore, the more likely they are to compromise you if you are doing anything weird (like wearing NVGs while dressed as a civilian). The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the undercover unit's attention-drawing behaviours, incognito status and vehicle, as well as environmental factors like moon intensity, overcast, rain and fog. It is recommended to not increase the detection radius much beyond the default.
+* Attention-drawing behaviour isn't necessarily weird, but it does make enemies notice you from further away. While dressed as the enemy, wearing the wrong helmet for your disguise is harder to detect from a distance than wearing the wrong vest, but both are weird. Wearing a vest will therefore add to your attention-drawing behaviour. Running, for instance, isn't so weird but will draw attention from enemies who are further away. Most weird behaviours will be attention-drawing too. The more attention-drawing behaviours you do, the further away units will start taking an interest in you, and therefore, the more likely they are to compromise you if you are doing anything weird (like wearing NVGs while dressed as a civilian). The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the undercover unit's attention-drawing behaviours, incognito status and vehicle, as well as environmental factors like moon intensity, overcast, rain and fog. It is recommended to not change the detection radius much from the default.
 
-If the unit is compromised, the unit must kill all enemies who know about them before they spread the units identity across the AO.
-After that, the unit becomes fully compromised and must change his disguise (clothes and either goggles / headgear) to go undercover again.
+If the unit is compromised, the unit should try to kill all enemies who know about them before they spread the unit's identity across the AO.
+After that, the unit becomes fully compromised and must change his disguise (clothes and either goggles / headgear) or leave the area completely to go undercover again.
 Each time unit gets fully compromised, the effects of any weird behaviour will be amplified as enemies will be looking for them.
 
-Suspicious / weird behaviours will vary according to:
-* Whether the unit is disguised as the enemy
+Suspicious / weird behaviours will vary according to factors including:
+* Whether the unit is disguised as the enemy or a civilian
 * Whether the unit is in a vehicle or on foot
-* Whether the vehicle is open or closed
-* Whether the unit has his weapon raised or lowered (if incognito)
+* Whether the position in the vehicle is completely open, partially open, or completely closed
 * What time of day and weather it is (dark / moonlit / overcast / fog at night, fog / rain during the day)
 * Whether the unit has been compromised before
-* Whether the unit looks like the group he is pretending to be
 
 #### Appropriate behaviour: a guide for new spies
-This is a short primer for the kinds of things to bear in mind while going undercover. It is by no means conclusive.
+This is a short primer for the kinds of things to bear in mind while going undercover. It is by no means conclusive. The best advice is to act as normal as you can for the situation.
 
 WHEN IN DISGUISE AS ENEMY:
 
@@ -123,42 +122,44 @@ When on foot, the following may count as weird behaviour:
 * Running / sprinting (when not under fire)
 * Crouching / crawling (when not under fire)
 * Wearing a uniform that the unit was recently compromised in
+* Raising your weapon (when not under fire)
+* Pointing your weapon at an enemy
 
 When in a vehicle, the following may count as weird behaviour:
 * Driving with headlights off at night
-* Wearing a non-disguise vest (if not in a tank)
+* Wearing a non-disguise uniform or vest (if not in an enclosed vehicle)
+* Wearing inappropriate headgear or goggles
+* Wearing a HMD (like a night vision device)
 
 
-WHEN NOT IN DISGUISE AS ENEMY:
+WHEN IN DISGUISE AS A CIVILIAN:
 
 When on foot, the following may count as weird behaviour:
 * Wearing a helmet, HMD or balaclava
 * Running / sprinting (when not under fire)
 * Crouching / crawling (when not under fire)
-* Wearing a uniform that the unit was recently compromised in
+* Wearing a uniform that the unit has been recently compromised in
 * Smelling of cordite (having shot recently)
-* Raising your weapon
+* Holding binoculars / laser designators / rangefinders
 
 And suspicious:
-* Wearing a suspicious uniform or vest
+* Wearing a non-civilian uniform or vest
 * Wearing a compromised uniform
-* Holding a weapon or holding binoculars / laser designators / rangefinders
 * Visibly carrying a weapon (including on your back - but not including holstered pistols)
 * Trespassing onto a restricted area
 
 When in a vehicle, the following may count as weird behaviour:
-* Driving with headlights off at night
 * Wearing a suspicious vest or uniform
 * Wearing a HMD (night vision goggles)
 * Wearing a compromised uniform
-* Driving fast (the faster you go, the more people will look at you)
+* Driving fast (the faster you go, the more attention you will draw - but for less time obviously)
 
 And suspicious:
 * Suspicious behaviour:
-* Driving a suspicious vehicle
+* Driving a non-civilian vehicle
 * Driving a vehicle that has been compromised
 * Trespassing onto a restricted area
 * Driving more than 30m offroad (optional)
 * Driving with headlights off at night
 
-This is a short overview; it is good practice to make sure all aspects of your disguise are in keeping with your cover, even if it isn't listed in the behaviours above. If you are dressed like a civilian, act like one. If dressed like the enemy, don't draw attention to yourself. 
+This is a short overview; it is good practice to make sure all aspects of your disguise are in keeping with your cover, even if it isn't listed in the behaviours above. If you are dressed like a civilian, act like one. If dressed like the enemy, keep your head down and don't draw attention to yourself.

@@ -17,110 +17,60 @@ Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
 _this spawn {
+
 	params ["_unit","_suspiciousEnemy"];
 
 	if (_suspiciousEnemy getVariable ["INC_isSuspicious",false]) exitWith {true};
-
-	if ((_unit getVariable ["INC_disguiseValue",1]) > 15) exitWith {
-		[_unit] call INCON_ucr_fnc_compromised;
-	};
 
 	_suspiciousEnemy setVariable ["INC_isSuspicious",true];
 
 	[_suspiciousEnemy,_unit] remoteExec ["doWatch",2];
 
-	sleep (random 15);
+	while {sleep 0.5; ((alive _unit && {alive _suspiciousEnemy}) && {captive _unit && {_suspiciousEnemy getVariable ["INC_isSuspicious",false]}} && {((_unit getHideFrom (vehicle _unit)) distanceSqr _unit < 25)})} do {
 
-	//Quick spot
-	if (((_unit getVariable ["INC_disguiseValue",1]) > 7) && {((2 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100))}) exitWith {
-		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-
-		if (45 > (random 100)) then {
-			private ["_comment"];
-				_comment = selectRandom ["Get him!","It's one of them!","Oh shit!","Take this guy down!","Kill him!","Shoot!","Take him out!"];
-			[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
-		};
-
-		sleep 2;
-
-		[_unit] call INCON_ucr_fnc_compromised;
-		sleep (random 3);
-		{
-			[_x] call INCON_ucr_fnc_compromised;
-			sleep (random 3);
-		} forEach ((units _unit) select {
-			(_x getVariable ["INC_anyKnowsSO",false]) &&
-			{(_x distance _unit) < (5 * (_unit getVariable ["INC_disguiseValue",1]))} &&
-			{((10 * (_x getVariable ["INC_disguiseValue",1])) > (random 100))}
-		});
-		true
-	};
-
-	if !((15 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
-		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-	};
-
-	if (45 > (random 100)) then {
-		private ["_comment"];
-		switch (_unit getVariable ["INC_goneIncog",false]) do {
-			case true: {
-				_comment = selectRandom ["Hey, who are you?","Who the fuck are you?","I don't recognise you.","I don't like the look of you.","You look strange.","What are you doing?","I'd like to know which unit you're from.","Who are you with?","You're not supposed to be here.","You're not with us are you?"];
-			};
-			case false: {
-				_comment = selectRandom ["I recognise you from somewhere.","You hiding something?","Stop right there, let me get a good look at you.","Stop. Don't move.","Stay right there.","You better stop fucking about."];
-			};
-		};
-		[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
-	};
-
-
-	if ((_unit getVariable ["INC_disguiseValue",1]) > 15) exitWith {
-		[_unit] call INCON_ucr_fnc_compromised;
-	};
-
-	sleep (random 15);
-
-	if !((23 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
-		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-		[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
-	};
-
-	waitUntil {
-
-		if ((!alive _suspiciousEnemy) || {!captive _unit}) exitWith {true};
-
-		if (20 > random 100) then {
-
-			[_suspiciousEnemy,([(getPosWorld _unit),10] call CBA_fnc_Randpos)] remoteExec ["doMove",2];
-		};
-
-		sleep (random 15);
-
-		if ((_unit getVariable ["INC_disguiseValue",1]) > 15) exitWith {
+		if ((_unit getVariable ["INC_disguiseValue",1]) > (13 + random 15)) exitWith {
 			[_unit] call INCON_ucr_fnc_compromised;
 		};
 
-		[_suspiciousEnemy,_unit] remoteExec ["doTarget",2];
+		_reactionTime = ((_unit distance _suspiciousEnemy) - (_unit getVariable ["INC_disguiseValue",1]));
 
-		if (
-			((((speed _unit) + 3) * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) &&
-			{(50 / (_unit distance _suspiciousEnemy)) > random 20}
-		) exitWith {
-			_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-			[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
+		if (_reactionTime <= 5) then {_reactionTime = 5};
+
+		sleep (random _reactionTime);
+
+
+		//Quick spot
+		if ((_unit getVariable ["INC_disguiseValue",1]) > (7 + (random 15))) exitWith {
 
 			if (45 > (random 100)) then {
 				private ["_comment"];
-				switch (_unit getVariable ["INC_goneIncog",false]) do {
-					case true: {
-						_comment = selectRandom ["We've got an imposter!","He's one of them!","He's not one of us!","Get him!","He's in disguise!","Oh shit!"];
-					};
-					case false: {
-						_comment = selectRandom ["He's one of them!","Fuck this guy!","I warned you!","Fucking weirdo!","Get this guy!","Kill him!"];
-					};
+				if ((_suspiciousEnemy distance _unit)< 40) then {
+					_comment = selectRandom ["Get him!","It's one of them!","Oh shit!","Take this guy down!","Kill him!","Shoot!","Take him out!"];
+					[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
 				};
-				[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
 			};
+
+			if ((side _suspiciousEnemy == INC_regEnySide && {80 > random 100}) || {50 > random 100}) then {
+				[(group _suspiciousEnemy),"WHITE"] remoteExec ["setCombatMode",_suspiciousEnemy];
+				{[ _x,"WHITE"] remoteExec ["setCombatMode",_suspiciousEnemy];} forEach (units _suspiciousEnemy);
+
+				sleep 0.5;
+
+				[_unit,_suspiciousEnemy] spawn {
+					params ["_unit","_suspiciousEnemy"];
+
+					_reactionTime = ((_unit distance _suspiciousEnemy) - (_unit getVariable ["INC_disguiseValue",1]));
+
+					if (_reactionTime <= 5) then {_reactionTime = 5};
+
+					sleep (random _reactionTime);
+
+					[(group _suspiciousEnemy),"RED"] remoteExec ["setCombatMode",_suspiciousEnemy];
+					{[ _x,"RED"] remoteExec ["setCombatMode",_suspiciousEnemy];} forEach (units _suspiciousEnemy);
+				};
+			};
+
+			sleep 2;
 
 			[_unit] call INCON_ucr_fnc_compromised;
 			sleep (random 3);
@@ -129,18 +79,107 @@ _this spawn {
 				sleep (random 3);
 			} forEach ((units _unit) select {
 				(_x getVariable ["INC_anyKnowsSO",false]) &&
-				{(_x distance _unit) < (10 * (_unit getVariable ["INC_disguiseValue",1]))} &&
-				{((22 * (_x getVariable ["INC_disguiseValue",1])) > (random 100))}
+				{(_x distance _unit) < (3 * (_unit getVariable ["INC_disguiseValue",1]))} &&
+				{((10 * (_x getVariable ["INC_disguiseValue",1])) > (random 100))}
 			});
 			true
 		};
 
-		if !((30 * (_unit getVariable ["INC_disguiseValue",1])) > (random 100)) exitWith {
-			_suspiciousEnemy setVariable ["INC_isSuspicious",false];
-			[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
-			true
+		if (45 > (random 100)) then {
+			private ["_comment"];
+
+			if ((_suspiciousEnemy distance _unit)< 40) then {
+				switch (_unit getVariable ["INC_goneIncog",false]) do {
+					case true: {
+						_comment = selectRandom ["You look odd.","There's something strange about you.","Hey, who are you?","Who the fuck are you?","I don't recognise you.","I don't like the look of you.","You look strange.","What are you doing?","I'd like to know which unit you're from.","Who are you with?","You're not supposed to be here.","You're not with us are you?"];
+					};
+					case false: {
+						_comment = selectRandom ["I recognise you from somewhere.","You hiding something?","Stop right there, let me get a good look at you.","Stop. Don't move.","Stay right there.","You better stop fucking about."];
+					};
+				};
+				[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
+			};
 		};
 
-		(!(((_suspiciousEnemy getHideFrom _unit) distanceSqr _unit) < 20) || {!alive _suspiciousEnemy} || {!captive _unit})
+		[_suspiciousEnemy,_unit] remoteExec ["doWatch",2];
+
+
+		waitUntil {
+
+			_suspiciousEnemy setSpeedMode "LIMITED";
+
+			if (_unit distance _suspiciousEnemy > (15 + (random 85))) then {
+
+				[_suspiciousEnemy,([(getPosWorld _unit),10] call CBA_fnc_Randpos)] remoteExec ["doMove",2];
+			};
+
+			_reactionTime = ((_unit distance _suspiciousEnemy) - (_unit getVariable ["INC_disguiseValue",1]));
+
+			if (_reactionTime <= 5) then {_reactionTime = 5};
+
+			sleep (_reactionTime * (random 3));
+
+			if !((alive _unit && {alive _suspiciousEnemy}) && {captive _unit && {_suspiciousEnemy getVariable ["INC_isSuspicious",false]}} && {((_unit getHideFrom (vehicle _unit)) distanceSqr _unit < 25)}) exitWith {true};
+
+			sleep 0.5;
+
+			if (((_unit getVariable ["INC_disguiseValue",1]) + ((speed _unit / 3))) > (random [3,10,30])) exitWith {
+
+
+				if ((_suspiciousEnemy distance _unit)< 40) then {
+
+					_comment = selectRandom ["Get him!","It's one of them!","Oh shit!","Surrender now!","I'll kill you!","You better surrender!","Take him down!"];
+					[[_suspiciousEnemy, _comment] remoteExec ["globalChat",_unit]];
+				};
+
+				if ((side _suspiciousEnemy == INC_regEnySide && {80 > random 100}) || {50 > random 100}) then {
+					[(group _suspiciousEnemy),"WHITE"] remoteExec ["setCombatMode",_suspiciousEnemy];
+					{[ _x,"WHITE"] remoteExec ["setCombatMode",_suspiciousEnemy];} forEach (units _suspiciousEnemy);
+
+					sleep 0.5;
+
+					[_unit,_suspiciousEnemy] spawn {
+						params ["_unit","_suspiciousEnemy"];
+
+						_reactionTime = ((_unit distance _suspiciousEnemy) - (_unit getVariable ["INC_disguiseValue",1]));
+
+						if (_reactionTime <= 5) then {_reactionTime = 5};
+
+						sleep (_reactionTime * (random 3));
+
+						[(group _suspiciousEnemy),"RED"] remoteExec ["setCombatMode",_suspiciousEnemy];
+						{[ _x,"RED"] remoteExec ["setCombatMode",_suspiciousEnemy];} forEach (units _suspiciousEnemy);
+					};
+				};
+
+				[_unit] call INCON_ucr_fnc_compromised;
+
+				sleep (random 3);
+				{
+					[_x] call INCON_ucr_fnc_compromised;
+					sleep (random 3);
+				} forEach ((units _unit) select {
+					(_x getVariable ["INC_anyKnowsSO",false]) &&
+					{(_x distance _unit) < (3 * (_unit getVariable ["INC_disguiseValue",1]))} &&
+					{((10 * (_x getVariable ["INC_disguiseValue",1])) > (random 100))}
+				});
+				true
+			};
+
+
+			((_unit getVariable ["INC_disguiseValue",1]) < (random [0,1.5,4]))
+		};
+
+		_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+
+		[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
+
+		_suspiciousEnemy setSpeedMode "NORMAL";
 	};
+
+	_suspiciousEnemy setVariable ["INC_isSuspicious",false];
+
+	[_suspiciousEnemy,objNull] remoteExec ["doWatch",2];
+
+	_suspiciousEnemy setSpeedMode "NORMAL";
 };
