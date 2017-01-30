@@ -650,14 +650,17 @@ if (!local _unit) exitWith {};
 					//Oddball check --- add in speed
 					if ((captive _unit) && {_suspiciousValue == 1}) then {
 
-						if (((!_noOffRoad && {speed _unit > 5}) && {driver _vehicle == _unit}) && {(_vehicle isKindOf "Land") && {((count (_unit nearRoads 30)) == 0)}}) then {
+						if (driver _vehicle == _unit) then {
 
-							_weirdoLevel = _weirdoLevel + 4;
-							_spotDistance = _spotDistance + 4;
+							if ((!_noOffRoad && {speed _unit > 5}) && {_vehicle isKindOf "Land" && {(count (_unit nearRoads 30)) == 0}}) then {
+
+								_weirdoLevel = _weirdoLevel + 4;
+								_spotDistance = _spotDistance + 4;
+							};
+
+							_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 40);
+							_spotDistance = _spotDistance + (((speed _unit) + 1)/ 8);
 						};
-
-						_weirdoLevel = _weirdoLevel + (((speed _unit) + 1)/ 40);
-						_spotDistance = _spotDistance + (((speed _unit) + 1)/ 8);
 
 						sleep _responseTime;
 
