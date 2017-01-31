@@ -91,6 +91,16 @@ if (!local _unit) exitWith {};
 
 			sleep _responseTime;
 
+			if (!isPlayer _unit) then {
+
+				_unit setVariable ["INC_canSwitch",[[_unit,false],"switchUniforms"] call INCON_ucr_fnc_gearHandler];
+
+				sleep _responseTime;
+
+				_unit setVariable ["INC_canSwawp",[[_unit,false],"swapGear"] call INCON_ucr_fnc_gearHandler];
+
+			};
+
 			//Incognito check
 			_incog = [[_unit],"checkIncogFoot"] call INCON_ucr_fnc_ucrMain;
 

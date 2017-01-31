@@ -199,7 +199,7 @@ switch (_operation) do {
 			]] remoteExec ["addAction", _groupLead];
 		};
 
-		if ((_dismiss) || {!(_unit getVariable ["INC_notDismissable",false])}) then {
+		if ((_dismiss || {!(_unit getVariable ["INC_notDismissable",false])}) && {_unit != leader _unit} && {!isPlayer _unit}) then {
 
 			[_unit, [
 				"<t color='#9933FF'>Dismiss</t>", {
@@ -216,7 +216,7 @@ switch (_operation) do {
 					(group _unit) setBehaviour "SAFE";
 					_wp1 setWaypointType "DISMISS";
 
-				},[],5.8,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
+				},[],5.8,false,true,"","((_this == _target) && {!isPlayer _this})"
 			]] remoteExec ["addAction", _groupLead];
 		} else {
 			_unit setVariable ["INC_notDismissable",true];
@@ -293,7 +293,7 @@ switch (_operation) do {
 					} else {hint "No safe uniforms found nearby."};
 				};
 
-			},[],4,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
+			},[],5.5,false,true,"","((_this == _target) && (isPlayer _this || {_this getVariable ['INC_canSwawp',false]}))"
 		];
 
 		if (_temporary) then {
@@ -346,7 +346,7 @@ switch (_operation) do {
 					} else {hint "No safe uniforms found nearby."};
 				};
 
-			},[],4,false,true,"","((_this == _target) && (_this getVariable ['isUndercover',false]))"
+			},[],5.5,false,true,"","((_this == _target) && (isPlayer _this || {_this getVariable ['INC_canSwitch',false]}))"
 		];
 
 		if (_temporary) then {
