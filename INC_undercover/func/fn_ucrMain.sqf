@@ -69,78 +69,139 @@ switch (_operation) do {
 
 		_input params ["_unit","_groupLead",["_dismiss",true]];
 
-		[_unit, [
+		switch (!isPlayer _unit || {!(isClass(configFile >> "CfgPatches" >> "ace_interact_menu"))}) do {
 
-			"<t color='#334FFF'>Conceal weapons</t>", {
+			case true: {
 
-				params ["_unit"];
+				[_unit, [
 
-				[_unit] spawn {
-					params ["_unit"];
+					"<t color='#334FFF'>Conceal weapons</t>", {
 
-					_wpnArray = ([primaryWeapon _unit, handgunWeapon _unit]) select {
-						(_x != "") &&
-						{(_unit canAddItemToUniform _x) || {_unit canAddItemToBackpack _x}}
-					};
+						params ["_unit"];
 
-					for "_i" from 1 to (count _wpnArray) do {
-						[[_unit],"concealWeapon"] call INCON_ucr_fnc_gearHandler;
-						sleep 4;
-					};
+						[_unit] spawn {
+							params ["_unit"];
 
-					sleep 2;
-
-					if !((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) then {
-						switch (isPlayer _unit) do {
-							case true: {
-								hint "Some weapons have been concealed";
+							_wpnArray = ([primaryWeapon _unit, handgunWeapon _unit]) select {
+								(_x != "") &&
+								{(_unit canAddItemToUniform _x) || {_unit canAddItemToBackpack _x}}
 							};
-							case false: {
-								_unit groupChat "Couldn't fit them all in.";
+
+							for "_i" from 1 to (count _wpnArray) do {
+								[[_unit],"concealWeapon"] call INCON_ucr_fnc_gearHandler;
+								sleep 4;
+							};
+
+							sleep 2;
+
+							if !((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) then {
+								switch (isPlayer _unit) do {
+									case true: {
+										hint "Some weapons have been concealed";
+									};
+									case false: {
+										_unit groupChat "Couldn't fit them all in.";
+									};
+								};
 							};
 						};
-					};
-				};
 
-			},[],6,false,true,"","(_this == _target) && {_this getVariable ['INC_canConcealWeapon',false]}"
+					},[],6,false,true,"","(_this == _target) && {_this getVariable ['INC_canConcealWeapon',false]}"
 
-		]] remoteExec ["addAction", _groupLead];
+				]] remoteExec ["addAction", _groupLead];
 
-		[_unit, [
+				[_unit, [
 
-			"<t color='#FF33BB'>Get concealed weapons out</t>", {
+					"<t color='#FF33BB'>Get concealed weapons out</t>", {
 
-				params ["_unit"];
+						params ["_unit"];
 
-				[_unit] spawn {
+						[_unit] spawn {
 
-					params ["_unit"];
+							params ["_unit"];
 
-					_wpnArray = ((weapons _unit) select {
-						((_x isKindOf ['Rifle', configFile >> 'CfgWeapons']) || {_x isKindOf ['Pistol', configFile >> 'CfgWeapons']})
-					});
+							_wpnArray = ((weapons _unit) select {
+								((_x isKindOf ['Rifle', configFile >> 'CfgWeapons']) || {_x isKindOf ['Pistol', configFile >> 'CfgWeapons']})
+							});
 
-					for "_i" from 1 to (count _wpnArray) do {
-						if (_i >= 3) exitWith {true};
-						[[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
-						sleep 4;
-					};
+							for "_i" from 1 to (count _wpnArray) do {
+								if (_i >= 3) exitWith {true};
+								[[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
+								sleep 4;
+							};
 
-					if (isPlayer _unit) exitWith {};
+							if (isPlayer _unit) exitWith {};
 
-					switch (currentWeapon _unit == primaryWeapon _unit) do {
-						case true: {
-							_unit groupChat "Got my rifle out.";
+							switch (currentWeapon _unit == primaryWeapon _unit) do {
+								case true: {
+									_unit groupChat "Got my rifle out.";
+								};
+								case false: {
+									_unit groupChat "Got my pistol out.";
+								};
+							};
 						};
-						case false: {
-							_unit groupChat "Got my pistol out.";
-						};
-					};
-				};
 
-			},[],6,false,true,"","(_this == _target) && {_this getVariable ['INC_canGoLoud',false]}"
+					},[],6,false,true,"","(_this == _target) && {_this getVariable ['INC_canGoLoud',false]}"
 
-		]] remoteExec ["addAction", _groupLead];
+				]] remoteExec ["addAction", _groupLead];
+			};
+
+			case false: {
+
+				INC_concealWeaponsACE = ['Conceal Weapons','Conceal Weapons','',{
+
+				    [player] spawn {
+				        params ['_unit'];
+
+				        _wpnArray = ([primaryWeapon _unit, handgunWeapon _unit]) select {
+				            (_x != '') &&
+				            {(_unit canAddItemToUniform _x) || {_unit canAddItemToBackpack _x}}
+				        };
+
+				        for '_i' from 1 to (count _wpnArray) do {
+				            [[_unit],"concealWeapon"] call INCON_ucr_fnc_gearHandler;
+				            sleep 4;
+				        };
+
+				        sleep 2;
+
+				        if !((currentWeapon _unit == '') || {currentWeapon _unit == 'Throw'} || {currentWeapon _unit == binocular _unit}) then {
+				            switch (isPlayer _unit) do {
+				                case true: {
+				                    hint 'Some weapons have been concealed';
+				                };
+				                case false: {
+				                    _unit groupChat 'Could not fit them all in.';
+				                };
+				            };
+				        };
+				    };
+
+				},{player getVariable ['INC_canConcealWeapon',false]}] call ace_interact_menu_fnc_createAction;
+				[player, 1, ["ACE_SelfActions"], INC_concealWeaponsACE] call ace_interact_menu_fnc_addActionToObject;
+
+
+				INC_unConcealWeaponsACE = ['Get Weapons Out','Get Concealed Weapons Out','',{
+
+				    [player] spawn {
+				        params ["_unit"];
+
+				        _wpnArray = ((weapons _unit) select {
+				            ((_x isKindOf ['Rifle', configFile >> 'CfgWeapons']) || {_x isKindOf ['Pistol', configFile >> 'CfgWeapons']})
+				        });
+
+				        for "_i" from 1 to (count _wpnArray) do {
+				            if (_i >= 3) exitWith {true};
+				            [[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
+				            sleep 4;
+				        };
+				    };
+
+				},{player getVariable ['INC_canGoLoud',false]}] call ace_interact_menu_fnc_createAction;
+				[player, 1, ["ACE_SelfActions"], INC_unConcealWeaponsACE] call ace_interact_menu_fnc_addActionToObject;
+			};
+		};
 
 		if (!isPlayer _unit) then {
 			[[_unit,false],"SwitchUniformAction"] call INCON_ucr_fnc_ucrMain;
@@ -194,7 +255,7 @@ switch (_operation) do {
 						};
 					} forEach (units _unit);
 
-				},[],4,false,true,"","(_this == _target) &&  {(count units _this > 1)} && {(_this getVariable ['INC_canGoLoud',false]) || {_this getVariable ['INC_goneIncog',false]}}"
+				},[],4,false,true,"","(_this == _target) &&  {(count units _this > 1)}"
 
 			]] remoteExec ["addAction", _groupLead];
 		};
@@ -293,7 +354,7 @@ switch (_operation) do {
 					} else {hint "No safe uniforms found nearby."};
 				};
 
-			},[],5.5,false,true,"","((_this == _target) && (isPlayer _this || {_this getVariable ['INC_canSwawp',false]}))"
+			},[],5.5,false,true,"","((_this == _target) && (isPlayer _this || {_this getVariable ['INC_canSwitch',false]}))"
 		];
 
 		if (_temporary) then {
@@ -346,7 +407,7 @@ switch (_operation) do {
 					} else {hint "No safe uniforms found nearby."};
 				};
 
-			},[],5.5,false,true,"","((_this == _target) && (isPlayer _this || {_this getVariable ['INC_canSwitch',false]}))"
+			},[],5.5,false,true,"","((_this == _target) && (isPlayer _this || {_this getVariable ['INC_canSwawp',false]}))"
 		];
 
 		if (_temporary) then {
