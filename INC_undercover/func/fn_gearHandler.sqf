@@ -519,19 +519,12 @@ switch (_operation) do {
 						private ["_newCrateCargo","_oldGwh"];
 
 						_oldGwh = false;
-						_newCrateCargo = [];
 
 						if (_activeContainer isKindOf "GroundWeaponHolder") then {_oldGwh = true};
 
 						_activeContainer addItemCargoGlobal [(_origUnif), 1];
 
-						//_newUnifItems = (itemcargo (_newUnif select 1)) + (magazinecargo (_newUnif select 1)) + (weaponcargo (_newUnif select 1));
-
 						[_unit,"AinvPercMstpSnonWnonDnon_Putdown_AmovPercMstpSnonWnonDnon"] remoteExec ["playMove",0];
-
-						sleep 0.2;
-
-						//{_activeContainer addItemCargoGlobal [_x, 1];} forEach (_newUnifItems);
 
 						sleep 1;
 
@@ -543,15 +536,35 @@ switch (_operation) do {
 
 						sleep 0.1;
 
-						//_newCrateCargo = (itemcargo _activeContainer) + (magazinecargo _activeContainer) + (weaponcargo _activeContainer);
+						_newCrateCargo = [];
 
-						for "_i" from 0 to ((count (everyContainer _activeContainer))-1) do {
-						    private ["_container","_contents"];
-							_container = ((everyContainer _activeContainer) select _i);
-							_contents = (itemcargo (_container select 1)) + (magazinecargo (_container select 1)) + (weaponcargo (_container select 1));
-							{_newCrateCargo pushBack _x} forEach _contents;
-							_newCrateCargo pushBack (_container select 0);
-						};
+						{
+							private ["_weapons"];
+							private _wpnItmsCrgo = weaponsItemsCargo (_x select 1);
+							{for "_i" from 1 to ((count _x - 1)) do {
+								private _item = _x select _i;
+								if (_item isEqualType "" && {_item != ""}) then {
+									if (_i > 0) then {_newCrateCargo pushBack _item} else {_newCrateCargo pushBack ([_item] call BIS_fnc_baseWeapon)};
+								} else {
+									if (_i == 4 && {!(_item isEqualTo [])}) then {_newCrateCargo pushBack (_item select 0)};
+								};
+							}} forEach _wpnItmsCrgo;
+							{_newCrateCargo pushBack _x} forEach ((itemCargo (_x select 1)) + (magazineCargo (_x select 1)) + (backPackCargo (_x select 1)));
+							{_newCrateCargo pushBack ([_x] call BIS_fnc_baseWeapon)} forEach (weaponCargo (_x select 1));
+							true
+						} count (everyContainer _activeContainer);
+
+						_wpnItmsCrgo = (weaponsItemsCargo _activeContainer);
+						{for "_i" from 0 to ((count _x - 1)) do {
+							private _item = _x select _i;
+							if (_item isEqualType "" && {_item != ""}) then {
+								if (_i > 0) then {_newCrateCargo pushBack _item} else {_newCrateCargo pushBack ([_item] call BIS_fnc_baseWeapon)};
+							} else {
+								if (_i == 4 && {!(_item isEqualTo [])}) then {_newCrateCargo pushBack (_item select 0)};
+							};
+						}} forEach _wpnItmsCrgo;
+						{_newCrateCargo pushBack _x} forEach ((itemCargo _activeContainer) + (magazineCargo _activeContainer) + (backPackCargo _activeContainer));
+						//{_newCrateCargo pushBack ([_x] call BIS_fnc_baseWeapon)} forEach (weaponCargo _activeContainer);
 
 						_newCrateCargo set [(_newCrateCargo find (_newUnif select 0)),-1];
 						_newCrateCargo = _newCrateCargo - [-1];
@@ -560,18 +573,23 @@ switch (_operation) do {
 
 						switch (_oldGwh) do {
 							case true: {
-
 								clearItemCargoGlobal _activeContainer;
+								clearWeaponCargoGlobal _activeContainer;
+								clearMagazineCargoGlobal _activeContainer;
+								clearBackpackCargoGlobal _activeContainer;
 								deleteVehicle _activeContainer;
 								 _newActiveContainer = createVehicle ["GroundWeaponHolder", getPosATL _unit, [], 0, "CAN_COLLIDE"];
- 								{_newActiveContainer addItemCargoGlobal [_x,1]} forEach (_newCrateCargo);
-
+								{_newActiveContainer addItemCargoGlobal [_x, 1]} forEach (_newCrateCargo select {!(_x isKindOf "Bag_Base")});
+								{_newActiveContainer addBackpackCargoGlobal [(_x call BIS_fnc_basicBackpack),1]} forEach (_newCrateCargo select {_x isKindOf "Bag_Base"});
 							};
 
 							case false: {
 								clearItemCargoGlobal _activeContainer;
-								{_activeContainer addItemCargoGlobal [_x,1]} forEach (_newCrateCargo);
-
+								clearWeaponCargoGlobal _activeContainer;
+								clearMagazineCargoGlobal _activeContainer;
+								clearBackpackCargoGlobal _activeContainer;
+								{_activeContainer addItemCargoGlobal [_x, 1]} forEach (_newCrateCargo select {!(_x isKindOf "Bag_Base")});
+								{_activeContainer addBackpackCargoGlobal [(_x call BIS_fnc_basicBackpack),1]} forEach (_newCrateCargo select {_x isKindOf "Bag_Base"});
 							};
 						};
 					};
