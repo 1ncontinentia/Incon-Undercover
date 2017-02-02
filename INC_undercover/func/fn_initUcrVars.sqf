@@ -15,13 +15,40 @@ Examples:
 Author: Incontinentia
 ---------------------------------------------------------------------------- */
 
-private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
-
 _this spawn {
+
+	private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
 
 	params [["_unit",player]];
 
 	#include "..\UCR_setup.sqf"
+
+	diag_log "Incon Undercover initialising...";
+
+	if (isNil "_asymEnySide") then {_asymEnySide = sideEmpty};
+
+	if (isNil "_regEnySide") then {_asymEnySide = sideEmpty};
+
+	if (side _unit == _regEnySide || {side _unit == _asymEnySide}) exitWith {
+
+		diag_log "Incon Undercover: undercover unit side must be different to enemy sides, exiting.";
+		systemChat "Incon Undercover: undercover unit side must be different to enemy sides, exiting.";
+	};
+
+	if (_regEnySide == _asymEnySide) exitWith {
+
+		diag_log "Incon Undercover: regular and asym enemy sides must be different, exiting.";
+		systemChat "Incon Undercover: regular and asym enemy sides must be different, exiting.";
+	};
+
+	if ((_regEnySide != sideEmpty && {_asymEnySide != sideEmpty}) && {[_regEnySide, _asymEnySide] call BIS_fnc_sideIsEnemy}) then {
+
+		diag_log "Incon Undercover: Enemy Incognito mode disabled - regular and asym enemy sides must be friendly to each other for Enemy Incognito mode to work.";
+		systemChat "Incon Undercover: Enemy Incognito mode disabled - regular and asym enemy sides must be friendly to each other for Enemy Incognito mode to work.";
+		_incogFactions = [];
+	};
+
+	sleep 0.2;
 
 	missionNamespace setVariable ["INC_regEnySide",_regEnySide,true];
 	missionNamespace setVariable ["INC_asymEnySide",_asymEnySide,true];
@@ -148,6 +175,8 @@ _this spawn {
 	[_unit,"spawnRebelCommander"] remoteExecCall ["INCON_ucr_fnc_ucrMain",2];
 
 	missionNamespace setVariable ["INC_ucrInitComplete",true,true];
+
+	diag_log "Incon Undercover init complete.";
 
 	_incogWpnsFinal = _incogWpns;
 

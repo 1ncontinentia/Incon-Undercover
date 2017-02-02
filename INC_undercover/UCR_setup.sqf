@@ -12,23 +12,23 @@ _undercoverUnitSide = west;             //What side is/are the undercover unit(s
 
 //-------------------------General Settings-------------------------
 
-_debug = false; //Set to true for debug hints
-_hints = true;  //Hints show changes of state etc
-_fullAIfunctionality = true; //Enable all checks on AI (may degrade performace slightly for large groups)
+_debug = false;                         //Set to true for debug hints
+_hints = true;                          //Hints show changes of state etc
+_fullAIfunctionality = true;            //Enable all checks on AI (may degrade performace very slightly for large groups, 15+)
 
 _racism = true;                         //Enemies will notice if you aren't the race of the faction you're pretending to be (making you easier to detect if nothing is covering your face)
 _racProfFacCiv = 1;                     //(Number) Multiplies the effect of racial profiling. Lower this number to simulate more multicultural civilian population
 _racProfFacEny = 1;                     //(Number) Multiplies the effect of racial profiling. Lower this number to simulate more multicultural enemy forces
 
-_regEnySide = east;                     //Units of this side will be classed as regular enemies (Side: can be east, west, independent, or sideEmpty) - if you don't need this, type 'sideEmpty' (without quotation marks) into this field or comment the line out (i.e. put // before _regEnySide, as in //_regEnySide = east;).
+_regEnySide = east;                     //Units of this side will be classed as regular enemies (Side: can be east, west, independent) - if you don't need this, comment the line out (i.e. put // before _regEnySide, as in //_regEnySide = east;).
 _regBarbaric = false;                   //(Bool - true or false) Will this side lash out on civilians if it takes casualties and doesn't know the attacker?
-_regDetectRadius = 15;                  //Minimum detection radius for regular troops (if they see you in this area and get a good look at you, your cover will be blown - this will increase the weirder you act and the more you are compromised)
+_regDetectRadius = 15;                  //Default detection radius for regular troops (this will expand and contract based on weather, time of day, and how the undercover unit is acting - civilians within this radius will be under much more scrutinty)
 
-_asymEnySide = independent;             //Units of this side will be classed as asymetric enemies (Side: can be east, west, independent, or sideEmpty) - if you don't need this, type 'sideEmpty' (without quotation marks) into this field or comment the line out (i.e. put // before _asymEnySide, as in //_asymEnySide = sideEmpty;).
-_asymBarbaric = true;                   //(Bool - true or false) Will this side lash out on civilians if it takes casualties and doesn't know the attacker?
-_asymDetectRadius = 25;                 //Minimum detection radius for asym troops (if they see you in this area and get a good look at you, your cover will be blown - this will increase the weirder you act and the more you are compromised)
+_asymEnySide = independent;             //Units of this side will be classed as asymetric enemies (Side: can be east, west, independent) - if you don't need this, comment the line out (i.e. put // before _asymEnySide, as in //_asymEnySide = east;).
+_asymBarbaric = true;                   //(Bool - true or false) Will this side have a small chance of lashing out on civilians if it takes casualties and doesn't know the attacker?
+_asymDetectRadius = 20;                 //Default detection radius for asym troops (this will expand and contract based on weather, time of day, and how the undercover unit is acting - civilians within this radius will be under much more scrutinty)
 
-_trespassMarkers = [];                  //Names of additional markers (any with "INC_tre" somewhere in the marker name will automatically be included) for areas that would be considered trespassing
+_trespassMarkers = [];                  //Names of additional markers for areas that would be considered trespassing (any with "INC_tre" - case sensitive - somewhere in the marker name will automatically be included)
 
 //-------------------------Civilian Disguise settings-------------------------
 
