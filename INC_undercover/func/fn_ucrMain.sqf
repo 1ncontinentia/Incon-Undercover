@@ -234,6 +234,7 @@ switch (_operation) do {
 							_x enableAI "AUTOTARGET";
 							_x setCombatMode "YELLOW";
 							_x setBehaviour "COMBAT";
+							_x setUnitPos "AUTO";
 
 							_x suppressFor 10;
 

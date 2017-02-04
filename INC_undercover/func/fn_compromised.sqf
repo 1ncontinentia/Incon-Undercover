@@ -99,25 +99,24 @@ if ((!isNull objectParent _unit) && {!_foot}) exitWith {
 		(!(_unit getVariable ["INC_AnyKnowsSO",false]) || {_cooldownTimer <= 0})
 	};
 
-	if !(_regKnowsAboutUnit) then {
-
-		//Checks if INC_regEnySide has seen him recently
-		_regKnowsAboutUnit = [_unit,INC_regEnySide,250] call INCON_ucr_fnc_isKnownExact;
-	};
-
 	//If there are still alerted units alive...
 	if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
 
 		switch (true) do {
-			case ([_unit,INC_regEnySide] call INCON_ucr_fnc_isKnownToSide): {
+			case ([_unit,INC_regEnySide,250] call INCON_ucr_fnc_isKnownExact): {
 				{[_x,[_unit,3]] remoteExec ["reveal",_x]} forEach (
 					(_unit nearEntities 1500) select {
 						(side _x == INC_regEnySide)
 					}
 				);
+
+				if !(_regKnowsAboutUnit) then {
+
+					_regKnowsAboutUnit = true;
+				};
 			};
 
-			case ([_unit,INC_asymEnySide] call INCON_ucr_fnc_isKnownToSide): {
+			case ([_unit,INC_asymEnySide,250] call INCON_ucr_fnc_isKnownExact): {
 				{[_x,[_unit,2]] remoteExec ["reveal",_x]} forEach (
 					(_unit nearEntities 800) select {
 						(side _x == INC_asymEnySide) &&
