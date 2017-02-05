@@ -116,6 +116,8 @@ switch (_operation) do {
 
 						params ["_unit"];
 
+						_unit setVariable ["INC_canGoLoud",false];
+
 						[_unit] spawn {
 
 							params ["_unit"];
@@ -153,6 +155,8 @@ switch (_operation) do {
 
 				    [player] spawn {
 				        params ['_unit'];
+
+						_unit setVariable ["INC_canGoLoud",false];
 
 				        _wpnArray = ([primaryWeapon _unit, handgunWeapon _unit]) select {
 				            (_x != '') &&
@@ -252,6 +256,8 @@ switch (_operation) do {
 								};
 
 								sleep 2;
+
+								_x suppressFor 10;
 							};
 						};
 					} forEach (units _unit);
