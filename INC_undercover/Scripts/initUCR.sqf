@@ -39,6 +39,8 @@ _unit setVariable ["isUndercover", true, true]; //Allow scripts to pick up sneak
 
 sleep 1;
 
+if (!isPlayer _unit) then {_unit setCombatMode "GREEN"}; 
+
 if (((_debug) || {_hints}) && {isPlayer _unit}) then {hint "Undercover initialising..."};
 
 if (isNil "INC_asymEnySide") then {
