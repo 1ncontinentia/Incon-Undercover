@@ -221,7 +221,7 @@ if (!local _unit) exitWith {};
 
 								} else {
 
-									//If the unit isn't wearing a bandana but is wearing something else, and is either dressed as a civilian or incognito and not wearing a balaclava...
+									//If the unit isn't wearing a bandana but is wearing something else, and is not wearing a balaclava...
 									if ((((goggles _unit) find "alaclava") == -1) && {((headgear _unit) find "alaclava") == -1} && {((headgear _unit) find "hemag") == -1}) then {
 
 										_weirdoLevel = _weirdoLevel + (3 * _racProfFacEny);
@@ -272,7 +272,7 @@ if (!local _unit) exitWith {};
 					if ((captive _unit) && {_suspiciousValue == 1}) then {
 
 						//Check if unit is wearing anything suspicious
-						if ((((headgear _unit) find "elmet") >= 0) || {(((goggles _unit) find "alaclava") >= 0) || {((headgear _unit) find "alaclava") >= 0}}) then {
+						if ((((headgear _unit) find "elmet") >= 0) || {(((goggles _unit) find "alaclava") >= 0) || {((headgear _unit) find "alaclava") >= 0}} || {((headgear _unit) find "hemag") >= 0}) then {
 
 							_weirdoLevel = _weirdoLevel + 5;
 							_spotDistance = _spotDistance + 2;
