@@ -14,7 +14,7 @@ Returns: An array of items / weapons / identities belonging to the given faction
 Examples:
 
 ["units",[(faction _groupLead)]] call INCON_ucr_fnc_getConfigInfo;
-["headgear",["OPF_F"]] call INCON_ucr_fnc_getConfigInfo; 
+["headgear",["OPF_F"]] call INCON_ucr_fnc_getConfigInfo;
 
 Author: Spyderblack723, modified by Incontinentia
 ---------------------------------------------------------------------------- */
@@ -150,7 +150,7 @@ switch (_gearType) do {
                 _item = _x;
                 _configPath = configFile >> "CfgWeapons" >> _item;
                     if (isClass _configPath) then {
-						_result pushbackunique _item;
+                        _result pushBackUnique ([_item] call BIS_fnc_baseWeapon);
                     };
             } forEach _weaponArray;
         } forEach _units;

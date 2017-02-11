@@ -135,7 +135,7 @@ if (!local _unit) exitWith {};
 
 						sleep _responseTime;
 
-						if !(currentWeapon _unit in INC_incogWpns) then {
+						if !(([currentWeapon _unit] call BIS_fnc_baseWeapon) in INC_incogWpns) then {
 							_weirdoLevel = _weirdoLevel + 1.5;
 							_spotDistance = _spotDistance + 0.5;
 						};
