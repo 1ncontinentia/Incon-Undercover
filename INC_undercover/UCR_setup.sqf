@@ -2,7 +2,7 @@
 
 Setup options for INC_undercover undercover / civilian recruitment script by Incontinentia.
 
-Please check each setting carefully otherwise the script may not function properly in your scenario.
+Please check each setting carefully otherwise the script may not function properly in your scenario. All classnames must have quotation marks ("Item_Random_F")
 
 */
 
@@ -32,18 +32,18 @@ _trespassMarkers = [];                  //Names of additional markers for areas 
 
 //-------------------------Civilian Disguise settings-------------------------
 
-_civFactions = ["CIV_F","CIV_F_TANOA"]; //Array of factions whose vests are safe for undercover units to wear (must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
+_civFactions = ["CIV_F","CIV_F_TANOA"]; //Array of factions whose vests are safe for undercover units to wear
 
-//(Array of classnames) Safe vests (on top of the specific factions above - must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
+//(Array of classnames) Safe vests (on top of the specific factions above - useful if faction has randomisation script or to add items that are not used by the faction)
 _civilianVests = [];
 
-//(Array of classnames) Safe uniforms (on top of the specific factions above - must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
+//(Array of classnames) Safe uniforms (on top of the specific factions above - useful if faction has randomisation script or to add items that are not used by the faction)
 _civilianUniforms = ["U_BG_Guerilla2_2","U_BG_Guerilla2_1","U_BG_Guerilla2_3","U_I_C_Soldier_Bandit_4_F","U_I_C_Soldier_Bandit_1_F","U_I_C_Soldier_Bandit_2_F","U_I_C_Soldier_Bandit_5_F","U_I_C_Soldier_Bandit_3_F"];
 
-//(Array of classnames) Safe headgear (will automatically include civilian headgear classes - must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
+//(Array of classnames) Safe headgear (will automatically include civilian headgear classes - useful if faction has randomisation script or to add items that are not used by the faction)
 _civilianHeadgear = [];
 
-//(Array of classnames) Safe backpacks (will automatically include civilian backpack classes - must have quotation marks around each item, as in ["Ping_Pong_1_F","Ping_Pong_2_F"])
+//(Array of classnames) Safe backpacks (will automatically include civilian backpack classes - useful if faction has randomisation script or to add items that are not used by the faction)
 _civilianBackpacks = ["B_FieldPack_blk","B_FieldPack_cbr","B_FieldPack_khk","B_FieldPack_oucamo","G_FieldPack_Medic","B_Carryall_cbr","B_Carryall_khk","B_Carryall_oucamo","B_TacticalPack_blk","B_TacticalPack_rgr","B_TacticalPack_oli","B_Kitbag_cbr","B_Kitbag_rgr","B_Kitbag_sgg","B_Respawn_Sleeping_bag_blue_F","B_Respawn_Sleeping_bag_brown_F","B_Respawn_TentDome_F","B_Respawn_TentA_F","B_Parachute","ACE_NonSteerableParachute","ACE_TacticalLadder_Pack"];
 
 //(Array of classnames) Safe vehicles to drive in (automatically includes vehicles from the civilian factions above).
@@ -55,6 +55,19 @@ _noOffRoad = true; //Civilian vehicles driving more than 50 meters from the near
 
 //-------------------------Enemy Disguise settings-------------------------
 _incogFactions = ["OPF_F","OPF_T_F"]; //Array of enemy factions whose items and vehicles will allow the player to impersonate the enemy
+
+//(Array of classnames) Safe vests (on top of the specific factions above - useful if faction has randomisation script or to add items that are not used by the faction)
+_incognitoVests = [];
+
+//(Array of classnames) Safe uniforms (on top of the specific factions above - useful if faction has randomisation script or to add items that are not used by the faction)
+_incognitoUniforms = [];
+
+//(Array of classnames) Safe headgear (will automatically include incog headgear classes - useful if faction has randomisation script or to add items that are not used by the faction)
+_incognitoHeadgear = [];
+
+//(Array of classnames) Safe backpacks (will automatically include incog backpack classes - useful if faction has randomisation script or to add items that are not used by the faction)
+_incognitoBackpacks = [];
+
 _incogVehArray = []; //(Array of classnames) Additional incognito vehicles (vehicles from the faction above will automatically count)
 
 //-------------------------Civilian recruitment settings-------------------------

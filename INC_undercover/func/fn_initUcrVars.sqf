@@ -97,13 +97,13 @@ _this spawn {
 
 	sleep 0.5;
 
-	_incogVests = [""] + (["vests",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
+	_incogVests =  _incognitoVests + [""] + (["vests",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogUniforms = (["uniforms",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
+	_incogUniforms = _incognitoUniforms + (["uniforms",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogHeadgear = [""] + (["headgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo) + (["possibleHeadgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
+	_incogHeadgear = _incognitoHeadgear + [""] + (["headgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo) + (["possibleHeadgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogBackpacks = [""] + (["backpacks",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
+	_incogBackpacks =  _incognitoBackpacks +  [""] + (["backpacks",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
 	_incogWpns = [""] + (["weapons",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
