@@ -208,7 +208,7 @@ if (!local _unit) exitWith {};
 								_spotDistance = _spotDistance + (2 * _racProfFacEny);
 							};
 
-							if (goggles _unit == "") then {
+							if (goggles _unit == ""  && {((headgear _unit) find "alaclava") == -1} && {((headgear _unit) find "hemag") == -1}) then {
 
 								_weirdoLevel = _weirdoLevel + (4 * _racProfFacEny);
 								_spotDistance = _spotDistance + (2 * _racProfFacEny);
@@ -572,7 +572,7 @@ if (!local _unit) exitWith {};
 									_spotDistance = _spotDistance + (0.5 * _racProfFacEny);
 								};
 
-								if (goggles _unit == "") then {
+								if (goggles _unit == ""  && {((headgear _unit) find "alaclava") == -1} && {((headgear _unit) find "hemag") == -1}) then {
 
 									_weirdoLevel = _weirdoLevel + (2.5 * _racProfFacEny);
 									_spotDistance = _spotDistance + (1 * _racProfFacEny);
