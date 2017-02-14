@@ -151,59 +151,64 @@ switch (_operation) do {
 
 			case false: {
 
-				INC_concealWeaponsACE = ['Conceal Weapons','Conceal Weapons','',{
+				if !(_unit getVariable ["INC_addedAceActions",false]) then {
 
-				    [player] spawn {
-				        params ['_unit'];
+					_unit setVariable ["INC_addedAceActions",true];
 
-						_unit setVariable ["INC_canGoLoud",false];
+					INC_concealWeaponsACE = ['Conceal Weapons','Conceal Weapons','',{
 
-				        _wpnArray = ([primaryWeapon _unit, handgunWeapon _unit]) select {
-				            (_x != '') &&
-				            {(_unit canAddItemToUniform _x) || {_unit canAddItemToBackpack _x}}
-				        };
+					    [player] spawn {
+					        params ['_unit'];
 
-				        for '_i' from 1 to (count _wpnArray) do {
-				            [[_unit],"concealWeapon"] call INCON_ucr_fnc_gearHandler;
-				            sleep 4;
-				        };
+							_unit setVariable ["INC_canGoLoud",false];
 
-				        sleep 2;
+					        _wpnArray = ([primaryWeapon _unit, handgunWeapon _unit]) select {
+					            (_x != '') &&
+					            {(_unit canAddItemToUniform _x) || {_unit canAddItemToBackpack _x}}
+					        };
 
-				        if !((currentWeapon _unit == '') || {currentWeapon _unit == 'Throw'} || {currentWeapon _unit == binocular _unit}) then {
-				            switch (isPlayer _unit) do {
-				                case true: {
-				                    hint 'Some weapons have been concealed';
-				                };
-				                case false: {
-				                    _unit groupChat 'Could not fit them all in.';
-				                };
-				            };
-				        };
-				    };
+					        for '_i' from 1 to (count _wpnArray) do {
+					            [[_unit],"concealWeapon"] call INCON_ucr_fnc_gearHandler;
+					            sleep 4;
+					        };
 
-				},{player getVariable ['INC_canConcealWeapon',false]}] call ace_interact_menu_fnc_createAction;
-				[player, 1, ["ACE_SelfActions"], INC_concealWeaponsACE] call ace_interact_menu_fnc_addActionToObject;
+					        sleep 2;
+
+					        if !((currentWeapon _unit == '') || {currentWeapon _unit == 'Throw'} || {currentWeapon _unit == binocular _unit}) then {
+					            switch (isPlayer _unit) do {
+					                case true: {
+					                    hint 'Some weapons have been concealed';
+					                };
+					                case false: {
+					                    _unit groupChat 'Could not fit them all in.';
+					                };
+					            };
+					        };
+					    };
+
+					},{player getVariable ['INC_canConcealWeapon',false]}] call ace_interact_menu_fnc_createAction;
+					[player, 1, ["ACE_SelfActions"], INC_concealWeaponsACE] call ace_interact_menu_fnc_addActionToObject;
 
 
-				INC_unConcealWeaponsACE = ['Get Weapons Out','Get Concealed Weapons Out','',{
+					INC_unConcealWeaponsACE = ['Get Weapons Out','Get Concealed Weapons Out','',{
 
-				    [player] spawn {
-				        params ["_unit"];
+					    [player] spawn {
+					        params ["_unit"];
 
-				        _wpnArray = ((weapons _unit) select {
-				            ((_x isKindOf ['Rifle', configFile >> 'CfgWeapons']) || {_x isKindOf ['Pistol', configFile >> 'CfgWeapons']})
-				        });
+					        _wpnArray = ((weapons _unit) select {
+					            ((_x isKindOf ['Rifle', configFile >> 'CfgWeapons']) || {_x isKindOf ['Pistol', configFile >> 'CfgWeapons']})
+					        });
 
-				        for "_i" from 1 to (count _wpnArray) do {
-				            if (_i >= 3) exitWith {true};
-				            [[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
-				            sleep 4;
-				        };
-				    };
+					        for "_i" from 1 to (count _wpnArray) do {
+					            if (_i >= 3) exitWith {true};
+					            [[_unit],"unConcealWeapon"] call INCON_ucr_fnc_gearHandler;
+					            sleep 4;
+					        };
+					    };
 
-				},{player getVariable ['INC_canGoLoud',false]}] call ace_interact_menu_fnc_createAction;
-				[player, 1, ["ACE_SelfActions"], INC_unConcealWeaponsACE] call ace_interact_menu_fnc_addActionToObject;
+					},{player getVariable ['INC_canGoLoud',false]}] call ace_interact_menu_fnc_createAction;
+					[player, 1, ["ACE_SelfActions"], INC_unConcealWeaponsACE] call ace_interact_menu_fnc_addActionToObject;
+				};
 			};
 		};
 
