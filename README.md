@@ -86,18 +86,18 @@ Non-player units in the undercover unit's group do not need anything; the script
 
 ### Credits
 
-Massive thanks to Spyderblack723 for his help creating some of the functions and correcting my mistakes / oversights on the original release. Also for generally being super helpful over the past year as I've got into modding. Grumpy Old Man, Tajin and sarogahtyp are responsible for creating a performant detection script, which I then adapted and used as a basis for the undercover script, so thank you to those guys too. Also thanks to das attorney, davidoss, Bad Benson and Tankbuster for some top optimisation tips.
+Massive thanks to Spyderblack723 for his help creating some of the functions and correcting my mistakes / oversights on the original release. Also for generally being super helpful over the past year as I've got into modding. Grumpy Old Man, Tajin and sarogahtyp are responsible for creating a performant detection script, which I then adapted and used as a basis for the undercover script, so thank you to those guys too. Also thanks to das attorney, davidoss, Bad Benson, Tankbuster, dedmen, fn_Quiksilver, marceldev89, baermitumlaut and Duda123 for some top optimisation tips.
 
 
 ### In Detail: How it works
 
 For the sake of this explanation, we'll separate behaviours into three categories: suspicious, attention-drawing and weird.
 
-* Any suspicious behvaviour will make enemies see the unit as hostile right away. Two minor suspicious behaviours (being both armed and trespassing when not dressed as an enemy) or one major one (shooting / killing an enemy) will compromise the unit if they are witnessed. Units will remain suspicious as long as there are enemies who have reasonably fresh target knowledge of the unit, even if not doing anything suspicious anymore.
+* Any suspicious behvaviour will make enemies see the unit as hostile right away. Two minor suspicious behaviours (being both armed and trespassing when not dressed as an enemy) or one major one (firing a weapon) will compromise the unit if they are witnessed. Units will remain suspicious as long as there are enemies who have reasonably fresh target knowledge of the unit, even if not doing anything suspicious anymore.
 
-* Weird behaviour will not make enemies see the unit as hostile instantly, but each additional weird behaviour will increase the likelihood of nearby enemies blowing the unit's cover. Weird behaviour in proximity to enemies may cause some to take interest and follow the unit or become outright hostile straight away if you are acting strangely enough. If the unit isn't able to stop acting strangely or the suspicious enemies are not dealt with quickly (or you manage to escape somehow), they may compromise the unit and any teammates who are also acting strangely nearby.
+* Weird behaviour will not make enemies see the unit as hostile instantly, but each additional weird behaviour will increase the likelihood of nearby enemies blowing the unit's cover. Weird behaviour in proximity to enemies may cause some to take interest and follow the unit or become outright hostile straight away if you are acting strangely enough. If the unit isn't able to stop acting strangely or the suspicious enemies are not dealt with quickly (or you don't manage to escape), they may compromise the unit and any teammates who are also acting strangely nearby.
 
-* Attention-drawing behaviour isn't necessarily weird, but it does make enemies notice you from further away. While dressed as the enemy, wearing the wrong helmet for your disguise is harder to detect from a distance than wearing the wrong vest, but both are weird. Wearing a vest will therefore add to your attention-drawing behaviour. Running, for instance, isn't so weird but will draw attention from enemies who are further away. Most weird behaviours will be attention-drawing too. The more attention-drawing behaviours you do, the further away units will start taking an interest in you, and therefore, the more likely they are to compromise you if you are doing anything weird (like wearing NVGs while dressed as a civilian). The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the undercover unit's attention-drawing behaviours, incognito status and vehicle, as well as environmental factors like moon intensity, overcast, rain and fog. It is recommended to not change the detection radius much from the default.
+* Attention-drawing behaviour isn't necessarily weird, but it does make enemies notice you from further away. While dressed as the enemy, wearing the wrong helmet for your disguise is harder to detect from a distance than wearing the wrong vest, but both are weird. Wearing a vest will therefore add to your attention-drawing behaviour. Running, for instance, isn't so weird but will draw attention from enemies who are further away. Most weird behaviours will be attention-drawing too. The more attention-drawing behaviours you do, the further away units will start taking an interest in you, and therefore, the more likely they are to compromise you if you are also doing anything weird (like wearing NVGs while dressed as a civilian). The default detection radius can be configured in the UCR_setup file but this radius will expand and contract according to the undercover unit's attention-drawing behaviours, incognito status and vehicle, as well as environmental factors like moon intensity, overcast, rain and fog. It is recommended to not change the detection radius much from the default.
 
 If the unit is compromised, the unit should try to kill all enemies who know about them before they spread the unit's identity across the AO.
 After that, the unit becomes fully compromised and must change his disguise (clothes and either goggles / headgear) or leave the area completely to go undercover again.
@@ -113,7 +113,7 @@ Suspicious / weird behaviours will vary according to factors including:
 #### Appropriate behaviour: a guide for new spies
 This is a short primer for the kinds of things to bear in mind while going undercover. It is by no means conclusive. The best advice is to act as normal as you can for the situation.
 
-WHEN IN DISGUISE AS ENEMY:
+WHEN IN DISGUISE AS THE ENEMY:
 
 When on foot, the following may count as weird behaviour:
 * Wearing a backpack or vest that isn't normally used by the enemy faction
@@ -152,7 +152,7 @@ When in a vehicle, the following may count as weird behaviour:
 * Wearing a suspicious vest or uniform
 * Wearing a HMD (night vision goggles)
 * Wearing a compromised uniform
-* Driving fast (the faster you go, the more attention you will draw - but for less time obviously)
+* Driving fast (the faster you go, the more attention you will draw)
 
 And suspicious:
 * Suspicious behaviour:
