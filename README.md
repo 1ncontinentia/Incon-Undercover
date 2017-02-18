@@ -86,7 +86,7 @@ Non-player units in the undercover unit's group do not need anything; the script
 
 ### Credits
 
-Massive thanks to Spyderblack723 for his help creating some of the functions and correcting my mistakes / oversights on the original release. Also for generally being super helpful over the past year as I've got into modding. Grumpy Old Man, Tajin and sarogahtyp are responsible for creating a performant detection script, which I then adapted and used as a basis for the undercover script, so thank you to those guys too. Also thanks to das attorney, davidoss, Bad Benson, Tankbuster, dedmen, fn_Quiksilver, marceldev89, baermitumlaut and Duda123 for some top optimisation tips.
+Massive thanks to Spyderblack723 for his help creating some of the functions and correcting my mistakes / oversights on the original release. Also for generally being super helpful over the past year as I've got into modding. Grumpy Old Man, Tajin and sarogahtyp are responsible for creating a performant detection script, which I then adapted and used as a basis for the undercover script, so thank you to those guys too. Also thanks to das attorney, davidoss, Bad Benson, Tankbuster, dedmen, fn_Quiksilver, marceldev89, baermitumlaut and Duda123 for some top optimisation tips. And huge thanks to accuracythruvolume for testing and feedback. 
 
 
 ### In Detail: How it works
