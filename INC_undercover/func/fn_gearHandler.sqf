@@ -733,77 +733,78 @@ switch (_operation) do {
 			};
 		};
 	};
-	
+
 	case "checkDisguise": {
-		_input params ["_unit"]; 
-		
+		_input params ["_unit"];
+
 		_unit setVariable ["INC_checkingDiguise",true];
 
 		_return = true;
-		
+
 		[_unit,_easyMode] spawn {
 			params ["_unit",["_easyMode",true]];
 			private ["_isIncog","_isCiv","_isArmed"];
-			
+
 			waitUntil {
-				sleep 1; 
+				sleep 1;
 				!(_unit getVariable ["INC_checkingDiguise",false])
-			}; 
-			
+			};
+
 			//Trespassing, incognito / civ, suspiciousness, weirdness
-			
+
 			if (_easyMode) then {
 				if (captive _unit) then {
-					hint "Your disguise is intact"
-					sleep 1; 
+					hint "Your disguise is intact";
+					sleep 2;
 				} else {
-				
+
 					if (_unit getVariable ["INC_trespassAlert",false]) then {
-						hint "You are trespassing"; 
-						sleep 1; 
-					}; 
-					
+						hint "You are trespassing";
+						sleep 2;
+					};
+
 					if (_unit getVariable ["INC_isCompromised",false]) then {
 						hint "You have been compromised";
-						sleep 1; 
+						sleep 2;
 					};
-					
-					hint "Your disguise isn't working"; 
-				}; 
-			}; 
-			
+
+					hint "Your disguise isn't working";
+				};
+			};
+
 			if ((_unit getVariable ["INC_suspiciousValue",1]) >= 2) then {
-				hint "You are acting suspiciously"; 
-				sleep 1; 
-			}; 
-			
-			if (_unit getVariable ["INC_firedRecent",false]) then {
-				hint "You smell of cordite";
-				sleep 1; 
-			};
-			
-			if ((_unit getVariable ["INC_disguiseValue",1]) < 2) then {
-				hint "Your disguise is great"; 
-				sleep 1; 
+				hint "You are acting suspiciously";
+				sleep 2;
 			} else {
-				if ((_unit getVariable ["INC_disguiseValue",1]) < 3) then {
-					hint "Your disguise is good"; 
-					sleep 1; 
+
+				if (_unit getVariable ["INC_firedRecent",false]) then {
+					hint "You smell of cordite";
+					sleep 2;
+				};
+
+				if ((_unit getVariable ["INC_disguiseValue",1]) < 2) then {
+					hint "Your disguise is great";
+					sleep 2;
 				} else {
-					if ((_unit getVariable ["INC_disguiseValue",1]) < 7) then {
-						hint "Your disguise is okay"; 
-						sleep 1; 
+					if ((_unit getVariable ["INC_disguiseValue",1]) < 3) then {
+						hint "Your disguise is good";
+						sleep 2;
 					} else {
-						if ((_unit getVariable ["INC_disguiseValue",1]) < 13) then {
-							hint "Your disguise is poor"; 
-							sleep 1; 
+						if ((_unit getVariable ["INC_disguiseValue",1]) < 7) then {
+							hint "Your disguise is okay";
+							sleep 2;
 						} else {
-							hint "Your disguise is terrible"; 
-						}; 
-					}; 
-				}; 
+							if ((_unit getVariable ["INC_disguiseValue",1]) < 13) then {
+								hint "Your disguise is poor";
+								sleep 2;
+							} else {
+								hint "Your disguise is terrible";
+							};
+						};
+					};
+				};
 			};
-		}; 
+		};
 	};
 };
 

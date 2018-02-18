@@ -68,10 +68,10 @@ switch (_operation) do {
 	case "addConcealActions": {
 
 		_input params ["_unit","_groupLead",["_dismiss",true]];
-	
+
 		_unit addEventHandler ["InventoryClosed", {
 			params ["_unit"];
-			[[_unit,true,8],"CheckDisguiseAction"] call INCON_ucr_fnc_ucrMain;
+			[[_unit,true,6],"CheckDisguiseAction"] call INCON_ucr_fnc_ucrMain;
 		}];
 
 		switch (!isPlayer _unit || {!(isClass(configFile >> "CfgPatches" >> "ace_interact_menu"))}) do {
@@ -451,7 +451,7 @@ switch (_operation) do {
 
 	case "CheckDisguiseAction": {
 
-		_input params ["_unit",["_temporary",true],["_duration",5]];
+		_input params ["_unit",["_temporary",true],["_duration",12]];
 
 		if (_unit getVariable ["INC_checkDisguiseAction",false]) exitWith {_return = false};
 
@@ -471,14 +471,9 @@ switch (_operation) do {
 
 			[_unit,_duration] spawn {
 
-				params ["_unit",["_timer",6]];
+				params ["_unit","_timer"];
 
-				waitUntil {
-					sleep 1;
-					_timer = _timer - 1;
-
-					!(_timer <= 0)
-				};
+				sleep _timer;
 
 				_unit removeAction INC_checkDisguise;
 

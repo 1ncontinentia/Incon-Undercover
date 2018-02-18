@@ -109,7 +109,7 @@ if (!local _unit) exitWith {};
 			switch (_incog) do {
 
 				case true: {
-					
+
 					//Only run on captive or gear checking units for performance
 					if (captive _unit || {_unit getVariable ["INC_checkingDiguise",false]}) then {
 
@@ -119,7 +119,7 @@ if (!local _unit) exitWith {};
 						};
 
 						if !(vest _unit in INC_incogVests) then {
-							_weirdoLevel = _weirdoLevel + 4;
+							_weirdoLevel = _weirdoLevel + 3;
 							_spotDistance = _spotDistance + 1;
 						};
 
@@ -163,8 +163,8 @@ if (!local _unit) exitWith {};
 						if !(_unit getVariable ["INC_shotNear",false]) then {
 
 							if ((currentWeapon _unit == primaryWeapon _unit) && {!(weaponLowered _unit)}) then {
-								_weirdoLevel = _weirdoLevel + 2;
-								_spotDistance = _spotDistance + 1;
+								_weirdoLevel = _weirdoLevel + 1;
+								_spotDistance = _spotDistance + 0.5;
 							};
 
 					        switch (stance _unit == "STAND") do {
@@ -434,7 +434,7 @@ if (!local _unit) exitWith {};
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
 			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
 			_unit setVariable ["INC_radiusMulti",_spotDistance];
-			_unit setVariable ["INC_checkingDiguise",false]; 
+			_unit setVariable ["INC_checkingDiguise",false];
 
 			(!(isNull objectParent _unit) || {!alive _unit})
 		};
@@ -821,7 +821,7 @@ if (!local _unit) exitWith {};
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
 			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
 			_unit setVariable ["INC_radiusMulti",_spotDistance];
-			_unit setVariable ["INC_checkingDiguise",false]; 
+			_unit setVariable ["INC_checkingDiguise",false];
 
 			((isNull objectParent _unit) || {!alive _unit})
 		};
