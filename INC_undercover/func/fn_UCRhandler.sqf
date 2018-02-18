@@ -42,6 +42,7 @@ if (isPlayer _unit) then {
 
 	waitUntil {
 
+		//Make AI stop targetting people when incognito 
 		if !(isPlayer _unit) then {
 			if ((combatMode _unit) in ["BLUE", "GREEN", "WHITE"]) then {
 				switch ((behaviour _unit == "SAFE") || {(behaviour _unit == "AWARE")}) do {
@@ -67,7 +68,7 @@ if (isPlayer _unit) then {
 
 		sleep 0.1;
 
-		//Proximity check for players (doesn't run if the unit isn't trying to be sneaky)
+		//Proximity check (doesn't run if the unit isn't trying to be sneaky)
 		if (((isPlayer _unit) || {_fullAIfunctionality}) && {captive _unit || {!isNull objectParent _unit && {!(_unit getVariable ["INC_isCompromised",false])}}}) then {
 
 			private ["_disguiseValue","_disguiseRadius","_veh"];
@@ -162,6 +163,7 @@ if (isPlayer _unit) then {
 
         sleep 0.3;
 
+		//Trespassing check
 		if !(_unit getVariable ["INC_trespassAlert",true]) then {
 	        {
 	            if (_unit inArea _x) exitWith {
@@ -310,6 +312,7 @@ if ((isPlayer _unit) || {_fullAIfunctionality}) then {
 	}];
 };
 
+//Environmental loop (runs once per mission)
 if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_envLoopActive",false])}) then {
 	[_unit] spawn {
 		params ["_unit"];
@@ -344,6 +347,3 @@ if ((isPlayer _unit) && {!(missionNamespace getVariable ["INC_envLoopActive",fal
 		missionNamespace setVariable ["INC_envLoopActive",false,true];
 	};
 };
-
-
-//Add in suspicious level stuff for compromised variable and all that shizzlematiz, consolidate trespass loops into this function, consolidate detect, remove old shit
