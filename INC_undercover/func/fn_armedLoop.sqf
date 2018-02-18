@@ -109,8 +109,9 @@ if (!local _unit) exitWith {};
 			switch (_incog) do {
 
 				case true: {
-
-					if (captive _unit) then {
+					
+					//Only run on captive or gear checking units for performance
+					if (captive _unit || {_unit getVariable ["INC_checkingDiguise",false]}) then {
 
 						if !(backpack _unit in INC_incogBackpacks) then {
 							_weirdoLevel = _weirdoLevel + 1;
@@ -268,8 +269,8 @@ if (!local _unit) exitWith {};
 
 					sleep _responseTime;
 
-					//Oddball check
-					if ((captive _unit) && {_suspiciousValue == 1}) then {
+					//Oddball check (only done if the unit is captive or checking disguise)
+					if (((captive _unit) && {_suspiciousValue == 1}) || {_unit getVariable ["INC_checkingDiguise",false]}) then {
 
 						//Check if unit is wearing anything suspicious
 						if ((((headgear _unit) find "elmet") >= 0) || {(((goggles _unit) find "alaclava") >= 0) || {((headgear _unit) find "alaclava") >= 0}} || {((headgear _unit) find "hemag") >= 0}) then {
@@ -433,6 +434,7 @@ if (!local _unit) exitWith {};
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
 			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
 			_unit setVariable ["INC_radiusMulti",_spotDistance];
+			_unit setVariable ["INC_checkingDiguise",false]; 
 
 			(!(isNull objectParent _unit) || {!alive _unit})
 		};
@@ -817,10 +819,9 @@ if (!local _unit) exitWith {};
 			sleep _responseTime;
 
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
-
 			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
-
 			_unit setVariable ["INC_radiusMulti",_spotDistance];
+			_unit setVariable ["INC_checkingDiguise",false]; 
 
 			((isNull objectParent _unit) || {!alive _unit})
 		};

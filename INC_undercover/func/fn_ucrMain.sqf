@@ -68,6 +68,11 @@ switch (_operation) do {
 	case "addConcealActions": {
 
 		_input params ["_unit","_groupLead",["_dismiss",true]];
+	
+		_unit addEventHandler ["InventoryClosed", {
+			params ["_unit"];
+			[[_unit,true,8],"CheckDisguiseAction"] call INCON_ucr_fnc_ucrMain;
+		}];
 
 		switch (!isPlayer _unit || {!(isClass(configFile >> "CfgPatches" >> "ace_interact_menu"))}) do {
 
@@ -438,6 +443,46 @@ switch (_operation) do {
 				_unit removeAction INC_stealGear;
 
 				_unit setVariable ["INC_swapActionActive",false];
+			};
+		};
+
+		_return = true;
+	};
+
+	case "CheckDisguiseAction": {
+
+		_input params ["_unit",["_temporary",true],["_duration",5]];
+
+		if (_unit getVariable ["INC_checkDisguiseAction",false]) exitWith {_return = false};
+
+		_unit setVariable ["INC_checkDisguiseAction",true];
+
+		//Can't do it in vehicles as it would mess everything up (can improve this later on)
+		INC_checkDisguise = _unit addAction [
+			"<t color='#47AF24'>Check Disguise</t>", {
+				params ["_unit"];
+
+				[[_unit],"checkDisguise"] call INCON_ucr_fnc_gearHandler;
+
+			},[],5.5,false,true,"","((_this == _target) && (isNull objectParent _this))"
+		];
+
+		if (_temporary) then {
+
+			[_unit,_duration] spawn {
+
+				params ["_unit",["_timer",6]];
+
+				waitUntil {
+					sleep 1;
+					_timer = _timer - 1;
+
+					!(_timer <= 0)
+				};
+
+				_unit removeAction INC_checkDisguise;
+
+				_unit setVariable ["INC_checkDisguiseAction",false];
 			};
 		};
 

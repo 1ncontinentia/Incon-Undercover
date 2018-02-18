@@ -14,6 +14,7 @@ _undercoverUnitSide = west;             //What side is/are the undercover unit(s
 
 _debug = false;                         //Set to true for debug
 _fullAIfunctionality = true;            //Enable all checks on AI (may degrade performace very slightly for large groups, 15+)
+_easyMode = true;                       //Disguise checks will also reveal if the player is compromised or not
 
 _racism = true;                         //Enemies will notice if you aren't the race of the faction you're pretending to be (making you easier to detect if nothing is covering your face)
 _racProfFacCiv = 1;                     //(Number) Multiplies the effect of racial profiling. Lower this number to simulate more multicultural civilian population
