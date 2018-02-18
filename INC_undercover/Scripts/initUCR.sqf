@@ -41,7 +41,7 @@ sleep 1;
 
 if (!isPlayer _unit) then {_unit setCombatMode "GREEN"}; 
 
-if (((_debug) || {_hints}) && {isPlayer _unit}) then {hint "Undercover initialising..."};
+if ((_debug) && {isPlayer _unit}) then {hint "Undercover initialising..."};
 
 if (isNil "INC_asymEnySide") then {
 	[player] call INCON_ucr_fnc_initUcrVars;
@@ -137,7 +137,6 @@ if (isPlayer _unit) then {
 			{!isPlayer _x}
 		});
 	};
-
 };
 
 sleep 1;
@@ -163,7 +162,7 @@ waitUntil {
 	};
 
 	//Tell them they are being suspicious
-	if (((_debug) || {_hints}) && {isPlayer _unit}) then {
+	if ((_debug) && {isPlayer _unit}) then {
 		[_unit] spawn {
 			params ["_unit"];
 			hint "Acting suspiciously.";

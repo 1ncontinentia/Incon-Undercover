@@ -12,8 +12,7 @@ _undercoverUnitSide = west;             //What side is/are the undercover unit(s
 
 //-------------------------General Settings-------------------------
 
-_debug = false;                         //Set to true for debug hints
-_hints = true;                          //Hints show changes of state etc
+_debug = false;                         //Set to true for debug
 _fullAIfunctionality = true;            //Enable all checks on AI (may degrade performace very slightly for large groups, 15+)
 
 _racism = true;                         //Enemies will notice if you aren't the race of the faction you're pretending to be (making you easier to detect if nothing is covering your face)
