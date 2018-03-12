@@ -393,17 +393,16 @@ switch (_operation) do {
 
 					if !(_mag == "") then {_unit setAmmo [_wpn,_ammoCount]};
 
-
-					removeAllPrimaryWeaponItems _unit;
-
 					sleep 0.1;
 
 					switch (_id) do {
 						case 0: {
+							removeAllPrimaryWeaponItems _unit;
 							{_unit addPrimaryWeaponItem _x} forEach _itemsToAdd;
 						};
 
 						case 1: {
+							removeAllHandgunItems _unit;
 							{_unit addHandgunItem _x} forEach _itemsToAdd;
 						};
 					};
