@@ -331,15 +331,20 @@ switch (_operation) do {
 		_nonPlayableArray join _newGroup;
 
 		[_newGroup] spawn {
+
 			params ["_newGroup"];
 
-			sleep 5;
+			{
+				if (vehicle _x != _x) then {
+					doGetOut _x;
+				};
+			} forEach (units _newGroup);
+
+			sleep 10;
 
 			{_x setCaptive false} forEach (units _newGroup);
 
-			sleep 2;
-
-			["",[],false,[_newGroup],[]] call ALiVE_fnc_CreateProfilesFromUnits;
+			[false,[_newGroup],[]] call ALiVE_fnc_CreateProfilesFromUnitsRuntime;
 		};
 	};
 
