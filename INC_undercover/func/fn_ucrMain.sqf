@@ -339,7 +339,7 @@ switch (_operation) do {
 
 			sleep 2;
 
-			["",[],false,[_newGroup]] call ALiVE_fnc_CreateProfilesFromUnits;
+			["",[],false,[_newGroup],[]] call ALiVE_fnc_CreateProfilesFromUnits;
 		};
 	};
 
