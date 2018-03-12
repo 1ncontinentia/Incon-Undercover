@@ -783,7 +783,7 @@ switch (_operation) do {
 				};
 
 				if ((_unit getVariable ["INC_disguiseValue",1]) < 2) then {
-					hint "Your disguise is great";
+					hint "Your disguise is solid";
 					sleep 2;
 				} else {
 					if ((_unit getVariable ["INC_disguiseValue",1]) < 3) then {
@@ -791,14 +791,14 @@ switch (_operation) do {
 						sleep 2;
 					} else {
 						if ((_unit getVariable ["INC_disguiseValue",1]) < 7) then {
-							hint "Your disguise is okay";
+							hint "You look a little out of place";
 							sleep 2;
 						} else {
 							if ((_unit getVariable ["INC_disguiseValue",1]) < 13) then {
-								hint "Your disguise is poor";
+								hint "You look suspicious";
 								sleep 2;
 							} else {
-								hint "Your disguise is terrible";
+								hint "You look extremely suspicious";
 							};
 						};
 					};
