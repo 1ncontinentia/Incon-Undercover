@@ -42,7 +42,7 @@ if (isPlayer _unit) then {
 
 	waitUntil {
 
-		//Make AI stop targetting people when incognito 
+		//Make AI stop targetting people when incognito
 		if !(isPlayer _unit) then {
 			if ((combatMode _unit) in ["BLUE", "GREEN", "WHITE"]) then {
 				switch ((behaviour _unit == "SAFE") || {(behaviour _unit == "AWARE")}) do {
@@ -221,6 +221,22 @@ if (isPlayer _unit) then {
 		_unit setVariable ["INC_asymKnowsSO", _alertedAsymKnows, true];
 		_unit setVariable ["INC_anyKnowsSO", _anyAlerted, true];
 
+		if ((_unit getVariable ["INC_compromisedValue",1]) > 1) then {
+
+			_unit setVariable ["INC_compromisedValue",((_unit getVariable ["INC_compromisedValue",1]) - (random 0.002)),true];
+		};
+
+		if ((_unit getVariable ["INC_compromisedValue",1]) > 3) then {
+
+			_compDistMulti = ((getPosWorld _unit) distance (_unit getVariable ["INC_lastSeenLoc",(getPosWorld _unit)])) / 40000;
+
+			_unit setVariable ["INC_compromisedValue",((_unit getVariable ["INC_compromisedValue",1]) - _compDistMulti),true];
+		};
+
+		if ((_unit getVariable ["INC_compromisedValue",1]) < 1) then {
+			_unit setVariable ["INC_compromisedValue",1,true];
+		};
+
 		(!(_unit getVariable ["isUndercover",false]) || !(alive _unit))
 	};
 };
@@ -265,6 +281,14 @@ _unit addEventHandler["GetInMan", {
 		if (([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact)}) exitWith {
 
 			[_unit,true] call INCON_ucr_fnc_compromised;
+		};
+	};
+
+	if !(_vehicle getVariable ["INC_naughtyVehicle",false]) then {
+
+		if ((([_unit, INC_regEnySide,30] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,30] call INCON_ucr_fnc_isKnownExact)}) && {(_unit getVariable ["INC_isCompromised",false])}) exitWith {
+
+			[_unit] call INCON_ucr_fnc_compromised;
 		};
 	};
 }];
