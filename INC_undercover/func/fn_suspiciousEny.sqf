@@ -110,7 +110,9 @@ _this spawn {
 
 			if (_unit distance _suspiciousEnemy > (15 + (random 85))) then {
 
-				[_suspiciousEnemy,([(getPosWorld _unit),10] call CBA_fnc_Randpos)] remoteExec ["doMove",2];
+				_pos = _suspiciousEnemy getHideFrom _unit;
+
+				[_suspiciousEnemy,([_pos,10] call CBA_fnc_Randpos)] remoteExec ["doMove",2];
 			};
 
 			_reactionTime = ((_unit distance _suspiciousEnemy) - (_unit getVariable ["INC_disguiseValue",1]));
