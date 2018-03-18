@@ -39,7 +39,7 @@ _unit setVariable ["isUndercover", true, true]; //Allow scripts to pick up sneak
 
 sleep 1;
 
-if (!isPlayer _unit) then {_unit setCombatMode "GREEN"}; 
+if (!isPlayer _unit) then {_unit setCombatMode "GREEN"};
 
 if ((_debug) && {isPlayer _unit}) then {hint "Undercover initialising..."};
 
@@ -159,19 +159,6 @@ waitUntil {
 	waitUntil {
 		sleep 1;
 		(((_unit getVariable ["INC_suspiciousValue",1]) >= 2) || {!captive _unit});
-	};
-
-	//Tell them they are being suspicious
-	if ((_debug) && {isPlayer _unit}) then {
-		[_unit] spawn {
-			params ["_unit"];
-			hint "Acting suspiciously.";
-			waitUntil {
-				sleep 1;
-				!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)
-			};
-			hint "No longer acting suspiciously.";
-		};
 	};
 
 	//Once the player is doing suspicious stuff, make them vulnerable to being compromised
