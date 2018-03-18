@@ -169,7 +169,7 @@ waitUntil {
 
 	//While he's acting suspiciously
 	while {
-		sleep 1;
+		sleep 0.7;
 		(((_unit getVariable ["INC_suspiciousValue",1]) >= 2) && {!(_unit getVariable ["INC_isCompromised",false])}) //While not compromised and either armed or trespassing
 	} do {
 		if (

@@ -126,8 +126,11 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 	//If unit changes clothing / vehicle while seen then the description to be shared is updated
 	waitUntil {
+
 		sleep 10;
+
 		_cooldownTimer = (_cooldownTimer - 5);
+
 		if (
 
 			([_unit,INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) ||
@@ -228,6 +231,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 			_compHeadGear = (_unit getVariable ["INC_compHeadGear",[]]);
 			_compVeh = (_unit getVariable ["INC_compVehs",[]]);
 
+			//Sets last seen location for units in vehicles
 			if (!isNull objectParent _unit) then {
 				_activeVeh = (vehicle _unit);
 				if !(
@@ -243,7 +247,9 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 			};
 
 			sleep 5;
+			sleep 2;
 
+			//Sets last seen location, compromised gear for units on foot
 			if (
 
 				!(uniform _unit in _compUniform) &&
@@ -275,7 +281,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 			};
 
 
-			sleep 3;
+			sleep 2;
 
 			if (
 
@@ -290,6 +296,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 				_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
 
 				//Limits the maximum weirdness level and does not add any if the unit hasn't tried to go incognito
+				//Limits the maximum weirdness level and does not add any if the unit hasn't tried to go incognito. Also adds weirdness depending on whether the unit changed disguises in last seen location.
 				if (_disguiseValue < 5 || {!_seenInDisguise}) then {
 					if (
 
