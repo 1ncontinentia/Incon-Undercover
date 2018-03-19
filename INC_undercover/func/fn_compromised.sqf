@@ -61,12 +61,11 @@ if ((!isNull objectParent _unit) && {!_foot}) exitWith {
 
 			_vehSpotted = false;
 
-			_cooldownTimer = 270;
-			sleep 30;
+			_cooldownTimer = 30 + (random 180);
 
 			waitUntil {
-				sleep 10;
-				_cooldownTimer = (_cooldownTimer - 10);
+				sleep 5;
+				_cooldownTimer = (_cooldownTimer - 5);
 
 				if (
 
@@ -102,7 +101,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 	params ["_unit",["_debug",false]];
 
-	private ["_seenInDisguise","_naughtyUniforms","_naughtyHeadgears","_activeVeh","_regKnowsAboutUnit","_lastSeenLoc"];
+	private ["_seenInDisguise","_lastSeenUniform","_naughtyUniforms","_naughtyHeadgears","_activeVeh","_regKnowsAboutUnit","_lastSeenLoc"];
 
 	// Publicize isCompromised variable to true.
 	_unit setVariable ["INC_isCompromised", true];
@@ -113,21 +112,20 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 	// SetCaptive after suspicious act has been committed
 	[_unit, false] remoteExec ["setCaptive", _unit];
 
+	_lastSeenUniform = (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"]);
 	_naughtyUniforms = [];
 	_naughtyHeadgears = [];
 	_seenInDisguise = false;
 	_activeVeh = objNull;
 	_lastSeenLoc = getPosWorld _unit;
 
-	sleep 30;
-
 	// Cooldown Timer to simulate how long it would take for word to get out
-	_cooldownTimer = random 180;
+	_cooldownTimer = 30 + (random 180);
 
 	//If unit changes clothing / vehicle while seen then the description to be shared is updated
 	waitUntil {
 
-		sleep 10;
+		sleep 5;
 
 		_cooldownTimer = (_cooldownTimer - 5);
 
@@ -147,6 +145,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 					if (uniform _unit in INC_incogUniforms || {uniform _unit in INC_civilianUniforms}) then {
 						if (50 > random 100) then {
 							_naughtyUniforms pushBackUnique (uniform _unit);
+							_lastSeenUniform = (uniform _unit);
 							_seenInDisguise = true;
 						};
 					};
@@ -161,12 +160,13 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 						if (20 > random 100) then {
 							_naughtyUniforms pushBackUnique (uniform _unit);
 							_seenInDisguise = true;
+							_lastSeenUniform = (uniform _unit);
 						};
 					};
 
 					if (70 > random 100) then {_activeVeh = objectParent _unit};
-					if (10 > random 100) then {_naughtyHeadgears pushBackUnique (headgear _unit)};
-					if (5 > random 100) then {_naughtyHeadgears pushBackUnique (goggles _unit)};
+					if (7 > random 100) then {_naughtyHeadgears pushBackUnique (headgear _unit)};
+					if (3 > random 100) then {_naughtyHeadgears pushBackUnique (goggles _unit)};
 				};
 			};
 		};
@@ -181,8 +181,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 			case ([_unit,INC_regEnySide,50] call INCON_ucr_fnc_isKnownExact): {
 				{[_x,[_unit,3]] remoteExec ["reveal",_x]} forEach (
 					(_unit nearEntities 1500) select {
-						(side _x == INC_regEnySide) &&
-						{"itemRadio" in assignedItems _x}
+						(side _x == INC_regEnySide)
 					}
 				);
 
@@ -202,7 +201,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 			};
 		};
 
-		private ["_unitUniform","_unitGoggles","_unitHeadgear","_compUniform","_compHeadGear","_compVeh"];
+		private ["_unitUniform","_unitGoggles","_unitHeadgear","_compUniforms","_compHeadGear","_compVeh"];
 
 		if ((_debug) && {isPlayer _unit}) then {hint "Your description has been shared."};
 
@@ -215,10 +214,10 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 		};
 
 		//Shares compromised uniforms and items, as well as last seen location
-		_compUniform = (_unit getVariable ["INC_compUniforms",[]]);
-		{_compUniform pushBackUnique _x} forEach _naughtyUniforms;
-		_unit setVariable ["INC_compUniforms",_compUniform];
-		_unit setVariable ["INC_compUniform",_naughtyUniforms];
+		_compUniforms = (_unit getVariable ["INC_compromisedUniforms",[]]);
+		{_compUniforms pushBackUnique _x} forEach _naughtyUniforms;
+		_unit setVariable ["INC_compromisedUniforms",_compUniforms];
+		_unit setVariable ["INC_activeCompUniform",_lastSeenUniform];
 		_compHeadGear = (_unit getVariable ["INC_compHeadGear",[]]);
 		{_compHeadGear pushBackUnique _x} forEach _naughtyHeadgears;
 		_unit setVariable ["INC_compHeadGear",_compHeadGear];
@@ -227,9 +226,11 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 		// Wait until nobody knows nuffing and the unit isn't being naughty (or has changed disguise)
 		waituntil {
 
-			_compUniform = (_unit getVariable ["INC_compUniforms",[]]);
+			_compUniforms = (_unit getVariable ["INC_compromisedUniforms",[]]);
 			_compHeadGear = (_unit getVariable ["INC_compHeadGear",[]]);
 			_compVeh = (_unit getVariable ["INC_compVehs",[]]);
+
+			_unit setVariable ["INC_disguiseChanged",false];
 
 			//Sets last seen location for units in vehicles
 			if (!isNull objectParent _unit) then {
@@ -246,21 +247,20 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 				}
 			};
 
-			sleep 5;
-			sleep 2;
+			sleep 1;
 
 			//Sets last seen location, compromised gear for units on foot
 			if (
 
-				!(uniform _unit in _compUniform) &&
+				!(uniform _unit in _compUniforms) &&
 				{!(goggles _unit in _compHeadGear) || {!(headgear _unit in _compHeadGear)} || {!(vehicle _unit in _compVeh)}} &&
 				{((!isNull objectParent _unit) && {!((vehicle _unit) getVariable ["INC_naughtyVehicle",false])}) || {isNull objectParent _unit}}
 			) then {
 
 				if (
 
-					([_unit,INC_regEnySide,15] call INCON_ucr_fnc_isKnownExact) ||
-					{([_unit,INC_asymEnySide,15] call INCON_ucr_fnc_isKnownExact)}
+					([_unit,INC_regEnySide,3] call INCON_ucr_fnc_isKnownExact) ||
+					{([_unit,INC_asymEnySide,3] call INCON_ucr_fnc_isKnownExact)}
 				) then {
 
 					if (uniform _unit in INC_incogUniforms || {uniform _unit in INC_civilianUniforms}) then {_seenInDisguise = true};
@@ -268,8 +268,9 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 					_lastSeenLoc = getPosWorld _unit;
 					_unit setVariable ["INC_lastSeenLoc",_lastSeenLoc];
 
-					_compUniform pushBackUnique (uniform _unit);
-					_unit setVariable ["INC_compUniforms",_compUniform];
+					_compUniforms pushBackUnique (uniform _unit);
+					_unit setVariable ["INC_compromisedUniforms",_compUniforms];
+					_unit setVariable ["INC_activeCompUniform",(uniform _unit)];
 
 					_compHeadGear pushBackUnique (goggles _unit);
 					_compHeadGear pushBackUnique (headgear _unit);
@@ -281,13 +282,9 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 			};
 
 
-			sleep 2;
+			sleep 1;
 
-			if (
-
-				((_unit getVariable ["INC_disguiseChanged",false]) && {(80 > (random 100))})
-
-			) exitWith {
+			if (_unit getVariable ["INC_disguiseChanged",false]) exitWith {
 
 				private ["_disguiseValue","_newDisguiseValue"];
 
@@ -295,25 +292,30 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 				_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
 
-				//Limits the maximum weirdness level and does not add any if the unit hasn't tried to go incognito
-				//Limits the maximum weirdness level and does not add any if the unit hasn't tried to go incognito. Also adds weirdness depending on whether the unit changed disguises in last seen location.
-				if (_disguiseValue < 5 || {!_seenInDisguise}) then {
+				//If there are living enemies that still know about the unit, it has a low enough disguise value and has been seen in disguise, then add weirdness to their new disguise which increases the closer they are to their last seen location. Otherwise, do nothing.
+				if (_disguiseValue < 5 && {_seenInDisguise} && {(_unit getVariable ["INC_AnyKnowsSO",false])}) then {
 					if (
 
-						([_unit,INC_regEnySide,55] call INCON_ucr_fnc_isKnownExact) ||
-						{([_unit,INC_asymEnySide,75] call INCON_ucr_fnc_isKnownExact)}
-
+						((getPosWorld _unit) distance (_unit getVariable ["INC_lastSeenLoc",(getPosWorld _unit)])) < (50 + (random 100))
 					) then {
 
-						_newDisguiseValue = _disguiseValue + (random 3);
+						if (
+
+							((getPosWorld _unit) distance (_unit getVariable ["INC_lastSeenLoc",(getPosWorld _unit)])) < (10 + (random 25))
+						) then {
+
+							_newDisguiseValue = _disguiseValue + (1 + (random 2));
+						} else {
+
+							_newDisguiseValue = _disguiseValue + (random 2);
+						};
+					} else {
+
+						_newDisguiseValue = _disguiseValue + (random 1);
 					};
 
-					_newDisguiseValue = _disguiseValue + (random 1);
-				} else {
-					_newDisguiseValue = _disguiseValue;
+					_unit setVariable ["INC_compromisedValue",_newDisguiseValue,true];
 				};
-
-				_unit setVariable ["INC_compromisedValue",_newDisguiseValue,true];
 
 				_unit setVariable ["INC_disguiseChanged",false,true];
 
@@ -338,11 +340,14 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 		private ["_disguiseValue","_newDisguiseValue"];
 
-		_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
+		if (_seenInDisguise) then {
 
-		_newDisguiseValue = _disguiseValue + (random 1.5);
+			_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
 
-		_unit setVariable ["INC_compromisedValue",_newDisguiseValue,true];
+			_newDisguiseValue = _disguiseValue + (random 1.5);
+
+			_unit setVariable ["INC_compromisedValue",_newDisguiseValue,true];
+		};
 
 		_unit setVariable ["INC_disguiseChanged",false,true];
 

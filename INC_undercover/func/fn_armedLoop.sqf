@@ -113,6 +113,11 @@ if (!local _unit) exitWith {};
 					//Only run on captive or gear checking units for performance
 					if (captive _unit || {_unit getVariable ["INC_checkingDiguise",false]}) then {
 
+						if (uniform _unit isEqualTo (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"])) then {
+
+							_suspiciousValue = _suspiciousValue + 2;
+						};
+
 						if !(backpack _unit in INC_incogBackpacks) then {
 							_weirdoLevel = _weirdoLevel + 1;
 							_spotDistance = _spotDistance + 1;
@@ -141,21 +146,19 @@ if (!local _unit) exitWith {};
 							_spotDistance = _spotDistance + 0.5;
 						};
 
-						if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
+						if (uniform _unit in (_unit getVariable ["INC_compromisedUniforms",[]])) then {
 							_weirdoLevel = _weirdoLevel + 3;
 						};
-
 
 						private ["_start","_end","_obj"];
 
 						_start = eyePos _unit;
-						_end = (_start vectorAdd (_unit weaponDirection currentWeapon _unit vectorMultiply 40));
+						_end = (_start vectorAdd (_unit weaponDirection currentWeapon _unit vectorMultiply 80));
 						_obj = (lineIntersectsSurfaces [_start, _end, _unit]) select 0 select 2;
 
 						if ((!isNil "_obj") && {_obj isKindOf "Man" && {side _obj in [INC_regEnySide,INC_asymEnySide]}}) then {
-							_weirdoLevel = _weirdoLevel + 8;
-							_spotDistance = _spotDistance + 3;
-
+							_weirdoLevel = _weirdoLevel + 10;
+							_spotDistance = _spotDistance + 4;
 						};
 
 						sleep _responseTime;
@@ -248,7 +251,7 @@ if (!local _unit) exitWith {};
 						_suspiciousValue = _suspiciousValue + 1;
 					};
 
-					if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
+					if (uniform _unit isEqualTo (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"])) then {
 
 						_suspiciousValue = _suspiciousValue + 1;
 					};
@@ -318,7 +321,7 @@ if (!local _unit) exitWith {};
 							_weirdoLevel = _weirdoLevel + 2;
 						};
 
-						if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
+						if (uniform _unit in (_unit getVariable ["INC_compromisedUniforms",[]])) then {
 							_weirdoLevel = _weirdoLevel + 3;
 						};
 
@@ -326,7 +329,7 @@ if (!local _unit) exitWith {};
 
 						if !(_unit getVariable ["INC_shotNear",false]) then {
 
-					        switch (stance _unit == "STAND") do {
+							switch (stance _unit == "STAND") do {
 
 								case true: {
 									if (speed _unit > 8) then {
@@ -767,9 +770,8 @@ if (!local _unit) exitWith {};
 							_weirdoLevel = _weirdoLevel + 2;
 						};
 
-						if (uniform _unit isEqualTo (_unit getVariable ["INC_compUniform","NONEXISTANT"])) then {
+						if (uniform _unit isEqualTo (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"])) then {
 							_weirdoLevel = _weirdoLevel + 3;
-							_spotDistance = _spotDistance + 1;
 						};
 					};
 				};
