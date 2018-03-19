@@ -51,7 +51,7 @@ _civilianVehicleArray = [];
 
 _HMDallowed = false; //(Bool - true or false) Are HMDs (night vision goggles etc.) safe to wear for units pretending to be civilians? Set to false if wearing HMDs will cause suspicion (must be stored in backpack).
 
-_noOffRoad = true; //Civilian vehicles driving more than 50 meters from the nearest road will be considered hostile
+_noOffRoad = false; //Civilian vehicles driving more than 50 meters from the nearest road will be considered hostile
 
 //-------------------------Enemy Disguise settings-------------------------
 _incogFactions = ["OPF_F","OPF_T_F"]; //Array of enemy factions whose items and vehicles will allow the player to impersonate the enemy
