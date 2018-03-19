@@ -106,12 +106,12 @@ if (isPlayer _unit) then {
 
 			waitUntil {
 				sleep 1;
-				_unit globalChat (format ["%1 cover intact: %2, comp f/v: %3 / %4",_unit,(captive _unit),(_unit getVariable ["INC_isCompromised",false]),((vehicle _unit) getVariable ["INC_naughtyVehicle",false])]);
-				_unit globalChat (format ["%1 trespassing: %2",_unit,((_unit getVariable ["INC_proxAlert",false]) || {(_unit getVariable ["INC_trespassAlert",false])})]);
+				_unit globalChat (format ["%1 cvr intact: %2, comp ft/vh: %3 / %4",_unit,(captive _unit),(_unit getVariable ["INC_isCompromised",false]),((vehicle _unit) getVariable ["INC_naughtyVehicle",false])]);
+				_unit globalChat (format ["%1 prox/tresp: %2",_unit,((_unit getVariable ["INC_proxAlert",false]) || {(_unit getVariable ["INC_trespassAlert",false])})]);
 				_unit globalChat (format ["%1 suspicious level: %2",_unit,(_unit getVariable ["INC_suspiciousValue",1])]);
-				_unit globalChat (format ["%1 weirdo check on: %2, value %3",_unit,(captive _unit),(round (_unit getVariable ["INC_disguiseValue",1]))]);
+				_unit globalChat (format ["%1 weirdo check on: %2, level %3",_unit,(captive _unit),(round (_unit getVariable ["INC_disguiseValue",1]))]);
 				_unit globalChat (format ["%1 dist multi on: %2, value i%3 / f%4",_unit,(captive _unit),(round (_unit getVariable ["INC_radiusMulti",1])),(round (_unit getVariable ["INC_disguiseRad",1]))]);
-				_unit globalChat (format ["Enemy know about %1: t%2 / i%3 / a%4",_unit,(_unit getVariable ["INC_AnyKnowsSO",false]),([_unit,INC_regEnySide,true] call INCON_ucr_fnc_isKnownToSide),([_unit,INC_asymEnySide,true] call INCON_ucr_fnc_isKnownToSide)]);
+				_unit globalChat (format ["Enemy know about %1: t%2 / r%3 / a%4",_unit,(_unit getVariable ["INC_AnyKnowsSO",false]),([_unit,INC_regEnySide,true] call INCON_ucr_fnc_isKnownToSide),([_unit,INC_asymEnySide,true] call INCON_ucr_fnc_isKnownToSide)]);
 				!(_unit getVariable ["isUndercover",false])
 			};
 
@@ -178,7 +178,7 @@ waitUntil {
 		) then {
 
 			//Once people know exactly where he is, and that he is doing loads of suspicious stuff, make him compromised
-			if (([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact)}) exitWith {
+			if (([_unit, INC_regEnySide,2] call INCON_ucr_fnc_isKnownExact) || {([_unit, INC_asymEnySide,2] call INCON_ucr_fnc_isKnownExact)}) exitWith {
 
 				[_unit] call INCON_ucr_fnc_compromised;
 			};

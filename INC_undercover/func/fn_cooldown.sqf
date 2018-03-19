@@ -21,14 +21,18 @@ if ((_unit getVariable ["INC_cooldown",false]) || {!local _unit}) exitWith {};
 
 _unit setVariable ["INC_cooldown", true];
 
+_unit setVariable ["INC_hasBeenPID",false];
+
 [_unit,_debug] spawn {
 
 	params ["_unit",["_debug",false]];
 
 	private ["_asymKnowsAboutUnit","_regKnowsAboutUnit","_regAlerted","_asymAlerted"];
 
-	//Holding variable while unit is armed / trespassing
+	//Holding variable while unit is armed / trespassing but remember if unit has been seen acting suspiciously
 	waitUntil {
+
+		if ([_unit, INC_regEnySide,2] call INCON_ucr_fnc_isKnownExact || {[_unit, INC_asymEnySide,2] call INCON_ucr_fnc_isKnownExact}) then {_unit setVariable ["INC_hasBeenPID",true]};
 		sleep 1;
 		!(_unit getVariable ["INC_suspicious",false])
 	};
@@ -36,7 +40,19 @@ _unit setVariable ["INC_cooldown", true];
 	//Stop the script running while the unit is compromised
 	waitUntil {
 		sleep 2;
+
+		if ([_unit, INC_regEnySide,2] call INCON_ucr_fnc_isKnownExact || {[_unit, INC_asymEnySide,2] call INCON_ucr_fnc_isKnownExact}) then {_unit setVariable ["INC_hasBeenPID",true]};
 		!((_unit getVariable ["INC_isCompromised",false]) || {(_unit getVariable ["INC_suspiciousValue",1]) >= 2});
+	};
+
+	//If the unit hasn't been seen while suspicious, exit
+	if !(_unit getVariable ["INC_hasBeenPID",false]) exitWith {
+
+		if !((_unit getVariable ["INC_isCompromised",false]) || {(_unit getVariable ["INC_suspiciousValue",1]) >= 2}) then {
+			[_unit, true] remoteExec ["setCaptive", _unit];
+		};
+
+		_unit setVariable ["INC_cooldown", false, true];
 	};
 
 	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
