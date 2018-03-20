@@ -415,20 +415,18 @@ if (!local _unit) exitWith {};
 
 				sleep _responseTime;
 
-				_nearMines = {_x isKindOf "timeBombCore"} count (nearestObjects [_unit,[],5]);
-				_suspiciousValue = _suspiciousValue + _nearMines;
+				_nearMines = {_x isKindOf "timeBombCore"} count (nearestObjects [_unit,[],3]);
+				_weirdoLevel = _weirdoLevel + (_nearMines * 25);
+				_spotDistance = _spotDistance + (_nearMines * 3);
 
-				if (_nearMines == 0) then {
+				_suspiciousEnemies = ((_unit nearEntities [["Man","LandVehicle"],(_regDetectRadius * (_unit getVariable ["INC_disguiseRad",1]))]) select {
+					((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
+					{((_x getHideFrom _unit) distanceSqr _unit < 15)} &&
+					{((missionNamespace getVariable ["INC_envJumpygMulti",1]) * ((_unit getVariable ["INC_disguiseValue",1]) * 3)) > (random 100)}
+				});
 
-					_suspiciousEnemies = ((_unit nearEntities [["Man","LandVehicle"],(_regDetectRadius * (_unit getVariable ["INC_disguiseRad",1]))]) select {
-						((side _x == INC_regEnySide) || {side _x == INC_asymEnySide}) &&
-						{((_x getHideFrom _unit) distanceSqr _unit < 15)} &&
-						{((missionNamespace getVariable ["INC_envJumpygMulti",1]) * ((_unit getVariable ["INC_disguiseValue",1]) * 3)) > (random 100)}
-					});
-
-					if (count _suspiciousEnemies != 0) then {
-						{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_ucr_fnc_suspiciousEny}} forEach _suspiciousEnemies;
-					};
+				if (count _suspiciousEnemies != 0) then {
+					{if !(_x getVariable ["INC_isSuspicious",false]) then {[_unit,_x] call INCON_ucr_fnc_suspiciousEny}} forEach _suspiciousEnemies;
 				};
 			};
 
