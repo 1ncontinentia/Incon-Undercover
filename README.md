@@ -16,7 +16,7 @@ SP / Coop and Dedi compatible.
 * Virtually every factor that can affect your cover (within engine limitations and the caveats mentioned below) has been accounted for.
 * Optimised to the max; should not noticably affect performance at all - no noticeable performance impact even during a stress test of 45+ undercover units simultaneously undercoverising several enemy patrols.
 * Operates primarily on each client - server / client interaction is therefore kept to a minimum even when multiple players are undercover at the same time
-* Compatible with RHS, ACE, ALiVE, Zeus, ASR, bCombat, TPWCAS, VCOM... pretty much everything its been tested on (some factions' helmets and bandannas may not be recognised but the overall effect of this will be minimal - if you desperately want all features, use vanilla or RHS versions of these assets)
+* Compatible with RHS, ACE, ALiVE, Zeus, ASR, bCombat, TPWCAS, VCOM... pretty much everything its been tested on with the exception of factions that rely on randomisation (some factions' helmets and bandannas may not be recognised but the overall effect of this will be minimal - if you desperately want all features, use vanilla or RHS versions of these assets)
 
 #### Comprehensive undercover / incognito simulation -
 
@@ -59,7 +59,7 @@ SP / Coop and Dedi compatible.
 
 ### USAGE
 
-1. Add all files from Incon-Undercover folder into your mission folder. If you already have a description.ext or initPlayerLocal.sqf then add the code to your existing files. (Make sure to delete any previous version of my undercover scripts). In description.ext, if the class is already defined (for instance, cfgFunctions), just add the #include line to the given class. 
+1. Add all files from Incon-Undercover folder into your mission folder. If you already have a description.ext or initPlayerLocal.sqf then add the code to your existing files. (Make sure to delete any previous version of my undercover scripts). In description.ext, if the class is already defined (for instance, cfgFunctions), just add the #include line to the given class.
 
 2. Configure your settings in the UCR_setup.sqf file in the INC_undercover folder (pay close attention to these, one wrong setting can lead to some weird behaviour).
 
@@ -81,12 +81,12 @@ Non-player units in the undercover unit's group do not need anything; the script
 * Only one side can be defined as asymmetric at a time and only one side can be defined as regular - and both must be hostile to the undercover unit's side. So if having a three-way war, one side must be asym and the other regular.
 * If having a three-way (...war), it is recommended to not have any incognito factions as an engine limitation means that incognito units (i.e. those disguised as the enemy) will be seen as friendly to all - could break the immersion if you're dressed as OPFOR and GreenFOR don't shoot at you when they should.
 * For mission makers - just be aware that the following could affect your mission: enemy units may wander from their original positions to follow undercover units if they become suspicious. Also, when compromised by regular forces, an undercover unit's description will be shared across other enemies in the local area after some time if they don't kill everyone who knows about them
-* Works on all tested mods. If you find an incompatibility, tell me!
+* Works on all tested mods with the exception of factions that use randomisation scripts such is the Iraqi Syrian Conflict Mod -- these will need a manual list of the possible enemy uniforms and gear (which is possible using the setup.sqf). If you find an incompatibility, tell me!
 
 
 ### Credits
 
-Massive thanks to Spyderblack723 for his help creating some of the functions and correcting my mistakes / oversights on the original release. Also for generally being super helpful over the past year as I've got into modding. Grumpy Old Man, Tajin and sarogahtyp are responsible for creating a performant detection script, which I then adapted and used as a basis for the undercover script, so thank you to those guys too. Also thanks to das attorney, davidoss, Bad Benson, Tankbuster, dedmen, fn_Quiksilver, marceldev89, baermitumlaut and Duda123 for some top optimisation tips. And huge thanks to accuracythruvolume for testing and feedback. 
+Massive thanks to Spyderblack723 for his help creating some of the functions and correcting my mistakes / oversights on the original release. Also for generally being super helpful over the past year as I've got into modding. Grumpy Old Man, Tajin and sarogahtyp are responsible for creating a performant detection script, which I then adapted and used as a basis for the undercover script, so thank you to those guys too. Also thanks to das attorney, davidoss, Bad Benson, Tankbuster, dedmen, fn_Quiksilver, marceldev89, baermitumlaut and Duda123 for some top optimisation tips. And huge thanks to accuracythruvolume for testing and feedback.
 
 
 ### In Detail: How it works
