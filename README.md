@@ -82,6 +82,7 @@ Non-player units in the undercover unit's group do not need anything; the script
 * If having a three-way (...war), it is recommended to not have any incognito factions as an engine limitation means that incognito units (i.e. those disguised as the enemy) will be seen as friendly to all - could break the immersion if you're dressed as OPFOR and GreenFOR don't shoot at you when they should.
 * For mission makers - just be aware that the following could affect your mission: enemy units may wander from their original positions to follow undercover units if they become suspicious. Also, when compromised by regular forces, an undercover unit's description will be shared across other enemies in the local area after some time if they don't kill everyone who knows about them
 * Works on all tested mods with the exception of factions that use randomisation scripts such is the Iraqi Syrian Conflict Mod -- these will need a manual list of the possible enemy uniforms and gear (which is possible using the setup.sqf). If you find an incompatibility, tell me!
+* In MP, ensure that respawn timers are set to at least 5 seconds to give the script a chance to recognise when a unit is dead and reset values accordingly. 
 
 
 ### Credits
