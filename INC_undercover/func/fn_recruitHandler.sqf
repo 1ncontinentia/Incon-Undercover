@@ -188,6 +188,10 @@ switch (_operation) do {
 
 			_recruitedCiv setUnitLoadout _civLoadout;
 
+            _recruitedCiv setVariable ["ace_medical_medicClass",1,true];
+            _recruitedCiv setVariable ["ACE_isEOD",1,true];
+            _recruitedCiv setVariable ["ACE_IsEngineer",1,true];
+
 			if ((count units _prevGroup) == 0) then {
 				deleteGroup _prevGroup;
 			};
@@ -224,6 +228,6 @@ switch (_operation) do {
 				_recruitedCiv setCombatMode "GREEN";
 			};
 		};
-		_return = true;
+		_return = _recruitedCiv;
 	};
 };
