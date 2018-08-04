@@ -6,6 +6,7 @@ class cooldown {allowedTargets=0;};
 class isKnownExact {allowedTargets=0;};
 class gearHandler {allowedTargets=0;};
 class getConfigInfo {allowedTargets=0;};
+class groupsWithPID {allowedTargets=0;};
 class isKnownToSide {allowedTargets=0;};
 class initUcrVars {allowedTargets=0;};
 class recruitHandler {allowedTargets=0;};

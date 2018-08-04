@@ -34,6 +34,7 @@ _unit setVariable ["INC_shotAt",false];
 _unit setVariable ["INC_firedRecent",false];
 _unit setVariable ["INC_highSecAlert",false];
 _unit setVariable ["INC_trespassAlert",false];
+_unit setVariable ["INC_seenByList",[]];
 
 if ((isPlayer _unit) && {time < 60}) then {{_x setVariable ["INC_notDismissable",true]} forEach (units group _unit)};
 
@@ -95,6 +96,7 @@ if (isPlayer _unit) then {
 			_unit setVariable ["INC_firedRecent",false];
 			_unit setVariable ["INC_highSecAlert",false];
 			_unit setVariable ["INC_trespassAlert",false];
+			_unit setVariable ["INC_seenByList",[]];
 			sleep 1;
 			[[_unit], "INC_undercover\Scripts\initUCR.sqf"] remoteExec ["execVM",_unit];
 		};
