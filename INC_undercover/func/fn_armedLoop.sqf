@@ -44,9 +44,9 @@ if (!local _unit) exitWith {};
 
 //Armed / Incognito Stuff
 //=======================================================================//
-[_unit,_HMDallowed,_noOffRoad,_regDetectRadius,_asymDetectRadius,_racism,_racProfFacCiv,_racProfFacEny] spawn {
+[_unit,_highSecInstantHostile,_highSecItemCheck,_highSecItemCheckScalar,_hsItChkOutside,_hsMustBeUnarmed,_globalSuspicionModifier,_HMDallowed,_noOffRoad,_regDetectRadius,_asymDetectRadius,_racism,_racProfFacCiv,_racProfFacEny] spawn {
 
-	params ["_unit","_HMDallowed","_noOffRoad","_regDetectRadius","_asymDetectRadius","_racism","_racProfFacCiv","_racProfFacEny"];
+	params ["_unit","_highSecInstantHostile","_highSecItemCheck","_highSecItemCheckScalar","_hsItChkOutside","_hsMustBeUnarmed","_globalSuspicionModifier","_HMDallowed","_noOffRoad","_regDetectRadius","_asymDetectRadius","_racism","_racProfFacCiv","_racProfFacEny"];
 
 	private _responseTime = 0.15;
 
@@ -109,20 +109,93 @@ if (!local _unit) exitWith {};
 
 				case true: {
 
+					if (uniform _unit isEqualTo (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"])) then {
+
+						_suspiciousValue = _suspiciousValue + 2;
+					};
+
+					//High security area check
+					switch (_unit getVariable ["INC_highSecAlert",false]) do {
+
+						case true: {
+
+							switch (uniform _unit in INC_highSecUniforms) do {
+								case true: {
+
+									if (_highSecItemCheck) then {
+										private _suspiciousItems = ([headgear _unit, goggles _unit, ([currentWeapon _unit] call BIS_fnc_baseWeapon), hmd _unit, vest _unit, backpack _unit] select {!(_x in INC_highSecItems)});
+
+										switch (_hsMustBeUnarmed) do {
+											case true: {
+
+												//Check if unit is armed
+												if !(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) then {
+
+													_suspiciousValue = _suspiciousValue + 1;
+												};
+
+												_weirdoLevel = _weirdoLevel + ((count _suspiciousItems) * _highSecItemCheckScalar);
+												_spotDistance = _spotDistance + ((count _suspiciousItems)/(2 / _highSecItemCheckScalar));
+											};
+
+											case false: {
+
+												_weirdoLevel = _weirdoLevel + ((count _suspiciousItems) * _highSecItemCheckScalar);
+												_spotDistance = _spotDistance + ((count _suspiciousItems)/(2 / _highSecItemCheckScalar));
+											};
+										};
+									};
+								};
+
+								case false: {
+
+									switch (_highSecInstantHostile) do {
+										case true: {
+
+											_suspiciousValue = _suspiciousValue + 2;
+										};
+
+										case false: {
+
+											_weirdoLevel = _weirdoLevel + 11;
+											_spotDistance = _spotDistance + 5;
+										};
+									};
+								};
+							};
+						};
+
+						case false: {
+
+							if (_hsItChkOutside && {_highSecItemCheck} && {uniform _unit in INC_highSecUniforms}) then {
+
+								private _suspiciousItems = ([headgear _unit, goggles _unit, ([currentWeapon _unit] call BIS_fnc_baseWeapon), hmd _unit, vest _unit, backpack _unit] select {!(_x in INC_highSecItems)});
+
+								switch (_hsMustBeUnarmed) do {
+									case true: {
+
+										//Check if unit is armed
+										if !(((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) && {primaryweapon _unit == ""} && {secondaryWeapon _unit == ""}) then {
+
+											_suspiciousValue = _suspiciousValue + 1;
+										};
+
+										_weirdoLevel = _weirdoLevel + ((count _suspiciousItems) * _highSecItemCheckScalar);
+										_spotDistance = _spotDistance + ((count _suspiciousItems)/(2 / _highSecItemCheckScalar));
+									};
+
+									case false: {
+
+										_weirdoLevel = _weirdoLevel + ((count _suspiciousItems) * _highSecItemCheckScalar);
+										_spotDistance = _spotDistance + ((count _suspiciousItems)/(2 / _highSecItemCheckScalar));
+									};
+								};
+							};
+						};
+					};
+
 					//Only run on captive or gear checking units for performance
 					if (captive _unit || {_unit getVariable ["INC_checkingDiguise",false]}) then {
-
-						if (uniform _unit isEqualTo (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"])) then {
-
-							_suspiciousValue = _suspiciousValue + 2;
-						};
-
-						//High security area check
-						if (_unit getVariable ["INC_highSecAlert",false] && {!(uniform _unit in INC_highSecUniforms)}) then {
-
-							_weirdoLevel = _weirdoLevel + 10;
-							_spotDistance = _spotDistance + 5;
-						};
 
 						if !(backpack _unit in INC_incogBackpacks) then {
 							_weirdoLevel = _weirdoLevel + 1;
@@ -439,7 +512,7 @@ if (!local _unit) exitWith {};
 			sleep _responseTime;
 
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
-			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
+			_unit setVariable ["INC_weirdoLevel",(_weirdoLevel * _globalSuspicionModifier)];
 			_unit setVariable ["INC_radiusMulti",_spotDistance];
 			_unit setVariable ["INC_checkingDiguise",false];
 
@@ -626,6 +699,41 @@ if (!local _unit) exitWith {};
 
 							_weirdoLevel = _weirdoLevel + 2;
 							_spotDistance = _spotDistance + 2;
+						};
+
+						//High security area check
+						if (_unit getVariable ["INC_highSecAlert",false]) then {
+
+							switch ((typeOf vehicle _unit) in INC_incogHighSecVeh) do {
+
+								case true: {
+									if (!(uniform _unit in INC_highSecUniforms) && {!_vehFullClosed}) then {
+
+										_weirdoLevel = _weirdoLevel * 2;
+
+										if (_vehFullOpen) then {
+
+											_weirdoLevel = _weirdoLevel * 2;
+										};
+									};
+								};
+
+								case false: {
+
+										switch (_highSecInstantHostile) do {
+										case true: {
+
+											_suspiciousValue = _suspiciousValue + 2;
+										};
+
+										case false: {
+
+											_weirdoLevel = _weirdoLevel + 11;
+											_spotDistance = _spotDistance + 5;
+										};
+									};
+								};
+							};
 						};
 					};
 				};
@@ -825,7 +933,7 @@ if (!local _unit) exitWith {};
 			sleep _responseTime;
 
 			_unit setVariable ["INC_suspiciousValue", _suspiciousValue];
-			_unit setVariable ["INC_weirdoLevel",_weirdoLevel];
+			_unit setVariable ["INC_weirdoLevel",(_weirdoLevel * _globalSuspicionModifier)];
 			_unit setVariable ["INC_radiusMulti",_spotDistance];
 			_unit setVariable ["INC_checkingDiguise",false];
 

@@ -14,7 +14,7 @@ _undercoverUnitSide = west;             //What side is/are the undercover unit(s
 
 _debug = false;                         //Set to true for debug
 _fullAIfunctionality = true;            //Enable all checks on AI (may degrade performace very slightly for large groups, 15+)
-_easyMode = true;                       //Disguise checks will also reveal if the player is compromised or not
+_easyMode = true;                       //Disguise checks will also reveal if the player's disguise is working or not
 
 _racism = true;                         //Enemies will notice if you aren't the race of the faction you're pretending to be (making you easier to detect if nothing is covering your face)
 _racProfFacCiv = 1;                     //(Number) Multiplies the effect of racial profiling. Lower this number to simulate more multicultural civilian population
@@ -28,8 +28,7 @@ _asymEnySide = sideEmpty;             //Units of this side will be classed as as
 _asymBarbaric = true;                   //(Bool - true or false) Will this side have a small chance of lashing out on civilians if it takes casualties and doesn't know the attacker?
 _asymDetectRadius = 15;                 //Default detection radius for asym troops (this will expand and contract based on weather, time of day, and how the undercover unit is acting - civilians within this radius will be under much more scrutinty)
 
-_trespassMarkers = [];                  //Names of additional markers for areas that would be considered trespassing (any with "INC_tre" - case sensitive - somewhere in the marker name will automatically be included)
-_highSecMarkers = []; 					//Names of additional markers for areas that are designated high security zones that require specific uniforms to enter without raising suspicion (any with "INC_highSec" - case sensitive - somewhere in the marker name will automatically be included)
+_globalSuspicionModifier = 1;           //Scales the level of suspicion of enemies. 1 is default, 2 means units are twice as likely to see through undercover unit's disguises, 0.5 means half as likely etc.
 
 //-------------------------Civilian Disguise settings-------------------------
 
@@ -58,11 +57,11 @@ _noOffRoad = false; //Civilian vehicles driving more than 50 meters from the nea
 //-------------------------Enemy Disguise settings-------------------------
 _incogFactions = ["OPF_F","OPF_T_F"]; //Array of enemy factions whose items and vehicles will allow the player to impersonate the enemy
 
+ //Names of additional markers for areas that would be considered trespassing (any with "INC_tre" - case sensitive - somewhere in the marker name will automatically be included)
+_trespassMarkers = [];
+
 //(Array of classnames) Safe vests (on top of the specific factions above - useful if faction has randomisation script or to add items that are not used by the faction)
 _incognitoVests = [];
-
-//(Array of classnames) Safe uniforms (on top of the specific factions above - useful if faction has randomisation script or to add items that are not used by the faction)
-_incognitoUniforms = [];
 
 //(Array of classnames) Safe headgear (will automatically include incog headgear classes - useful if faction has randomisation script or to add items that are not used by the faction)
 _incognitoHeadgear = [];
@@ -70,9 +69,39 @@ _incognitoHeadgear = [];
 //(Array of classnames) Safe backpacks (will automatically include incog backpack classes - useful if faction has randomisation script or to add items that are not used by the faction)
 _incognitoBackpacks = [];
 
-_incogVehArray = []; //(Array of classnames) Additional incognito vehicles (vehicles from the faction above will automatically count)
+//(Array of classnames) Safe uniforms (on top of the specific factions above - useful if faction has randomisation script or to add items that are not used by the faction)
+_incognitoUniforms = [];
 
-_highSecurityUniforms = []; // (Array of classnames) Uniforms that allow entry into high security areas (defined by high security markers)
+_incogVehArray = []; //(Array of classnames) Additional incognito vehicles (vehicles from the faction above will automatically count, as will all _highSecVehicles)
+
+
+
+//-------------------------High security zone settings-------------------------
+/*
+High security zones are areas that can only be entered with specific uniforms / items, even if the unit is disguised as an enemy.
+For instance, it could be a radar installation or a marker in the vicinity of a high value target that only specially designated units are allowed near.
+All high security zones are automatically considered non-civilian territory, but units dressed as enemies can enter without being instantly considered hostile, but they will attract a LOT more attention.
+In these settings, you can .
+*/
+
+_highSecMarkers = []; 					//Names of additional markers for areas that are designated high security zones that require specific uniforms to enter without raising suspicion (any with "INC_highSec" - case sensitive - somewhere in the marker name will automatically be included)
+
+_highSecInstantHostile = false;         // If true, units entering high security areas with the wrong uniform will be instantly deemed hostile by enemy forces. If false, it will be highly suspicious.
+
+_highSecVehicles = [];                  // (Array of classnames) Vehicles that can enter high security areas without raising suspicion (uniforms will still be noticed according to how open the vehicle is)
+
+_highSecurityUniforms = [];             // (Array of classnames) Uniforms that allow entry into high security areas (defined by high security markers)
+
+_highSecItemCheck = true;               // Check for disallowed items that aren't in the permitted list? Each non-permitted item will incur a suspicion penality. Set to false if high security checks just include uniform only.
+
+_highSecItems = [];                     // (Array of classnames) List of items such as vests, headgear, hats etc., that won't cause suspicion in high security areas (only works on foot for now)
+
+_hsItChkOutside = true;                 // The high security item check will occur if wearing a high security uniform even in non-high security zones. Useful if the high security uniform is, for example, a businessman or scientist, who would look weird carrying a gun and helmet.
+
+_hsMustBeUnarmed = true;               // Units carrying weapons will be considered hostile (requires _highSecItemCheck to be set to true).
+
+_highSecItemCheckScalar = 1;            // Multiplies the level of suspicion caused by each suspect item when in a high security zone
+
 
 //-------------------------Civilian recruitment settings-------------------------
 /*

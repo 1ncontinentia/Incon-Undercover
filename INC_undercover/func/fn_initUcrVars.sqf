@@ -107,14 +107,16 @@ _this spawn {
 	sleep 0.1;
 	_incogWpns = [""] + (["weapons",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogVeh = ([[_incogFactions],"getFacVehs"] call INCON_ucr_fnc_ucrMain) + _incogVehArray;
+	_incogVeh = ([[_incogFactions],"getFacVehs"] call INCON_ucr_fnc_ucrMain) + _incogVehArray + _highSecVehicles;
 	sleep 0.1;
 	missionNamespace setVariable ["INC_incogVests",_incogVests,true];
 	missionNamespace setVariable ["INC_incogUniforms",(_incogUniforms - [""]),true];
 	missionNamespace setVariable ["INC_highSecUniforms",_highSecurityUniforms,true];
+	missionNamespace setVariable ["INC_highSecItems",(_highSecItems + [""]),true];
 	missionNamespace setVariable ["INC_incogHeadgear",_incogHeadgear,true];
 	missionNamespace setVariable ["INC_incogBackpacks",_incogBackpacks,true];
 	missionNamespace setVariable ["INC_incogVehArray",_incogVeh,true];
+	missionNamespace setVariable ["INC_incogHighSecVeh",_highSecVehicles,true];
 	missionNamespace setVariable ["INC_incogWpns",_incogWpns,true];
 
 	sleep 0.2;
@@ -123,9 +125,11 @@ _this spawn {
 		diag_log format ["Incon undercover variable INC_incogVests: %1", INC_incogVests ];
 		diag_log format ["Incon undercover variable INC_incogUniforms: %1", INC_incogUniforms ];
 		diag_log format ["Incon undercover variable INC_highSecUniforms: %1", INC_highSecUniforms ];
+		diag_log format ["Incon undercover variable INC_highSecItems: %1", INC_highSecItems ];
 		diag_log format ["Incon undercover variable INC_incogHeadgear: %1", INC_incogHeadgear ];
 		diag_log format ["Incon undercover variable INC_incogBackpacks: %1", INC_incogBackpacks ];
 		diag_log format ["Incon undercover variable INC_incogVehArray: %1", INC_incogVehArray ];
+		diag_log format ["Incon undercover variable INC_incogHighSecVeh: %1", INC_incogHighSecVeh ];
 		diag_log format ["Incon undercover variable INC_incogWpns: %1", INC_incogWpns ];
 	};
 
