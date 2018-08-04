@@ -32,6 +32,8 @@ _unit setVariable ["INC_suspicious", false];
 _unit setVariable ["INC_cooldown", false];
 _unit setVariable ["INC_shotAt",false];
 _unit setVariable ["INC_firedRecent",false];
+_unit setVariable ["INC_highSecAlert",false];
+_unit setVariable ["INC_trespassAlert",false];
 
 if ((isPlayer _unit) && {time < 60}) then {{_x setVariable ["INC_notDismissable",true]} forEach (units group _unit)};
 
@@ -70,7 +72,7 @@ if (_racism) then {
 };
 
 if ((_debug) && {isPlayer _unit}) then {
-	diag_log format ["INC_ucr Racism checks active: %1",_racism];
+	diag_log format ["INC_ucr racism checks active: %1",_racism];
 	diag_log format ["Incon undercover variable INC_looksLikeCiv: %1", (_unit getVariable "INC_looksLikeCiv") ];
 	diag_log format ["Incon undercover variable INC_looksLikeIncog: %1", (_unit getVariable "INC_looksLikeIncog") ];
 };
@@ -91,6 +93,8 @@ if (isPlayer _unit) then {
 			_unit setVariable ["INC_cooldown", false];
 			_unit setVariable ["INC_shotAt",false];
 			_unit setVariable ["INC_firedRecent",false];
+			_unit setVariable ["INC_highSecAlert",false];
+			_unit setVariable ["INC_trespassAlert",false];
 			sleep 1;
 			[[_unit], "INC_undercover\Scripts\initUCR.sqf"] remoteExec ["execVM",_unit];
 		};

@@ -17,7 +17,7 @@ Author: Incontinentia
 
 _this spawn {
 
-	private ["_trespassMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_incogFactions"];
+	private ["_trespassMarkers","_highSecMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_highSecurityUniforms","_incogFactions"];
 
 	params [["_unit",player]];
 
@@ -99,7 +99,7 @@ _this spawn {
 
 	_incogVests =  _incognitoVests + [""] + (["vests",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
-	_incogUniforms = _incognitoUniforms + (["uniforms",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
+	_incogUniforms = _incognitoUniforms + _highSecurityUniforms + (["uniforms",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
 	_incogHeadgear = _incognitoHeadgear + [""] + (["headgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo) + (["possibleHeadgear",_incogFactions] call INCON_ucr_fnc_getConfigInfo);
 	sleep 0.1;
@@ -111,6 +111,7 @@ _this spawn {
 	sleep 0.1;
 	missionNamespace setVariable ["INC_incogVests",_incogVests,true];
 	missionNamespace setVariable ["INC_incogUniforms",(_incogUniforms - [""]),true];
+	missionNamespace setVariable ["INC_highSecUniforms",_highSecurityUniforms,true];
 	missionNamespace setVariable ["INC_incogHeadgear",_incogHeadgear,true];
 	missionNamespace setVariable ["INC_incogBackpacks",_incogBackpacks,true];
 	missionNamespace setVariable ["INC_incogVehArray",_incogVeh,true];
@@ -121,6 +122,7 @@ _this spawn {
 	if (_debug) then {
 		diag_log format ["Incon undercover variable INC_incogVests: %1", INC_incogVests ];
 		diag_log format ["Incon undercover variable INC_incogUniforms: %1", INC_incogUniforms ];
+		diag_log format ["Incon undercover variable INC_highSecUniforms: %1", INC_highSecUniforms ];
 		diag_log format ["Incon undercover variable INC_incogHeadgear: %1", INC_incogHeadgear ];
 		diag_log format ["Incon undercover variable INC_incogBackpacks: %1", INC_incogBackpacks ];
 		diag_log format ["Incon undercover variable INC_incogVehArray: %1", INC_incogVehArray ];
@@ -160,12 +162,26 @@ _this spawn {
 		    ((_x find "INC_tre") >= 0)
 		});
 
+		{
+
+		    _highSecMarkers pushBack _x;
+
+		} forEach (allMapMarkers select {
+		    ((_x find "INC_highSec") >= 0)
+		});
+
+		{_trespassMarkers pushBack _x} forEach _highSecMarkers;
+
 		{_x setMarkerAlpha 0} forEach _trespassMarkers;
 
 		missionNamespace setVariable ["INC_trespassMarkers",_trespassMarkers,true];
+		missionNamespace setVariable ["INC_highSecMarkers",_highSecMarkers,true];
+		missionNamespace setVariable ["INC_highSecCheckActive",!(count _highSecMarkers == 0),true];
 
 		if (_debug) then {
 			diag_log format ["Incon undercover variable INC_trespassMarkers: %1", INC_trespassMarkers ];
+			diag_log format ["Incon undercover variable INC_highSecMarkers: %1", INC_highSecMarkers ];
+			diag_log format ["Incon undercover high security check active: %1", !(count _highSecMarkers == 0) ];
 		};
 	};
 

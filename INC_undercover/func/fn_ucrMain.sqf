@@ -650,7 +650,7 @@ switch (_operation) do {
 				if !(_unit getVariable ["INC_isCompromised",false]) then {
 
 					//If either side has seen the unit, make him compromised
-					if (([_unit, INC_regEnySide,20] call INCON_ucr_fnc_isKnownExact) || {[_unit, INC_asymEnySide,20] call INCON_ucr_fnc_isKnownExact}) then {
+					if (([_unit, INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) || {[_unit, INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact}) then {
 						[_unit] call INCON_ucr_fnc_compromised;
 					};
 				};

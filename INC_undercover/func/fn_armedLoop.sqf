@@ -98,7 +98,6 @@ if (!local _unit) exitWith {};
 				sleep _responseTime;
 
 				_unit setVariable ["INC_canSwawp",[[_unit,false],"swapGear"] call INCON_ucr_fnc_gearHandler];
-
 			};
 
 			//Incognito check
@@ -116,6 +115,13 @@ if (!local _unit) exitWith {};
 						if (uniform _unit isEqualTo (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"])) then {
 
 							_suspiciousValue = _suspiciousValue + 2;
+						};
+
+						//High security area check
+						if (_unit getVariable ["INC_highSecAlert",false] && {!(uniform _unit in INC_highSecUniforms)}) then {
+
+							_weirdoLevel = _weirdoLevel + 8;
+							_spotDistance = _spotDistance + 4;
 						};
 
 						if !(backpack _unit in INC_incogBackpacks) then {
@@ -629,7 +635,7 @@ if (!local _unit) exitWith {};
 					//Suspicious vehicle check
 					if (!((typeof _vehicle) in INC_civilianVehicleArray) || {(_vehicle getVariable ["INC_naughtyVehicle",false])}) then {
 
-						_suspiciousValue = _suspiciousValue + 2;
+						_suspiciousValue = _suspiciousValue + 1;
 					};
 
 					//Trespass check

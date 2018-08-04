@@ -29,6 +29,7 @@ _asymBarbaric = true;                   //(Bool - true or false) Will this side 
 _asymDetectRadius = 15;                 //Default detection radius for asym troops (this will expand and contract based on weather, time of day, and how the undercover unit is acting - civilians within this radius will be under much more scrutinty)
 
 _trespassMarkers = [];                  //Names of additional markers for areas that would be considered trespassing (any with "INC_tre" - case sensitive - somewhere in the marker name will automatically be included)
+_highSecMarkers = []; 					//Names of additional markers for areas that are designated high security zones that require specific uniforms to enter without raising suspicion (any with "INC_highSec" - case sensitive - somewhere in the marker name will automatically be included)
 
 //-------------------------Civilian Disguise settings-------------------------
 
@@ -53,6 +54,7 @@ _HMDallowed = false; //(Bool - true or false) Are HMDs (night vision goggles etc
 
 _noOffRoad = false; //Civilian vehicles driving more than 50 meters from the nearest road will be considered hostile
 
+
 //-------------------------Enemy Disguise settings-------------------------
 _incogFactions = ["OPF_F","OPF_T_F"]; //Array of enemy factions whose items and vehicles will allow the player to impersonate the enemy
 
@@ -69,6 +71,8 @@ _incognitoHeadgear = [];
 _incognitoBackpacks = [];
 
 _incogVehArray = []; //(Array of classnames) Additional incognito vehicles (vehicles from the faction above will automatically count)
+
+_highSecurityUniforms = []; // (Array of classnames) Uniforms that allow entry into high security areas (defined by high security markers)
 
 //-------------------------Civilian recruitment settings-------------------------
 /*

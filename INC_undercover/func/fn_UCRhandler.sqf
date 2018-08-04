@@ -161,7 +161,7 @@ if (isPlayer _unit) then {
 			};
 		};
 
-        sleep 0.3;
+        sleep 0.2;
 
 		//Trespassing check
 		if !(_unit getVariable ["INC_trespassAlert",true]) then {
@@ -188,6 +188,38 @@ if (isPlayer _unit) then {
 
 	            false
 	        } count INC_trespassMarkers;
+		};
+
+		sleep 0.1;
+
+		//High security check
+		if ((missionNamespace getVariable ["INC_highSecCheckActive",false]) && {_unit getVariable ["INC_goneIncog",false]} && {_unit getVariable ["INC_trespassAlert",false]}) then {
+
+			if !(_unit getVariable ["INC_highSecAlert",true]) then {
+		        {
+		            if (_unit inArea _x) exitWith {
+
+		                private _activeMarker = _x;
+
+		                _unit setVariable ["INC_highSecAlert",true];
+
+						[_unit,_activeMarker] spawn {
+							params ["_unit","_activeMarker"];
+
+							waitUntil {
+
+								sleep 1;
+
+								!(_unit inArea _activeMarker);
+							};
+							_unit setVariable ["INC_highSecAlert",false];
+
+						};
+					};
+
+		            false
+		        } count INC_highSecMarkers;
+			};
 		};
 
 		sleep 0.2;

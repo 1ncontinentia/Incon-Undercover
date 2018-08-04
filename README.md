@@ -28,12 +28,13 @@ SP / Coop and Dedi compatible.
 * Responds to whether the units are in vehicles or on foot, dressed as enemies or civilians, whether the unit's face fits or doesn't fit in with the faction they are pretending to be, or whether it is day or night, with each situation requiring players to behave appropriately
 * Suspicious enemies may challenge or watch and follow undercover units if they act weirdly; the more weird stuff you do, the more likely they are to see through your disguise (you can even use this to your advantage to draw enemies attention away from another unit while they do something suspicious - just don't get too cocky or they will open fire on you)
 * Players must "act" their role; doing weird stuff will raise suspicion and could blow your cover - if you point your weapon at an enemy and they see you doing it, they will get suspicious very quickly. Equally, if an enemy sees you crawling around or planting explosives, you're not going to stay undercover for long.
-* Enemies will detect if undercover units are the nationality of the group they are impersonating; covering your face with a scarf or bandanna will reduce this but not as much as choosing undercover units whose faces fit in with the people they are trying to impersonate
+* Enemies will detect if undercover units are not of the ethnicity of the group they are impersonating; covering your face with a scarf or bandanna will reduce this but not as much as choosing undercover units whose faces fit in with the people they are trying to impersonate
 * All actions have consequences, good or bad. If the MRAP you're driving gets a bit close to a patrol, moving into the back of it and out of sight of the enemy might just save your skin. Equally, putting a balaclava on when you're a civilian will attract a lot of attention - which is especially not good if you're already carrying a military rucksack.
-* Once undercover units become compromised, enemies will remember the vehicles they are spotted in and clothes they are wearing - change your clothing (both uniform and either headgear or goggles) and if no enemies see you doing it, your new disguise may stick
+* Once undercover units become compromised, enemies will remember the vehicles they are spotted in and (if they get a good look) the clothes they are wearing - change your clothing and if no enemies see you doing it, your new disguise may stick. The further you are away from where you were spotted, the more likely your new disguise is to work.
 * Easily switch disguises: take enemy uniforms from nearby crates, vehicles, dead bodies and the ground (and order AI subordinates to do the same)
 * Quickly conceal and un-conceal your (and your subordinates') weapons if you have the inventory space - without faffing with inventories
 * Different configurable detection systems for regular and asymetric enemy forces
+* Configurable high security zones require specific uniforms. Go without and enemies are likely to get suspicious of you very quickly. 
 
 #### Stealth kills work -
 
@@ -54,7 +55,7 @@ SP / Coop and Dedi compatible.
 * Kill enemies without getting spotted and there is a chance they will lash out against civilians, with a potential to cause a civilian uprising (optional)
 * Automatically arm ambient civilians with weapons and items which they may use if recruited or during an uprising
 * Try to steal civilians' clothes from them (but be prepared that your reputation will take a hit or you may become compromised)
-* (Requires ALiVE) Turn recruited units into a profiled group to be used by AI commander of the same faction as the undercover unit (add to object init: this addaction ["Profile group","[player,'profileGroup'] remoteExecCall ['INCON_ucr_fnc_ucrMain',2]",[],1,false,true]);
+* (Requires ALiVE) Turn recruited units into a profiled group to be used by AI commander of the same faction as the undercover unit. Add the following to object init: this addaction ["Profile group","[player,'profileGroup'] remoteExecCall ['INCON_ucr_fnc_ucrMain',2]",[],1,false,true]);
 
 
 ### USAGE
@@ -82,7 +83,7 @@ Non-player units in the undercover unit's group do not need anything; the script
 * If having a three-way (...war), it is recommended to not have any incognito factions as an engine limitation means that incognito units (i.e. those disguised as the enemy) will be seen as friendly to all - could break the immersion if you're dressed as OPFOR and GreenFOR don't shoot at you when they should.
 * For mission makers - just be aware that the following could affect your mission: enemy units may wander from their original positions to follow undercover units if they become suspicious. Also, when compromised by regular forces, an undercover unit's description will be shared across other enemies in the local area after some time if they don't kill everyone who knows about them
 * Works on all tested mods with the exception of factions that use randomisation scripts such is the Iraqi Syrian Conflict Mod -- these will need a manual list of the possible enemy uniforms and gear (which is possible using the setup.sqf). If you find an incompatibility, tell me!
-* In MP, ensure that respawn timers are set to at least 5 seconds to give the script a chance to recognise when a unit is dead and reset values accordingly. 
+* In MP, ensure that respawn timers are set to at least 5 seconds to give the script a chance to recognise when a unit is dead and reset values accordingly.
 
 
 ### Credits
