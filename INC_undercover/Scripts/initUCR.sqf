@@ -145,6 +145,8 @@ if (isPlayer _unit) then {
 
 sleep 1;
 
+if ((_debug) && {isPlayer _unit}) then {hint "Undercover init complete."};
+
 //Get the undercover loops running on the unit
 [_unit] call INCON_ucr_fnc_UCRhandler;
 

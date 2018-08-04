@@ -120,8 +120,8 @@ if (!local _unit) exitWith {};
 						//High security area check
 						if (_unit getVariable ["INC_highSecAlert",false] && {!(uniform _unit in INC_highSecUniforms)}) then {
 
-							_weirdoLevel = _weirdoLevel + 8;
-							_spotDistance = _spotDistance + 4;
+							_weirdoLevel = _weirdoLevel + 10;
+							_spotDistance = _spotDistance + 5;
 						};
 
 						if !(backpack _unit in INC_incogBackpacks) then {
