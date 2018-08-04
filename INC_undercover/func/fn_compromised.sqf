@@ -101,7 +101,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 	params ["_unit",["_debug",false]];
 
-	private ["_seenInDisguise","_lastSeenUniform","_naughtyUniforms","_naughtyHeadgears","_activeVeh","_regKnowsAboutUnit","_lastSeenLoc"];
+	private ["_seenInDisguise","_lastSeenUniform","_naughtyUniforms","_naughtyHeadgears","_activeVeh","_regKnowsAboutUnit","_lastSeenLoc","_underAttack"];
 
 	// Publicize isCompromised variable to true.
 	_unit setVariable ["INC_isCompromised", true];
@@ -118,21 +118,26 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 	_seenInDisguise = false;
 	_activeVeh = objNull;
 	_lastSeenLoc = getPosWorld _unit;
+	_underAttack = false;
 
 	// Cooldown Timer to simulate how long it would take for word to get out
-	_cooldownTimer = 30 + (random 180);
+	_cooldownTimer = 5 + (random 40);
 
 	//If unit changes clothing / vehicle while seen then the description to be shared is updated
 	waitUntil {
 
-		sleep 5;
+		sleep 2;
 
-		_cooldownTimer = (_cooldownTimer - 5);
+		if (_seenInDisguise) then {_cooldownTimer = (_cooldownTimer - 2)};
+
+		if (15 > random 100) then {
+			_underAttack = true;
+		};
 
 		if (
 
-			([_unit,INC_regEnySide,10] call INCON_ucr_fnc_isKnownExact) ||
-			{([_unit,INC_asymEnySide,10] call INCON_ucr_fnc_isKnownExact)}
+			([_unit,INC_regEnySide,2] call INCON_ucr_fnc_isKnownExact) ||
+			{([_unit,INC_asymEnySide,2] call INCON_ucr_fnc_isKnownExact)}
 
 		) then {
 
@@ -143,39 +148,55 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 				case (true): {
 
 					if (uniform _unit in INC_incogUniforms || {uniform _unit in INC_civilianUniforms}) then {
-						if (50 > random 100) then {
+						if (20 > random 100) then {
 							_naughtyUniforms pushBackUnique (uniform _unit);
 							_lastSeenUniform = (uniform _unit);
 							_seenInDisguise = true;
 						};
 					};
 
-					if (20> random 100) then {_naughtyHeadgears pushBackUnique (headgear _unit)};
-					if (10> random 100) then {_naughtyHeadgears pushBackUnique (goggles _unit)};
+					if (5> random 100) then {_naughtyHeadgears pushBackUnique (headgear _unit)};
+					if (5> random 100) then {_naughtyHeadgears pushBackUnique (goggles _unit)};
 				};
 
 				case (false): {
 
 					if (uniform _unit in INC_incogUniforms || {uniform _unit in INC_civilianUniforms}) then {
-						if (20 > random 100) then {
+						if (5 > random 100) then {
 							_naughtyUniforms pushBackUnique (uniform _unit);
 							_seenInDisguise = true;
 							_lastSeenUniform = (uniform _unit);
 						};
 					};
 
-					if (70 > random 100) then {_activeVeh = objectParent _unit};
-					if (7 > random 100) then {_naughtyHeadgears pushBackUnique (headgear _unit)};
-					if (3 > random 100) then {_naughtyHeadgears pushBackUnique (goggles _unit)};
+					if (40 > random 100) then {_activeVeh = objectParent _unit};
+					if (4 > random 100) then {_naughtyHeadgears pushBackUnique (headgear _unit)};
+					if (4 > random 100) then {_naughtyHeadgears pushBackUnique (goggles _unit)};
 				};
 			};
 		};
 
-		((!(_unit getVariable ["INC_AnyKnowsSO",false]) && {isNull objectParent _unit || {!((objectParent _unit) getVariable ["INC_naughtyVehicle",false]) && {_cooldownTimer <= 0}}}) || {_cooldownTimer <= 0})
+		(
+			(
+				!(
+
+					([_unit,INC_regEnySide,10] call INCON_ucr_fnc_groupsWithPID) ||
+					{([_unit,INC_asymEnySide,10] call INCON_ucr_fnc_groupsWithPID)}
+
+				) &&
+				{
+					isNull objectParent _unit ||
+					{
+						!((objectParent _unit) getVariable ["INC_naughtyVehicle",false])
+						&& {_cooldownTimer <= 0}
+					}
+				}
+			) || {_cooldownTimer <= 0}
+		)
 	};
 
-	//If there are still alerted units alive...
-	if (_unit getVariable ["INC_AnyKnowsSO",false]) then {
+	//If there are still any living groups left who have seen the unit...
+	if (([_unit,INC_regEnySide,20] call INCON_ucr_fnc_groupsWithPID) || {([_unit,INC_asymEnySide,20] call INCON_ucr_fnc_groupsWithPID)}) then {
 
 		switch (true) do {
 			case ([_unit,INC_regEnySide,50] call INCON_ucr_fnc_isKnownExact): {
@@ -358,6 +379,29 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 		// Publicize isCompromised to false.
 		_unit setVariable ["INC_isCompromised", false];
+
+		if (_unit getVariable ["INC_anyKnowsSO",false]) then {
+
+			_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
+
+			if (_underAttack) then {_disguiseValue = _disguiseValue + (random 3)};
+
+			_unit setVariable ["INC_compromisedValue",(_disguiseValue + (random 2)),true];
+
+			if (
+
+				([_unit,INC_regEnySide,(150 + (random 200))] call INCON_ucr_fnc_isKnownExact) ||
+				{([_unit,INC_asymEnySide,(100 + (random 100))] call INCON_ucr_fnc_isKnownExact)}
+
+			) then {
+
+				_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
+
+				_unit setVariable ["INC_lastSeenLoc",_lastSeenLoc];
+
+				_unit setVariable ["INC_compromisedValue",(_disguiseValue + (random 5)),true];
+			};
+		};
 
 		if ((_debug) && {isPlayer _unit}) then {hint "No longer compromised."};
 

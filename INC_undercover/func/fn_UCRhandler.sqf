@@ -255,12 +255,18 @@ if (isPlayer _unit) then {
 
 		if ((_unit getVariable ["INC_compromisedValue",1]) > 1) then {
 
-			_unit setVariable ["INC_compromisedValue",((_unit getVariable ["INC_compromisedValue",1]) - (random 0.002)),true];
+			private _coolOffIncriment = random 0.002;
+
+			if !(_anyAlerted) then {_coolOffIncriment = _coolOffIncriment * 5};
+
+			_unit setVariable ["INC_compromisedValue",((_unit getVariable ["INC_compromisedValue",1]) - (_coolOffIncriment)),true];
 		};
 
 		if ((_unit getVariable ["INC_compromisedValue",1]) > 3) then {
 
 			_compDistMulti = ((getPosWorld _unit) distance (_unit getVariable ["INC_lastSeenLoc",(getPosWorld _unit)])) / 40000;
+
+			if !(_anyAlerted) then {_compDistMulti = _compDistMulti * 10};
 
 			_unit setVariable ["INC_compromisedValue",((_unit getVariable ["INC_compromisedValue",1]) - _compDistMulti),true];
 		};

@@ -32,16 +32,18 @@ _unit setVariable ["INC_hasBeenPID",false];
 	//Holding variable while unit is armed / trespassing but remember if unit has been seen acting suspiciously
 	waitUntil {
 
-		if ([_unit, INC_regEnySide,2] call INCON_ucr_fnc_isKnownExact || {[_unit, INC_asymEnySide,2] call INCON_ucr_fnc_isKnownExact}) then {_unit setVariable ["INC_hasBeenPID",true]};
+		if ([_unit, INC_regEnySide,2] call INCON_ucr_fnc_groupsWithPID || {[_unit, INC_asymEnySide,2] call INCON_ucr_fnc_groupsWithPID}) then {_unit setVariable ["INC_hasBeenPID",true]} else {_unit setVariable ["INC_hasBeenPID",false]};
 		sleep 1;
 		!(_unit getVariable ["INC_suspicious",false])
 	};
 
 	//Stop the script running while the unit is compromised
 	waitUntil {
-		sleep 2;
+		sleep 1;
 
-		if ([_unit, INC_regEnySide,2] call INCON_ucr_fnc_isKnownExact || {[_unit, INC_asymEnySide,2] call INCON_ucr_fnc_isKnownExact}) then {_unit setVariable ["INC_hasBeenPID",true]};
+		if ([_unit, INC_regEnySide,2] call INCON_ucr_fnc_groupsWithPID || {[_unit, INC_asymEnySide,2] call INCON_ucr_fnc_groupsWithPID}) then {_unit setVariable ["INC_hasBeenPID",true]} else {_unit setVariable ["INC_hasBeenPID",false]};
+		sleep 1;
+
 		!((_unit getVariable ["INC_isCompromised",false]) || {(_unit getVariable ["INC_suspiciousValue",1]) >= 2});
 	};
 
