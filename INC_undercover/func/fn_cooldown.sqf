@@ -97,7 +97,7 @@ _unit setVariable ["INC_hasBeenPID",false];
 	if (_asymKnowsAboutUnit) then {
 
 		waitUntil {
-			sleep 10;
+			sleep 2;
 			(!(_unit getVariable ["INC_asymKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)} && {!(_unit getVariable ["INC_isCompromised",false])})
 		};
 
@@ -105,7 +105,7 @@ _unit setVariable ["INC_hasBeenPID",false];
 	} else {
 
 		waitUntil {
-			sleep 10;
+			sleep 2;
 			(!(_unit getVariable ["INC_regKnowsSO",false]) && {!((_unit getVariable ["INC_suspiciousValue",1]) >= 2)} && {!(_unit getVariable ["INC_isCompromised",false])})
 		};
 

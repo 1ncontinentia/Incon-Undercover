@@ -382,25 +382,30 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 		if (_unit getVariable ["INC_anyKnowsSO",false]) then {
 
-			_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
+			private _disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
 
-			if (_underAttack) then {_disguiseValue = _disguiseValue + (random 3)};
+			_disguiseValue = _disguiseValue + (random 2);
 
-			_unit setVariable ["INC_compromisedValue",(_disguiseValue + (random 2)),true];
+			sleep 0.1;
 
-			if (
+			if (_underAttack) then {
 
-				([_unit,INC_regEnySide,(150 + (random 200))] call INCON_ucr_fnc_isKnownExact) ||
-				{([_unit,INC_asymEnySide,(100 + (random 100))] call INCON_ucr_fnc_isKnownExact)}
+				_disguiseValue = _disguiseValue + (random 3);
 
-			) then {
+				if (
 
-				_disguiseValue = (_unit getVariable ["INC_compromisedValue",1]);
+					([_unit,INC_regEnySide,(150 + (random 200))] call INCON_ucr_fnc_isKnownExact) ||
+					{([_unit,INC_asymEnySide,(100 + (random 100))] call INCON_ucr_fnc_isKnownExact)}
 
-				_unit setVariable ["INC_lastSeenLoc",_lastSeenLoc];
+				) then {
 
-				_unit setVariable ["INC_compromisedValue",(_disguiseValue + (random 5)),true];
+					_disguiseValue = _disguiseValue + (random 5);
+
+					_unit setVariable ["INC_lastSeenLoc",_lastSeenLoc];
+				};
 			};
+
+			_unit setVariable ["INC_compromisedValue",_disguiseValue,true];
 		};
 
 		if ((_debug) && {isPlayer _unit}) then {hint "No longer compromised."};

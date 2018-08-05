@@ -238,7 +238,7 @@ if (isPlayer _unit) then {
 
 	waitUntil {
 
-		sleep 4;
+		sleep 2;
 
 		private _alertedRegKnows = ([_unit, INC_regEnySide] call INCON_ucr_fnc_isKnownToSide);
 
@@ -253,26 +253,39 @@ if (isPlayer _unit) then {
 		_unit setVariable ["INC_asymKnowsSO", _alertedAsymKnows, true];
 		_unit setVariable ["INC_anyKnowsSO", _anyAlerted, true];
 
-		if ((_unit getVariable ["INC_compromisedValue",1]) > 1) then {
+		sleep 0.2;
 
-			private _coolOffIncriment = random 0.002;
+		if !(_unit getVariable ["INC_isCompromised",false]) then {
 
-			if !(_anyAlerted) then {_coolOffIncriment = _coolOffIncriment * 5};
+			private _compValue = _unit getVariable ["INC_compromisedValue",1];
 
-			_unit setVariable ["INC_compromisedValue",((_unit getVariable ["INC_compromisedValue",1]) - (_coolOffIncriment)),true];
-		};
+			if (_compValue > 1) then {
 
-		if ((_unit getVariable ["INC_compromisedValue",1]) > 3) then {
+				private _coolOffIncriment = random 0.002;
 
-			_compDistMulti = ((getPosWorld _unit) distance (_unit getVariable ["INC_lastSeenLoc",(getPosWorld _unit)])) / 40000;
+				if !(_anyAlerted) then {_coolOffIncriment = _coolOffIncriment * 5};
 
-			if !(_anyAlerted) then {_compDistMulti = _compDistMulti * 10};
+				_unit setVariable ["INC_compromisedValue",(_compValue - _coolOffIncriment),true];
+			};
 
-			_unit setVariable ["INC_compromisedValue",((_unit getVariable ["INC_compromisedValue",1]) - _compDistMulti),true];
-		};
+			sleep 0.2;
 
-		if ((_unit getVariable ["INC_compromisedValue",1]) < 1) then {
-			_unit setVariable ["INC_compromisedValue",1,true];
+			if (_compValue > 2) then {
+
+				_compDistMulti = ((getPosWorld _unit) distance (_unit getVariable ["INC_lastSeenLoc",(getPosWorld _unit)])) / 40000;
+
+				if (_compDistMulti == 0) then {_compDistMulti = 0.002};
+
+				if !(_anyAlerted) then {_compDistMulti = (_compDistMulti * (10 * _compValue))};
+
+				_unit setVariable ["INC_compromisedValue",(_compValue - _compDistMulti),true];
+			};
+
+			sleep 0.2;
+
+			if (_compValue < 1) then {
+				_unit setVariable ["INC_compromisedValue",1,true];
+			};
 		};
 
 		(!(_unit getVariable ["isUndercover",false]) || !(alive _unit))
