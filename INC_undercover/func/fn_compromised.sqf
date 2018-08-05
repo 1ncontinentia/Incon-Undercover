@@ -101,7 +101,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 	params ["_unit",["_debug",false]];
 
-	private ["_seenInDisguise","_lastSeenUniform","_naughtyUniforms","_naughtyHeadgears","_activeVeh","_regKnowsAboutUnit","_lastSeenLoc","_underAttack"];
+	private ["_seenInDisguise","_lastSeenUniform","_naughtyUniforms","_naughtyHeadgears","_activeVeh","_regKnowsAboutUnit","_lastSeenLoc","_underAttack","_initialUniform"];
 
 	// Publicize isCompromised variable to true.
 	_unit setVariable ["INC_isCompromised", true];
@@ -116,6 +116,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 	_naughtyUniforms = [];
 	_naughtyHeadgears = [];
 	_seenInDisguise = false;
+	_initialUniform = uniform _unit;
 	_activeVeh = objNull;
 	_lastSeenLoc = getPosWorld _unit;
 	_underAttack = false;
@@ -128,7 +129,8 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 
 		sleep 2;
 
-		if (_seenInDisguise) then {_cooldownTimer = (_cooldownTimer - 2)};
+		//Cooldown timer only runs if the unit has been seen in disguise, isn't incognito at all, or has changed disguise (prevents units description being shared then immediately seeming as though the disguise has changed)
+		if (_seenInDisguise || {!(uniform _unit in INC_incogUniforms || {uniform _unit in INC_civilianUniforms})} || {uniform _unit != _initialUniform}) then {_cooldownTimer = (_cooldownTimer - 2)} else {_cooldownTimer = (_cooldownTimer - 0.2)};
 
 		if (15 > random 100) then {
 			_underAttack = true;
@@ -148,7 +150,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 				case (true): {
 
 					if (uniform _unit in INC_incogUniforms || {uniform _unit in INC_civilianUniforms}) then {
-						if (20 > random 100) then {
+						if (25 > random 100) then {
 							_naughtyUniforms pushBackUnique (uniform _unit);
 							_lastSeenUniform = (uniform _unit);
 							_seenInDisguise = true;
@@ -162,7 +164,7 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 				case (false): {
 
 					if (uniform _unit in INC_incogUniforms || {uniform _unit in INC_civilianUniforms}) then {
-						if (5 > random 100) then {
+						if (10 > random 100) then {
 							_naughtyUniforms pushBackUnique (uniform _unit);
 							_seenInDisguise = true;
 							_lastSeenUniform = (uniform _unit);
