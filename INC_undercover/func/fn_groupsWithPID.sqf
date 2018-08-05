@@ -14,7 +14,7 @@ Returns:
 Whether there are groups left alive with a PID of the unit.
 ---------------------------------------------------------------------------- */
 
-private ["_unitsWithPID","_aliveUnitsWithPID"];
+private ["_groupsWithPID","_aliveGroupsWithPID"];
 
 params [["_unit",player],["_side",sideEmpty],["_distSqr",2],["_foot",true]];
 
@@ -24,17 +24,20 @@ if (!_foot) then {
 	_unit = vehicle _unit;
 };
 
-_unitsWithPID = _unit getVariable ["INC_seenByList",[]];
+_groupsWithPID = _unit getVariable ["INC_seenByList",[]];
 
 {
 	if (((leader _x getHideFrom _unit) distanceSqr _unit < _distSqr) && {alive leader _x}) then {
-		_unitsWithPID pushBackUnique _x;
-	}; false} forEach (allGroups select {
+		_groupsWithPID pushBackUnique _x;
+	}; false
+} forEach (allGroups select {
 	(side (leader _x) isEqualTo _side)
 });
 
-_aliveUnitsWithPID = _unitsWithPID - (_unitsWithPID select {!alive (leader _x)});
+_aliveGroupsWithPID = [];
 
-_unit setVariable ["INC_seenByList",_aliveUnitsWithPID];
+{{if (alive _x) exitWith {_aliveGroupsWithPID pushBackUnique (group _x)}} forEach (units _x)} forEach _groupsWithPID;
 
-(count _aliveUnitsWithPID != 0)
+_unit setVariable ["INC_seenByList",_aliveGroupsWithPID];
+
+(count _aliveGroupsWithPID != 0)
