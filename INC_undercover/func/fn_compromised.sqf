@@ -109,7 +109,9 @@ if ((_debug) && {isPlayer _unit}) then {hint "You've been compromised."};
 	//Checks if INC_regEnySide has seen him recently and sets variables accordingly
 	_regKnowsAboutUnit = [_unit,INC_regEnySide,50] call INCON_ucr_fnc_isKnownExact;
 
-	// SetCaptive after suspicious act has been committed
+	// Sets unit captive to false after suspicious act has been committed
+
+	[[_unit],"captiveCheck"] call INCON_ucr_fnc_ucrMain; //Checks whether the unit is the undercover side, if not, switches sides
 	[_unit, false] remoteExec ["setCaptive", _unit];
 
 	_lastSeenUniform = (_unit getVariable ["INC_activeCompUniform","NONEXISTANT"]);

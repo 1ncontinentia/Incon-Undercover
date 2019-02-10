@@ -25,6 +25,32 @@ _return = false;
 
 switch (_operation) do {
 
+	case "captiveCheck": {
+
+		_input params ["_unit",["_switchSides",true]];
+
+		private ["_captiveStatus","_sideSwitchNeeded"];
+
+		_captiveStatus = captive _unit;
+		_unit setCaptive false;
+		_sideSwitchNeeded = !((side _unit) == _undercoverUnitSide);
+		_unit setCaptive _captiveStatus;
+
+		if (_switchSides && _sideSwitchNeeded) then {
+			private ["_newGroup","_oldGroup"];
+			_newGroup = createGroup [_undercoverUnitSide,true];
+			_oldGroup = (group _unit);
+			(units group _unit) joinSilent _newGroup;
+			deleteGroup _oldGroup;
+		};
+
+		if (_debug && _sideSwitchNeeded) then {
+			hint "Captive check failed. Unit side is incorrect.";
+		};
+
+		_return = _sideSwitchNeeded;
+	};
+
 	case "spawnRebelCommander": {
 
 		private ["_commander","_rebelGroup"];

@@ -80,6 +80,7 @@ if ((_debug) && {isPlayer _unit}) then {
 
 sleep 0.5;
 
+[[_unit],"captiveCheck"] call INCON_ucr_fnc_ucrMain; //Checks whether the unit is the undercover side, if not, switches sides
 [_unit, true] remoteExec ["setCaptive", _unit]; //Makes enemies not hostile to the unit
 
 if (isPlayer _unit) then {
@@ -171,6 +172,7 @@ waitUntil {
 
 	//Once the player is doing suspicious stuff, make them vulnerable to being compromised
 	_unit setVariable ["INC_suspicious", true]; //Hold the cooldown script until the unit is no longer doing suspicious things
+	[[_unit],"captiveCheck"] call INCON_ucr_fnc_ucrMain; //Checks whether the unit is the undercover side, if not, switches sides
 	[_unit, false] remoteExec ["setCaptive", _unit]; //Makes enemies hostile to the unit
 
 	[_unit] call INCON_ucr_fnc_cooldown; //Gets the cooldown script going

@@ -51,6 +51,8 @@ _unit setVariable ["INC_hasBeenPID",false];
 	if !(_unit getVariable ["INC_hasBeenPID",false]) exitWith {
 
 		if !((_unit getVariable ["INC_isCompromised",false]) || {(_unit getVariable ["INC_suspiciousValue",1]) >= 2}) then {
+
+			[[_unit],"captiveCheck"] call INCON_ucr_fnc_ucrMain; //Checks whether the unit is the undercover side, if not, switches sides
 			[_unit, true] remoteExec ["setCaptive", _unit];
 		};
 
@@ -69,6 +71,8 @@ _unit setVariable ["INC_hasBeenPID",false];
 	if !((_asymKnowsAboutUnit) || {_regKnowsAboutUnit}) exitWith {
 
 		if !((_unit getVariable ["INC_isCompromised",false]) || {(_unit getVariable ["INC_suspiciousValue",1]) >= 2}) then {
+
+			[[_unit],"captiveCheck"] call INCON_ucr_fnc_ucrMain; //Checks whether the unit is the undercover side, if not, switches sides
 			[_unit, true] remoteExec ["setCaptive", _unit];
 		};
 
@@ -86,6 +90,8 @@ _unit setVariable ["INC_hasBeenPID",false];
 		};
 
 		if !(_unit getVariable ["INC_isCompromised",false]) then {
+
+			[[_unit],"captiveCheck"] call INCON_ucr_fnc_ucrMain; //Checks whether the unit is the undercover side, if not, switches sides
 			[_unit, true] remoteExec ["setCaptive", _unit];
 		};
 
@@ -118,6 +124,8 @@ _unit setVariable ["INC_hasBeenPID",false];
 
 	//Then set captive back to true as long as the compromised loop isn't running
 	if !(_unit getVariable ["INC_isCompromised",false]) then {
+
+		[[_unit],"captiveCheck"] call INCON_ucr_fnc_ucrMain; //Checks whether the unit is the undercover side, if not, switches sides
 		[_unit, true] remoteExec ["setCaptive", _unit];
 	};
 
