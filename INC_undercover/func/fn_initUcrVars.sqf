@@ -29,12 +29,6 @@ _this spawn {
 
 	if (isNil "_regEnySide") then {_asymEnySide = sideEmpty};
 
-	if (side _unit == _regEnySide || {side _unit == _asymEnySide}) exitWith {
-
-		diag_log "Incon Undercover: undercover unit side must be different to enemy sides, exiting.";
-		systemChat "Incon Undercover: undercover unit side must be different to enemy sides, exiting.";
-	};
-
 	if (_regEnySide == _asymEnySide) exitWith {
 
 		diag_log "Incon Undercover: regular and asym enemy sides must be different, exiting.";
@@ -46,6 +40,12 @@ _this spawn {
 		diag_log "Incon Undercover: Enemy Incognito mode disabled - regular and asym enemy sides must be friendly to each other for Enemy Incognito mode to work.";
 		systemChat "Incon Undercover: Enemy Incognito mode disabled - regular and asym enemy sides must be friendly to each other for Enemy Incognito mode to work.";
 		_incogFactions = [];
+	};
+
+	if (side _unit == _regEnySide || {side _unit == _asymEnySide}) then {
+
+		diag_log "Incon Undercover: undercover unit side different to enemy sides, switching.";
+		systemChat "Incon Undercover: undercover unit side different to enemy sides, switching.";
 	};
 
 	sleep 0.2;
