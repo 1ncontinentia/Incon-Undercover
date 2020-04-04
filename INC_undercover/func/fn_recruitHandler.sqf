@@ -80,6 +80,8 @@ switch (_operation) do {
         		},[],6,true,true,"","((_this getVariable ['isUndercover',false]) && {!(_target getVariable ['INC_alreadyTried',false])} && {alive _target} && {uniform _target != ''} && {(currentWeapon _this != '') && {(currentWeapon _this == primaryWeapon _this) || {currentWeapon _this == handgunWeapon _this}}})",4
         ]] remoteExec ["addAction", 0,true];
 
+        _unit setVariable ["INC_weaponStore",[["",[""]],["",[""]]]];
+
         if (30 > (random 100)) then {
         	[_unit,"addBackpack"] call INCON_ucr_fnc_gearHandler;
         };
