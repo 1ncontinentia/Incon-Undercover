@@ -93,8 +93,32 @@ switch (_operation) do {
 
 			} else {
 
+				if (_canCarryOpenly) then {
+					_unit addWeapon _wpn;
+					_unit addMagazine (selectRandom _magsArray);
+					for "_i" from 1 to (ceil random 8) do {
+						_unit addMagazine (selectRandom _magsArray);
+					};
+				};
+
 				_return = false;
 			};
+		};
+	};
+
+	case "addCarryWeapon": {
+
+		_input params ["_unit"];
+
+		private _wpn = selectRandom _civWpnArray;
+		private _magsArray = ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
+
+		_return = true;
+
+		_unit addWeapon _wpn;
+		_unit addMagazine (selectRandom _magsArray);
+		for "_i" from 1 to (ceil random 8) do {
+			_unit addMagazine (selectRandom _magsArray);
 		};
 	};
 
