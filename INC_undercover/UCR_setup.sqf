@@ -112,6 +112,7 @@ You can also dismiss your new teammates and they will leave your group and carry
 
 _civRecruitEnabled = true;          //(Bool - true or false) Set this to false to prevent undercover units from recruiting civilians
 _armedCivPercentage = 70;           //(Number - 0 to 100) Max percentage of civilians armed with weapons from the array below, either on their person or in their backpacks (will only work if _civRecruitEnabled is set to true, otherwise this is ignored)
+_civPackPercentage = 30;            //(Number - 0 to 100) Percentage of civilians with backpacks
 _canCarryOpenly = true;             //If the weapon can't fit in the pack, should civilians carry weapons overtly instead?
 
 //Weapon classnames for armed civilians (array of classnames)

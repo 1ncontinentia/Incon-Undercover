@@ -82,7 +82,7 @@ switch (_operation) do {
 
         _unit setVariable ["INC_weaponStore",[["",[""]],["",[""]]]];
 
-        if (30 > (random 100)) then {
+        if ((_civPackPercentage > (random 100)) && (backpack _unit == "")) then {
         	[_unit,"addBackpack"] call INCON_ucr_fnc_gearHandler;
         };
 
