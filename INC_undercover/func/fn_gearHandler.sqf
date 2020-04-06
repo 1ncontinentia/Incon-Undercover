@@ -65,11 +65,25 @@ switch (_operation) do {
 		_return = unitBackpack _unit;
 	};
 
-	case "addWeapon": {
+	case "addVest": {
 
 		_input params ["_unit"];
 
-		private _wpn = selectRandom _civWpnArray;
+		_unit addVest (selectRandom _civilianVests);
+
+		_return = vest _unit;
+	};
+
+	case "addWeapon": {
+
+		_input params ["_unit",["_weighting",((100 - _rareWeaponPercentage - _superRareWeaponPercentage)/100),(_rareWeaponPercentage/100),(_superRareWeaponPercentage/100)]];
+
+		if ((count _rareWeaponArray) == 0) then {_rareWeaponArray = _civWpnArray};
+
+		if ((count _superRareWeaponArray) == 0) then {_superRareWeaponArray = _civWpnArray};
+
+		private _wpnList = [_civWpnArray,_rareWeaponArray,_superRareWeaponArray] selectRandomWeighted [_weighting];
+		private _wpn = selectRandom _wpnList;
 		private _magsArray = ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
 
 		_return = true;
@@ -108,9 +122,14 @@ switch (_operation) do {
 
 	case "addCarryWeapon": {
 
-		_input params ["_unit"];
+		_input params ["_unit",["_weighting",((100 - _rareWeaponPercentage - _superRareWeaponPercentage)/100),(_rareWeaponPercentage/100),(_superRareWeaponPercentage/100)]];
 
-		private _wpn = selectRandom _civWpnArray;
+		if ((count _rareWeaponArray) == 0) then {_rareWeaponArray = _civWpnArray};
+
+		if ((count _superRareWeaponArray) == 0) then {_superRareWeaponArray = _civWpnArray};
+
+		private _wpnList = [_civWpnArray,_rareWeaponArray,_superRareWeaponArray] selectRandomWeighted [_weighting];
+		private _wpn = selectRandom _wpnList;
 		private _magsArray = ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
 
 		_return = true;

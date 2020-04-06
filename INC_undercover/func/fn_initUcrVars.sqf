@@ -17,7 +17,7 @@ Author: Incontinentia
 
 _this spawn {
 
-	private ["_trespassMarkers","_highSecMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_incogVests","_incogUniforms","_highSecurityUniforms","_incogFactions"];
+	private ["_trespassMarkers","_highSecMarkers","_civilianVests","_civilianUniforms","_civilianBackpacks","_civFactions","_civPackArray","_civVestArray","_incogVests","_incogUniforms","_highSecurityUniforms","_incogFactions"];
 
 	params [["_unit",player]];
 

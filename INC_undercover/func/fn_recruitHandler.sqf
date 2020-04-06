@@ -82,13 +82,25 @@ switch (_operation) do {
 
         _unit setVariable ["INC_weaponStore",[["",[""]],["",[""]]]];
 
-        if ((_civPackPercentage > (random 100)) && (backpack _unit == "")) then {
+        if ((_civPackPercentage > (random 100)) && {backpack _unit == ""}) then {
         	[_unit,"addBackpack"] call INCON_ucr_fnc_gearHandler;
+        };
+
+        if ((_civVestPercentage > (random 100)) && {vest _unit == ""}) then {
+        	[_unit,"addVest"] call INCON_ucr_fnc_gearHandler;
         };
 
         if (_armedCivPercentage > (random 100)) then {
 
-        	[_unit,"addWeapon"] call INCON_ucr_fnc_gearHandler;
+            switch (_carryAllWeaponsOpenly) do {
+                case true: {
+                    [_unit,"addWeapon"] call INCON_ucr_fnc_gearHandler;
+                };
+
+                case false: {
+                    [_unit,"addCarryWeapon"] call INCON_ucr_fnc_gearHandler;
+                };
+            };
         };
 
         if (50 > (random 100)) then {
