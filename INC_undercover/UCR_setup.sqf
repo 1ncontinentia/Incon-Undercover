@@ -118,6 +118,7 @@ _canCarryOpenly = true;             //If the weapon can't fit in the pack, shoul
 _carryAllWeaponsOpenly = false;     //Carry all weapons openly (overrides the above)
 _rareWeaponPercentage = 20;         //Percentage chance that a civilian will have a rare weapon
 _superRareWeaponPercentage = 5;     //Percentage chance that a civilian will have a rare weapon
+_maxCivMags = 10;                   //Maximum number of magazines a civilian will carry
 
 //Weapon classnames for armed civilians (array of classnames)
 _civWpnArray = ["arifle_AKS_F","arifle_AKM_F","hgun_Pistol_01_F","hgun_Rook40_F","hgun_ACPC2_F","hgun_Rook40_F"];

@@ -76,13 +76,13 @@ switch (_operation) do {
 
 	case "addWeapon": {
 
-		_input params ["_unit",["_weighting",((100 - _rareWeaponPercentage - _superRareWeaponPercentage)/100),(_rareWeaponPercentage/100),(_superRareWeaponPercentage/100)]];
+		_input params ["_unit",["_weighting",[(100 - _rareWeaponPercentage - _superRareWeaponPercentage),_rareWeaponPercentage,_superRareWeaponPercentage]]];
 
 		if ((count _rareWeaponArray) == 0) then {_rareWeaponArray = _civWpnArray};
 
 		if ((count _superRareWeaponArray) == 0) then {_superRareWeaponArray = _civWpnArray};
 
-		private _wpnList = [_civWpnArray,_rareWeaponArray,_superRareWeaponArray] selectRandomWeighted [_weighting];
+		private _wpnList = [_civWpnArray,_rareWeaponArray,_superRareWeaponArray] selectRandomWeighted _weighting;
 		private _wpn = selectRandom _wpnList;
 		private _magsArray = ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
 
@@ -91,7 +91,7 @@ switch (_operation) do {
 		if (_unit canAddItemToUniform _wpn) then {
 			_unit addItemToUniform _wpn;
 			_unit addMagazine (selectRandom _magsArray);
-			for "_i" from 1 to (ceil random 5) do {
+			for "_i" from 1 to (ceil random _maxCivMags) do {
 				_unit addMagazine (selectRandom _magsArray);
 			};
 
@@ -101,7 +101,7 @@ switch (_operation) do {
 
 				_unit addMagazine (selectRandom _magsArray);
 				_unit addItemToBackpack _wpn;
-				for "_i" from 1 to (ceil random 8) do {
+				for "_i" from 1 to (ceil random _maxCivMags) do {
 					_unit addMagazine (selectRandom _magsArray);
 				};
 
@@ -110,7 +110,7 @@ switch (_operation) do {
 				if (_canCarryOpenly) then {
 					_unit addWeapon _wpn;
 					_unit addMagazine (selectRandom _magsArray);
-					for "_i" from 1 to (ceil random 8) do {
+					for "_i" from 1 to (ceil random _maxCivMags) do {
 						_unit addMagazine (selectRandom _magsArray);
 					};
 				};
@@ -122,13 +122,13 @@ switch (_operation) do {
 
 	case "addCarryWeapon": {
 
-		_input params ["_unit",["_weighting",((100 - _rareWeaponPercentage - _superRareWeaponPercentage)/100),(_rareWeaponPercentage/100),(_superRareWeaponPercentage/100)]];
+		_input params ["_unit",["_weighting",[(100 - _rareWeaponPercentage - _superRareWeaponPercentage),_rareWeaponPercentage,_superRareWeaponPercentage]]];
 
 		if ((count _rareWeaponArray) == 0) then {_rareWeaponArray = _civWpnArray};
 
 		if ((count _superRareWeaponArray) == 0) then {_superRareWeaponArray = _civWpnArray};
 
-		private _wpnList = [_civWpnArray,_rareWeaponArray,_superRareWeaponArray] selectRandomWeighted [_weighting];
+		private _wpnList = [_civWpnArray,_rareWeaponArray,_superRareWeaponArray] selectRandomWeighted _weighting;
 		private _wpn = selectRandom _wpnList;
 		private _magsArray = ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
 
@@ -136,7 +136,7 @@ switch (_operation) do {
 
 		_unit addWeapon _wpn;
 		_unit addMagazine (selectRandom _magsArray);
-		for "_i" from 1 to (ceil random 8) do {
+		for "_i" from 1 to (ceil random _maxCivMags) do {
 			_unit addMagazine (selectRandom _magsArray);
 		};
 	};
