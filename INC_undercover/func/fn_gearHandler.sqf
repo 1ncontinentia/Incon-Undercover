@@ -88,36 +88,46 @@ switch (_operation) do {
 
 		_return = true;
 
-		if (_unit canAddItemToUniform _wpn) then {
+		if (
+			_hideAllPistols &&
+			(_wpn isKindOf ['Pistol', configFile >> 'CfgWeapons'])
+		) exitWith {
+			(uniformContainer _unit) addItemCargoGlobal [_wpn,1];
+			_unit addMagazine (selectRandom _magsArray);
+			for "_i" from 1 to (ceil random _maxCivMags) do {
+				_unit addMagazine (selectRandom _magsArray);
+			};
+		};
+
+		if (_unit canAddItemToUniform _wpn) exitWith {
 			_unit addItemToUniform _wpn;
 			_unit addMagazine (selectRandom _magsArray);
 			for "_i" from 1 to (ceil random _maxCivMags) do {
 				_unit addMagazine (selectRandom _magsArray);
 			};
 
-		} else {
+		};
 
-			if (_unit canAddItemToBackpack _wpn) then {
+		if (_unit canAddItemToBackpack _wpn) exitWith {
 
+			_unit addMagazine (selectRandom _magsArray);
+			_unit addItemToBackpack _wpn;
+			for "_i" from 1 to (ceil random _maxCivMags) do {
 				_unit addMagazine (selectRandom _magsArray);
-				_unit addItemToBackpack _wpn;
-				for "_i" from 1 to (ceil random _maxCivMags) do {
-					_unit addMagazine (selectRandom _magsArray);
-				};
+			};
 
-			} else {
+		};
 
-				if (_canCarryOpenly) then {
-					_unit addWeapon _wpn;
-					_unit addMagazine (selectRandom _magsArray);
-					for "_i" from 1 to (ceil random _maxCivMags) do {
-						_unit addMagazine (selectRandom _magsArray);
-					};
-				};
-
-				_return = false;
+		if (_canCarryOpenly) exitWith {
+			_unit addWeapon _wpn;
+			_unit addMagazine (selectRandom _magsArray);
+			for "_i" from 1 to (ceil random _maxCivMags) do {
+				_unit addMagazine (selectRandom _magsArray);
 			};
 		};
+
+		_return = false;
+
 	};
 
 	case "addCarryWeapon": {
@@ -133,6 +143,18 @@ switch (_operation) do {
 		private _magsArray = ([_wpn,"getCompatMags"] call INCON_ucr_fnc_gearHandler);
 
 		_return = true;
+
+		if (
+			_hideAllPistols &&
+			(_wpn isKindOf ['Pistol', configFile >> 'CfgWeapons'])
+		) exitWith {
+			(uniformContainer _unit) addItemCargoGlobal [_wpn,1];
+			_unit addMagazine (selectRandom _magsArray);
+			for "_i" from 1 to (ceil random _maxCivMags) do {
+				_unit addMagazine (selectRandom _magsArray);
+			};
+			_return = false;
+		};
 
 		_unit addWeapon _wpn;
 		_unit addMagazine (selectRandom _magsArray);

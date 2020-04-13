@@ -18,7 +18,52 @@ Author: Incontinentia
 
 params ["_input",["_operation","recruitAttempt"]];
 
+_return = false;
+
 switch (_operation) do {
+
+    case "changeUnitSide": {
+
+        _input params [["_unit",objNull],["_newSide",west],["_enemyCheckRadius",50]];
+
+        if ({!(side _x in [_newSide,civilian])} count nearestObjects [(getPosWorld _unit),["Man","Car","Tank"],_enemyCheckRadius] > 0) exitWith {
+            _return = false;
+        };
+
+        private _tempGroup = createGroup _newSide;
+
+        [_unit] joinSilent _tempGroup;
+
+        (_tempGroup) spawn {
+        	params ["_tempGroup"];
+        	waitUntil {
+        		sleep 50;
+        		(count units _tempGroup == 0)
+        	};
+        	deleteGroup _tempGroup;
+        };
+
+        _return = true;
+    };
+
+    case "unarmedCheck": {
+        _input params [["_unit",objNull]];
+
+        if !((currentWeapon _unit == "") || {currentWeapon _unit == "Throw"} || {currentWeapon _unit == binocular _unit}) then {
+            _return = false;
+        } else {
+            _return = true;
+        };
+    };
+
+    case "makeCivNormal": {
+        _input params [["_unit",objNull]];
+
+        _unit removeAllEventHandlers "FiredNear";
+        _unit switchmove ""; //Disable ALiVE civilian animations
+        _unit setVariable ["ALIVE_agentBusy",true]; //Disable ALiVE commanding
+        if !(isNil "ALIVE_fnc_agentHandler") then {[ALIVE_agentHandler, "unregisterAgent", _unit] call ALIVE_fnc_agentHandler}; //Unregister from ALiVE tasking
+    };
 
     case "recruitCiv": {
 
@@ -30,10 +75,11 @@ switch (_operation) do {
         	"<t color='#33FFEC'>Recruit</t>", {
         		params ["_civ","_undercoverUnit"];
 
+                /*
         		if !((currentWeapon _undercoverUnit == "") || (currentWeapon _undercoverUnit == "Throw")) exitWith {
         		    private _civComment = selectRandom ["Put your weapon away.","Get that thing out of my face","I don't like being threatened.","Put your gun away."];
         		    [[_civ, _civComment] remoteExec ["globalChat",0]];
-        		};
+        		};*/
 
         		[[_civ,_undercoverUnit],"recruitAttempt"] remoteExecCall ["INCON_ucr_fnc_recruitHandler",_civ];
 
@@ -245,3 +291,5 @@ switch (_operation) do {
 		_return = _recruitedCiv;
 	};
 };
+
+_return

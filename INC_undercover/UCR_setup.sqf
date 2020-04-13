@@ -114,6 +114,7 @@ _civRecruitEnabled = true;          //(Bool - true or false) Set this to false t
 _armedCivPercentage = 70;           //(Number - 0 to 100) Max percentage of civilians armed with weapons from the array below, either on their person or in their backpacks (will only work if _civRecruitEnabled is set to true, otherwise this is ignored)
 _civPackPercentage = 30;            //(Number - 0 to 100) Percentage of civilians with backpacks
 _civVestPercentage = 10;            //(Number - 0 to 100) Percentage of civilians who will have vests added (from above list of civilian vests)
+_hideAllPistols = true;             //(Bool - true or false) Hide all pistols in uniform?
 _canCarryOpenly = true;             //If the weapon can't fit in the pack, should civilians carry weapons overtly instead?
 _carryAllWeaponsOpenly = false;     //Carry all weapons openly (overrides the above)
 _rareWeaponPercentage = 20;         //Percentage chance that a civilian will have a rare weapon
