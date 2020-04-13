@@ -62,6 +62,18 @@ switch (_operation) do {
         _unit removeAllEventHandlers "FiredNear";
         _unit switchmove ""; //Disable ALiVE civilian animations
         _unit setVariable ["ALIVE_agentBusy",true]; //Disable ALiVE commanding
+        _unit enableAI "TARGET";
+        _unit enableAI "AUTOTARGET";
+        _unit enableAI "AUTOCOMBAT";
+        _unit enableAI "ANIM";
+        _unit enableAI "FSM";
+        _unit enableAI "WEAPONAIM";
+        _unit enableAI "AIMINGERROR";
+        _unit enableAI "SUPPRESSION";
+        _unit enableAI "CHECKVISIBLE";
+        _unit enableAI "CHECKVISIBLE";
+        _unit enableAI "PATH";
+        _unit enableAI "MOVE";
         if !(isNil "ALIVE_fnc_agentHandler") then {[ALIVE_agentHandler, "unregisterAgent", _unit] call ALIVE_fnc_agentHandler}; //Unregister from ALiVE tasking
     };
 
