@@ -144,18 +144,6 @@ switch (_operation) do {
 
 		_return = true;
 
-		if (
-			_hideAllPistols &&
-			(_wpn isKindOf ['Pistol', configFile >> 'CfgWeapons'])
-		) exitWith {
-			(uniformContainer _unit) addItemCargoGlobal [_wpn,1];
-			_unit addMagazine (selectRandom _magsArray);
-			for "_i" from 1 to (ceil random _maxCivMags) do {
-				_unit addMagazine (selectRandom _magsArray);
-			};
-			_return = false;
-		};
-
 		_unit addWeapon _wpn;
 		_unit addMagazine (selectRandom _magsArray);
 		for "_i" from 1 to (ceil random _maxCivMags) do {
