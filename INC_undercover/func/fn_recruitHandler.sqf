@@ -175,6 +175,10 @@ switch (_operation) do {
 
         _percentage = (linearConversion [0, 40000, (rating _undercoverUnit), 5, 70, true]);
 
+        if ((side _civ)==_undercoverUnitSide) then {
+            _percentage = _percentage + 20;
+        };
+
         if (_percentage > 30) then {
             if ((_percentage > (random 100)) && {_undercoverUnit getVariable ["isUndercover", false]}) then {
 
@@ -199,7 +203,7 @@ switch (_operation) do {
 
         } else {
 
-            if ((_percentage > (random 100)) && {_undercoverUnit getVariable ["isUndercover", false]} && {!(_undercoverUnit getVariable ["INC_isCompromised", false])}) then {
+            if ((_percentage > (random 100)) && {_undercoverUnit getVariable ["isUndercover", false]}) then {
 
                 if (_undercoverGroup < (2 + (random 5))) then {
 
